@@ -1,0 +1,3 @@
+# zsh-specific aliases, completing .shell_aliases.
+
+alias -s pdf='xdg-open'
