@@ -1,0 +1,109 @@
+#!/bin/bash
+# Perfoms one of three action:
+# - Runs the executable in the scratchpad and show it, if not already running
+# - show it if already running and hidden
+# - hide it if already running and visible.
+#
+# Dependencies: i3-msg, wmctrl, xprop
+
+# Parameters: executable_name mark_name win_class
+
+# has_mark mark_name
+# Return true if the mark mark_name is set to a window.
+has_mark()
+{
+	mark_name="$1"
+
+	i3-msg -t get_marks | grep "$mark_name" 1>/dev/null
+	if [ $? = 0 ]; then
+		true
+	else
+		false
+	fi
+}
+
+# window_ids win_class
+# Echoes the list of windows with class win_class, as newline-separated list.
+window_ids()
+{
+	win_class="$1"
+
+	wmctrl -l | gawk '{print $1}' |
+		while read win_id; do
+			if xprop -id $win_id | grep 'WM_CLASS(STRING)' | grep "$win_class" 1>/dev/null; then
+				echo $win_id
+			fi
+		done
+}
+
+# wait_new_window win_class old_win_ids
+# Loop until a window with name win_name not being in the list of old windows
+# old_win_ids appears.
+# Echoes the id of the new window.
+wait_new_window()
+{
+	win_class="$1"
+	old_win_ids="$2"
+
+	# From newline-separated to space separated for easier string matching.
+	old_win_ids=$(echo "$old_win_ids" | xargs echo)
+	found=0
+	# 'found=false' and 'while ! [[ $found ]]; do' does not work
+	while [[ $found = 0 ]]; do
+		new_and_old_win_ids=$(window_ids "$win_class")
+		echo "$new_and_old_win_ids" |
+			while read new_id; do
+				# Use bash's regular expression matching (not in sh).
+				if ! [[ "$old_win_ids" =~ "$new_id" ]]; then
+					# If the window is in old list but not in the new
+					# list, this is the window we're intested in.
+					found_id="$new_id"
+					found=1
+					break
+				fi
+			done
+		# Wait before scanning again.
+		sleep 0.1
+	done
+	echo "$found_id"
+}
+
+# exec_and_mark executable_name mark_name win_class
+# Execute executable_name, wait for the window to open, and mark this window with mark_name.
+# win_name and win_class are used to detect that a new window with name win_name has opened,
+# as opposed to windows with this name opened before calling this function.
+exec_and_mark()
+{
+	executable_name="$1"
+	mark_name="$2"
+	win_class="$3"
+
+	win_ids_before=$(window_ids "$win_class")	
+	$executable_name &
+	echo before
+	win_id=$(wait_new_window "$win_class" "$win_ids_before")
+	echo win_id: "$win_id"
+	echo after
+	i3-msg "[id=$win_id] mark $mark_name"
+	echo i3-msg "[con_mark=$mark_name] move scratchpad"
+	i3-msg "[con_mark=$mark_name] move scratchpad"
+}
+
+i3_launch_or_toggle()
+{
+	executable_name="$1"
+	mark_name="$2"
+	win_class="$3"
+
+	if ! has_mark "$mark_name"; then
+		echo has no mark
+		exec_and_mark "$executable_name" "$mark_name" "$win_class"
+	else
+		echo has mark
+		# Toggle visibility.
+		i3-msg "[con_mark="$mark_name"] scratchpad show"
+	fi
+}
+
+i3_launch_or_toggle $@
+
