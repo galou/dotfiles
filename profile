@@ -8,12 +8,20 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-# set PATH so it includes user's private bin if it exists
+# set PATH so it includes user's private bin if it exists and is not already in $PATH.
 if [ -d "$HOME/.local/bin" ] ; then
-	echo $PATH | grep $HOME/.local/bin > /dev/null
-	if [ $? = 1 ]; then
-		PATH="$HOME/.local/bin:$PATH"
-	fi
+    echo "$PATH" | grep "$HOME/.local/bin" > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+fi
+
+# set PATH so it includes npm bin if it exists and is not already in $PATH.
+if [ -d "$HOME/.cache/npm-global/bin" ] ; then
+    echo "$PATH" | grep "$HOME/.cache/npm-global/bin" > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="$HOME/.cache/npm-global/bin:$PATH"
+    fi
 fi
 
 # if running bash
@@ -25,9 +33,9 @@ fi
 # fi
 
 # 256-color terminal
-if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
-	export TERM=xterm-256color
-fi
+# if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
+# 	export TERM=xterm-256color
+# fi
 
 #function jvim
 #{
@@ -37,10 +45,14 @@ fi
 #       	fi
 #}
 
-# The ${VAR+foo} construct expands to the empty string if VAR is unset or to
-# foo if VAR is set to anything (including the empty string).
-export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH+:}/usr/local/lib64/pkgconfig
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH+:}/usr/local/lib64
+export EDITOR=vim
+
+if [[ $HOST -eq "pcgael" ]]; then
+    # The ${VAR+foo} construct expands to the empty string if VAR is unset or to
+    # foo if VAR is set to anything (including the empty string).
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH+:}/usr/local/lib64/pkgconfig
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH+:}/usr/local/lib64
+fi
 
 # Eclipse home, for Eclipse to see eclipse.ini
 export ECLIPSE_HOME=$HOME/.config/eclipse
@@ -53,15 +65,14 @@ export JUPYTER_CONFIG_DIR=$HOME/.config/jupyter
 export MPLCONFIGDIR=$HOME/.config/matplotlib
 
 # ROS configuration
-export ROS_WORKSPACE=$HOME/ros_kinetic_ws
 export ROS_LANG_DISABLE=genlisp
 
-# Add completion for gr
+# Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
     source <(gr completion)
 fi
 
-get_ip()
+get_ip_eno1()
 {
 	ip=$(ifconfig eno1 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ -z "$ip" ]; then
@@ -85,34 +96,12 @@ get_ip_wlp3s0()
 ros_master_local()
 {
     export ROS_MASTER_URI="http://localhost:11311"
-    export ROS_IP=$(get_ip)
-    #export ROS_HOSTNAME="pcgael"
-}
-
-ros_master_syrotek()
-{
-    export ROS_MASTER_URI="http://syrotek.felk.cvut.cz:11311"
-    #export ROS_MASTER_URI="http://147.32.84.212:11311"
-    export ROS_IP=$(get_ip)
-    #export ROS_HOSTNAME="pcgael"
-}
-
-ros_master_morbot()
-{
-    export ROS_MASTER_URI="http://169.254.0.2:11311"
-    export ROS_IP=$(get_ip_wlp3s0)
-    #export ROS_HOSTNAME="pcgael"
+    export ROS_IP=$(get_ip_eno1)
 }
 
 ros_master_host_wifi()
 {
     export ROS_MASTER_URI="http://$1:11311"
-    export ROS_IP=$(get_ip_wlp3s0)
-}
-
-ros_master_emili_wifi()
-{
-    export ROS_MASTER_URI="http://172.16.180.139:11311"
     export ROS_IP=$(get_ip_wlp3s0)
 }
 
@@ -129,18 +118,27 @@ ros_rosconsole_format_node_message()
 
 conda_activate()
 {
-    export PATH=/home/gael/.local/lib/conda/bin:$PATH
+    # set PATH so it includes npm bin if it exists and is not already in $PATH.
+    if [ -d "$HOME/.local/lib/conda/bin" ] ; then
+	echo "$PATH" | grep "$HOME/.local/lib/conda/bin" > /dev/null
+	if [ $? = 1 ]; then
+	    export PATH="$HOME/.local/lib/conda/bin:$PATH"
+	fi
+    fi
 }
 
 fcd()
 {
-    cd $(dirname $1)
+    cd "$(dirname "$1")"
 }
 
-# training for ros industrial
-#. ~/industrial_training/training/.training_units.zsh
+weather()
+{
+    curl -Ss 'https://wttr.in?0'
+}
+
+export HOST
 
 # Delete shortcut created by Office Setup.
-rm -f "/home/gael/.local/share/applications/wine/Programs/Microsoft Office/Microsoft Office 2010 Tools/Digital Certificate for VBA Projects.desktop"
+#rm -f "/home/gael/.local/share/applications/wine/Programs/Microsoft Office/Microsoft Office 2010 Tools/Digital Certificate for VBA Projects.desktop"
 
-export WINEARCH=win32

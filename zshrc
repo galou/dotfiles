@@ -156,8 +156,17 @@ setopt extendedglob
 
 # ROS setup
 ros_activate() {
-  source $HOME/ros_kinetic_ws/devel/setup.zsh
-  export ROS_WORKSPACE=$HOME/ros_kinetic_ws
+  if [[ $HOST = "pcgael3" ]]; then
+    export ROS_WORKSPACE=$HOME/ros_melodic_ws
+  elif [[ $HOST = "pcgael2" ]]; then
+    export ROS_WORKSPACE=$HOME/ros_kinetic_ws
+  elif [[ $HOST = "pcgael" ]]; then
+    export ROS_WORKSPACE=$HOME/ros_indigo_ws
+  fi
+
+  if [ -e $ROS_WORKSPACE/devel/setup.zsh ]; then
+    source $ROS_WORKSPACE/devel/setup.zsh
+  fi
   # Add /usr/lib/x86_64-linux-gnu for Gazebo urdf parser to work
   # export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH+:}$LD_LIBRARY_PATH
 
