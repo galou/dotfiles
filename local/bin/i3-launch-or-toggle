@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/zsh
+# TODO: make it work under bash
 # Perfoms one of three action:
 # - Runs the executable in the scratchpad and show it, if not already running
 # - show it if already running and hidden
@@ -97,7 +98,6 @@ exec_and_mark()
 
 	win_ids_before=$(window_ids "$win_class")	
 	$executable_name &
-	window_ids "$win_class"
 	win_id=$(wait_new_window "$win_class" "$win_ids_before")
 	if [ -z $win_id ]; then
 		return
