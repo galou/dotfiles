@@ -45,18 +45,23 @@ wait_new_window()
 	win_class="$1"
 	old_win_ids="$2"
 
+
+	# Max. number of iteration to wait for the correct window.
+	# The time out will be $max_iteration * sleep_time_in_loop.
+	max_iteration=10
+
 	# From newline-separated to space separated for easier string matching.
 	old_win_ids=$(echo "$old_win_ids" | xargs echo)
-	found=0
-	# 'found=false' and 'while ! [[ $found ]]; do' does not work
-	while [[ $found = 0 ]]; do
+	found=false
+	iteration=0
+	while ! $found; do
 		new_and_old_win_ids=$(window_ids "$win_class")
 		if [ -z "$old_win_ids" ]; then
 			# Empty $old_win_ids
 			if [ ! -z "$new_and_old_win_ids" ]; then
 				# Return the single window, if it exists.
 				found_id="$new_and_old_win_ids"
-				found=1
+				found=true
 			fi
 		fi
 		echo "$new_and_old_win_ids" |
@@ -66,12 +71,16 @@ wait_new_window()
 					# If the window is in old list but not in the new
 					# list, this is the window we're intested in.
 					found_id="$new_id"
-					found=1
+					found=true
 					break
 				fi
 			done
 		# Wait before scanning again.
 		sleep 0.1
+		iteration=$((iteration + 1))
+		if [[ $iteration -gt $max_iteration ]]; then
+			break
+		fi
 	done
 	echo "$found_id"
 }
@@ -90,6 +99,9 @@ exec_and_mark()
 	$executable_name &
 	window_ids "$win_class"
 	win_id=$(wait_new_window "$win_class" "$win_ids_before")
+	if [ -z $win_id ]; then
+		return
+	fi
 	i3-msg "[id=$win_id] mark $mark_name"
 	i3-msg "[con_mark=$mark_name] move scratchpad"
 	i3-msg "[con_mark=$mark_name] scratchpad show"
