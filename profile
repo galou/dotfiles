@@ -33,9 +33,9 @@ fi
 # fi
 
 # 256-color terminal
-# if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
-# 	export TERM=xterm-256color
-# fi
+if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
+	export TERM=xterm-256color
+fi
 
 #function jvim
 #{
