@@ -127,9 +127,18 @@ conda_activate()
     fi
 }
 
+# fcd file
+# cd to the directory containing file.
 fcd()
 {
     cd "$(dirname "$1")"
+}
+
+# mkcd directory
+# mkdir directory && cd directory
+mkcd()
+{
+    mkdir "$1" && cd "$1"
 }
 
 weather()
