@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import xml.etree.ElementTree as ET
+
+g_recently_used_file = os.environ['HOME'] + '/.local/share/recently-used.xbel'
+
+
+def parse_recently_used():
+    """Return the list of recently used documents, in inverted chronological order"""
+    try:
+        tree = ET.parse(g_recently_used_file)
+    except FileNotFoundError:
+        print('Could not open ' + g_recently_used_file)
+        exit(1)
+    root = tree.getroot()
+    recently_used = []
+    for child in root:
+        if child.tag == 'bookmark':
+            recently_used.append(child.attrib['href'].replace('file://', ''))
+    return recently_used[::-1]
+
+
+def match_recent(query):
+    for recent in parse_recently_used():
+        if query in recent:
+            print(recent)
+
+
+if __name__ == '__main__':
+    try:
+        match_recent(sys.argv[1])
+    except IndexError:
+        # Call without arguments, print the complete list.
+        for recent in parse_recently_used():
+            print(recent)
+        sys.exit(0)
+
+    from subprocess import Popen, PIPE
+    Popen(['xdg-open', sys.argv[1]], stdout=PIPE, stderr=PIPE)
+    sys.exit(0)
