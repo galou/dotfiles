@@ -33,12 +33,12 @@ font pango:monospace 8
 #exec --no-startup-id gnome-settings-daemon
 
 # Workspace and windows assignments
-workspace "1: mail" output DP-0 
-workspace "2: misc" output DP-0
-workspace "3: web" output DVI-D-0
-workspace "4: files" output DVI-D-0
-assign [instance="^Mail$"] "1: mail"
-assign [instance="^vlc$"] "2: misc"
+workspace "1:mail" output DP-0
+workspace "2:misc" output DP-0
+workspace "3:web" output DVI-D-0
+workspace "4:files" output DVI-D-0
+assign [instance="^Mail$"] "1:mail"
+assign [instance="^vlc$"] "2:misc"
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
