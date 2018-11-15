@@ -1,11 +1,20 @@
 #!/bin/zsh
 # TODO: make it work under bash
 # Perfoms one of three action:
-# - Runs the executable in the scratchpad and show it, if not already running
-# - show it if already running and hidden
-# - hide it if already running and visible.
+# - Runs the executable in the scratchpad and show it, if not already running.
+# - Shows it if already running and hidden.
+# - Hides it if already running and visible.
 #
 # Dependencies: i3-msg, wmctrl, xprop
+#
+# This script is a simplified version of
+# https://github.com/open-dynaMIX/raiseorlaunch. As of 2018-11-15 with i3 v
+# 4.14.1 raiseorlaunch doesn't work with scratchpad and mark (Tested with
+# "python3 -m raiseorlaunch -r -d -l 5 -m qalc -c '.*qalculate.*' -e qalculate"
+# which doesn't set the mark on first launch.
+#
+# Author: Gaël Écorchard
+# License: CC0-1.0
 
 # Parameters: executable_name mark_name win_class
 
@@ -90,6 +99,10 @@ wait_new_window()
 # Execute executable_name, wait for the window to open, and mark this window with mark_name.
 # win_name and win_class are used to detect that a new window with name win_name has opened,
 # as opposed to windows with this name opened before calling this function.
+#
+# We unfortunately have to wait for the window to appear before marking it. It
+# means that the window may first appear as a normal window before we move it
+# to the scratchpad, provoking some wobling in the layout.
 exec_and_mark()
 {
 	executable_name="$1"
@@ -107,6 +120,7 @@ exec_and_mark()
 	i3-msg "[con_mark=$mark_name] scratchpad show"
 }
 
+# i3_launch_or_toggle executable_name mark_name win_class
 i3_launch_or_toggle()
 {
 	executable_name="$1"
