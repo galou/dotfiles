@@ -1,5 +1,7 @@
 #!/bin/zsh
 # TODO: make it work under bash
+# TODO: use "i3-msg 'exec $executable --class marked-$mark' instead of marks. Then, [class='marked-$mark'] can be used.
+#
 # Perfoms one of three action:
 # - Runs the executable in the scratchpad and show it, if not already running.
 # - Shows it if already running and hidden.
