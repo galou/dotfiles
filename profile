@@ -150,7 +150,7 @@ weather()
 # Return a space separated list of connected displays
 connected_displays()
 {
-    xrandr --listmonitors | tail -n 2 | cut --delimiter=' ' --field=6
+    xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
 }
 
 export HOST
