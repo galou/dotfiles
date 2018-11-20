@@ -5,11 +5,14 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+set $left_monitor DP-0
+set $right_monitor DVI-D-0
+
 # General configuration
 exec --no-startup-id setxkbmap gael
-exec --no-startup-id xrandr --output DVI-D-0 --primary --output DP-0 --left-of DVI-D-0 --rotate right
+exec --no-startup-id xrandr --output $right_monitor --primary --output $left_monitor --left-of $right_monitor --rotate right
 exec --no-startup-id numlockx on
-# Blanking after 120s, Suspend and Off after 600s.
+# Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms standby 120 600 600
 
 set $mod Mod4
@@ -32,16 +35,13 @@ font pango:monospace 8
 # Use GTK theme.
 #exec --no-startup-id gnome-settings-daemon
 
-set $left_monitor DP-0
-set $right_monitor DVI-D-0
-
 # Workspace and windows assignments
 workspace "1:mail" output $left_monitor
 workspace "2:misc" output $left_monitor
 workspace "3:web" output $right_monitor
 workspace "4:files" output $right_monitor
 # Alternatively with icons from "Font Awesome 5".
-# workspace "1:" output $left_monitorDP-0
+# workspace "1:" output $left_monitor
 # workspace "3:" output $right_monitor
 # workspace "4:" output $right_monitor
 # workspace "5:" output $right_monitor
@@ -185,6 +185,7 @@ focus_follows_mouse yes
 # finds out, if available)
 bar {
     status_command i3blocks
+    tray_output primary
 }
 
 # Multimedia shortcuts
@@ -215,6 +216,7 @@ bindsym XF86Search exec caja
 bindsym XF86Calculator exec --no-startup-id "i3-launch-or-toggle mate-calculator calc mate-calc"
 bindsym Shift+XF86Calculator exec --no-startup-id "i3-launch-or-toggle qalculate qalc qalculate"
 bindsym XF86Launch5 exec gnome-terminal -- vim
+bindsym $mod+o exec gnome-terminal -- htop
 
 # Autostart
 exec thunderbird
