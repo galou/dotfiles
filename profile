@@ -146,6 +146,13 @@ weather()
     curl -Ss 'https://wttr.in?0'
 }
 
+# connected_displays
+# Return a space separated list of connected displays
+connected_displays()
+{
+    xrandr --listmonitors | tail -n 2 | cut --delimiter=' ' --field=6
+}
+
 export HOST
 
 # Delete shortcut created by Office Setup.
