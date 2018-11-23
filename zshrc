@@ -182,11 +182,14 @@ fi
 
 # ROS setup
 ros_activate() {
-  if [[ $HOST = "pcgael3" ]]; then
+  HOST=$(hostname -f)
+  if [[ "$HOST" = "pcgael4" ]]; then
     export ROS_WORKSPACE=$HOME/ros_melodic_ws
-  elif [[ $HOST = "pcgael2" ]]; then
+  elif [[ "$HOST" = "pcgael3" ]]; then
+    export ROS_WORKSPACE=$HOME/ros_melodic_ws
+  elif [[ "$HOST" = "pcgael2" ]]; then
     export ROS_WORKSPACE=$HOME/ros_kinetic_ws
-  elif [[ $HOST = "pcgael" ]]; then
+  elif [[ "$HOST" = "pcgael" ]]; then
     export ROS_WORKSPACE=$HOME/ros_indigo_ws
   fi
 
