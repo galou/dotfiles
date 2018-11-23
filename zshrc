@@ -3,6 +3,9 @@ if [[ ! -o interactive ]]; then
   return
 fi
 
+# Uncomment the following line and the first line to start profiling.
+# zprof
+
 # Aliases
 if [ -f ~/.shell_aliases ]; then
     . ~/.shell_aliases
@@ -29,12 +32,17 @@ stty -echoctl
 ADOTDIR=$HOME/.config/antigen
 source $ADOTDIR/antigen/antigen.zsh
 antigen use oh-my-zsh
-antigen bundle command-not-found
 antigen bundle common-aliases
+# Some useful git aliases
 antigen bundle git
 antigen bundle pip
+# Proposes a package for a missing command
+antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
+# support approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in
+# http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/
+antigen bundle zsh-navigation-tools
 antigen theme agnoster
 antigen apply
 # tweak to agnoster theme
@@ -59,7 +67,7 @@ ZSH_THEME_TERM_TITLE_IDLE="%20<..<%~%<<"
 # Old PS1, now set by agnoster theme
 #export PS1='%B%F{green}%n@%m%f %F{blue}%1~ %#%f%b '
 
-# antigen sets 'alias gr=git remote', gr is also 
+# antigen sets 'alias gr=git remote', gr is also a program to manage several git repos.
 unalias gr
 
 # History management
@@ -74,7 +82,20 @@ setopt hist_save_no_dups
 # Vim key bindings
 bindkey -v
 
+# Completion configuration.
+# Case-insensitive completion.
+# Highlight the common part and the next character of completions.
+zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02=01}:${(s.:.)LS_COLORS}")'
+
+# Add custom directory for completion.
+fpath+=$HOME/.config/zsh/completion
+
 # The following lines were added by compinstall
+
+zstyle ':completion:*' completer _complete _ignored
+zstyle ':completion:*' ignore-parents parent pwd
+zstyle ':completion:*' list-suffixes true
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle :compinstall filename '/home/gael/.zshrc'
 
 autoload -Uz compinit
@@ -154,6 +175,11 @@ setopt interactivecomments # pound sign in interactive prompt as a comment
 # Use extendedglob (for example ^CMakeLists.txt for all but this file)
 setopt extendedglob
 
+# Completion for gr (Generated with `gr completion >> ...`
+if [ -e $HOME/.config/zsh/completion/gr.zsh ]; then
+  source $HOME/.config/zsh/completion/gr.zsh
+fi
+
 # ROS setup
 ros_activate() {
   if [[ $HOST = "pcgael3" ]]; then
@@ -178,9 +204,4 @@ ros_activate() {
 if [ -e /tmp/activate_ros ]; then
   ros_activate
 fi
-
-# MP3 manipulation
-mp3_list() {
-  find -mmin -$1 -exec file "{}" \; | grep Audio | cut -d : -f -1
-}
 

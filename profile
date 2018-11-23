@@ -127,6 +127,11 @@ conda_activate()
     fi
 }
 
+# MP3 manipulation
+mp3_list() {
+  find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
+}
+
 # fcd file
 # cd to the directory containing file.
 fcd()
