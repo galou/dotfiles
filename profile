@@ -24,6 +24,15 @@ if [ -d "$HOME/.cache/npm-global/bin" ] ; then
     fi
 fi
 
+# Prefix /usr/lib/ccache to use ccache by default
+if [ -d /usr/lib/ccache ] ; then
+    echo "$PATH" | grep /usr/lib/ccache > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="/usr/lib/ccache:$PATH"
+    fi
+fi
+
+
 # if running bash
 # if [ -n "$BASH_VERSION" ]; then
 #     # include .bashrc if it exists
