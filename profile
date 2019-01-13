@@ -159,6 +159,13 @@ weather()
     curl -Ss 'https://wttr.in?0'
 }
 
+# Update the QuickFix data for my tomtom watch
+# Uses https://github.com/dlenski/ttblue.
+tomtom-updategps()
+{
+  ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
+}
+
 # connected_displays
 # Return a space separated list of connected displays
 connected_displays()
