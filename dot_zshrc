@@ -7,8 +7,8 @@ fi
 # zprof
 
 # Aliases
-if [ -f ~/.shell_aliases ]; then
-    . ~/.shell_aliases
+if [ -f ~/.config/shell/shell_aliases ]; then
+    . ~/.config/shell/shell_aliases
 fi
 if [ -f ~/.zsh_aliases ]; then
     . ~/.zsh_aliases
