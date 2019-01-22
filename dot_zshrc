@@ -15,8 +15,8 @@ if [ -f ~/.config/zsh/zsh_aliases ]; then
 fi
 
 # Profile
-if [ -f ~/.profile ]; then
-	. ~/.profile
+if [ -f ~/.config/shell/profile ]; then
+	. ~/.config/shell/profile
 fi
 
 # Deactive ctrl-s sending xoff

@@ -1,0 +1,5 @@
+.config/duplicity/passphrase.sh
+.local/lib/rofi/calc.so.rst
+.local/share/rofi/finder.sh.rst
+.local/share/rofi/rofi-bibbrowser.rst
+.local/share/rofi/rofi-locate.sh.rst
