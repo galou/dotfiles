@@ -93,9 +93,17 @@ get_ip_eno1()
 	echo $ip
 }
 
-get_ip_wlp3s0()
+get_ip_wifi()
 {
-    ip=$(ifconfig wlp3s0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+    HOST=$(hostname -f)
+    if [[ "$HOST" = "pcgael4" ]]; then
+	WIFI_DEVICE=wlp63s0
+    elif [[ "$HOST" = "pcgael3" ]]; then
+	WIFI_DEVICE=wlp3s0
+    elif [[ "$HOST" = "pcgael2" ]]; then
+	WIFI_DEVICE=wlp3s0
+    fi
+    ip=$(ifconfig $WIFI_DEVICE | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
     if [ -z "$ip" ]; then
 	ip='127.0.0.1'
     fi
@@ -111,7 +119,7 @@ ros_master_local()
 ros_master_host_wifi()
 {
     export ROS_MASTER_URI="http://$1:11311"
-    export ROS_IP=$(get_ip_wlp3s0)
+    export ROS_IP=$(get_ip_wifi)
 }
 
 # cf. http://wiki.ros.org/rosconsole
@@ -158,6 +166,13 @@ mkcd()
 weather()
 {
     curl -Ss 'https://wttr.in?0'
+}
+
+# Update the QuickFix data for my tomtom watch
+# Uses https://github.com/dlenski/ttblue.
+tomtom-updategps()
+{
+  ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
 }
 
 # connected_displays
