@@ -15,6 +15,8 @@ exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms standby 120 600 600
 
+# Main key for interacting with i3.
+# Alt = Mod4.
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -56,7 +58,7 @@ floating_modifier $mod
 # you came from now, you can just press $mod+2 again to switch back to "1: www".
 workspace_auto_back_and_forth yes
 
-# kill focused window
+# kill focused window, nicely.
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
@@ -86,6 +88,8 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
@@ -217,6 +221,9 @@ bindsym XF86Calculator exec --no-startup-id "i3-launch-or-toggle mate-calculator
 bindsym Shift+XF86Calculator exec --no-startup-id "i3-launch-or-toggle qalculate qalc qalculate"
 bindsym XF86Launch5 exec gnome-terminal -- vim
 bindsym $mod+o exec gnome-terminal -- htop
+bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
+bindsym Mod1+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
+bindsym Shift+Print exec --no-startup-id "scrot -s $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 
 # Autostart
 exec thunderbird
