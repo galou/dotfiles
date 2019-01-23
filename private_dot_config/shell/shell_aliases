@@ -30,6 +30,9 @@ alias j='z'
 alias lama-status='gr @lama status'
 alias catkin_create_pkg_gael='catkin_create_pkg -l BSD -a "Gael Ecorchard" -m "Gael Ecorchard"'
 
+# Instead of git gui.
+alias gg='git grep'
+
 # Strip color codes from STDIN to save into a file
 # Ex: command_with_color | stripcolor > file.txt
 alias stripcolor='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'

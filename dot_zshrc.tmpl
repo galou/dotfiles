@@ -1,3 +1,5 @@
+# This file is managed by chezmoi, its source is ~/.local/share/chezmoi/dot_zshrc.tmpl.
+
 # If not running interactively, don't do anything
 if [[ ! -o interactive ]]; then
   return
@@ -6,27 +8,10 @@ fi
 # Uncomment the following line and the first line to start profiling.
 # zprof
 
-# Aliases
-if [ -f ~/.config/shell/shell_aliases ]; then
-    . ~/.config/shell/shell_aliases
-fi
-if [ -f ~/.config/zsh/zsh_aliases ]; then
-    . ~/.config/zsh/zsh_aliases
-fi
-
 # Profile
 if [ -f ~/.config/shell/profile ]; then
 	. ~/.config/shell/profile
 fi
-
-# Deactive ctrl-s sending xoff
-# so that it can be used for something else
-stty ixany
-stty ixoff
-stty -ixon
-# Deactive showing ^C when ctrl-c
-stty -echoctl
-
 
 # antigen configuration
 ADOTDIR=$HOME/.config/antigen
@@ -180,24 +165,25 @@ if [ -e $HOME/.config/zsh/completion/gr.zsh ]; then
   source $HOME/.config/zsh/completion/gr.zsh
 fi
 
+{{- /* ros_distro may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+{{- if (index . "ros_distro")}}
+
 # ROS setup
 ros_activate() {
-  HOST=$(hostname -f)
-  if [[ "$HOST" = "pcgael4" ]]; then
-    export ROS_WORKSPACE=$HOME/ros_melodic_ws
-  elif [[ "$HOST" = "pcgael3" ]]; then
-    export ROS_WORKSPACE=$HOME/ros_melodic_ws
-  elif [[ "$HOST" = "pcgael2" ]]; then
-    export ROS_WORKSPACE=$HOME/ros_kinetic_ws
-  elif [[ "$HOST" = "pcgael" ]]; then
-    export ROS_WORKSPACE=$HOME/ros_indigo_ws
-  fi
+  # Variable substitution with default ${PARAMETER-default}
+  export ROS_WORKSPACE=${ROS_WORKSPACE-$HOME/ros_{{.ros_distro}}_ws}
 
   if [ -e $ROS_WORKSPACE/devel/setup.zsh ]; then
     source $ROS_WORKSPACE/devel/setup.zsh
+  elif [ -e $ROS_WORKSPACE/install/local_setup.zsh ]; then
+    source $ROS_WORKSPACE/install/local_setup.zsh
   fi
+
+  {{- if eq .chezmoi.hostname "pcgael"}}
+
   # Add /usr/lib/x86_64-linux-gnu for Gazebo urdf parser to work
   # export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH+:}$LD_LIBRARY_PATH
+  {{- end}}
 
   # slaunch as alias doesn't help because completion doesn't work (zsh 5.1.1)
   alias slaunch='roslaunch safelog_launch'
@@ -206,5 +192,14 @@ ros_activate() {
 # Activate ROS if /tmp/activate_ros exists.
 if [ -e /tmp/activate_ros ]; then
   ros_activate
+fi
+{{- end}}
+
+# Aliases
+if [ -f ~/.config/shell/shell_aliases ]; then
+    . ~/.config/shell/shell_aliases
+fi
+if [ -f ~/.config/zsh/zsh_aliases ]; then
+    . ~/.config/zsh/zsh_aliases
 fi
 

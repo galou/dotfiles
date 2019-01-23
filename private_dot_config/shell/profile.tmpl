@@ -1,12 +1,5 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
-# see /usr/share/doc/bash/examples/startup-files for examples.
-# the files are located in the bash-doc package.
-
-# the default umask is set in /etc/profile; for setting the umask
-# for ssh logins, install and configure the libpam-umask package.
-#umask 022
+# This file is sourced by ~/.zshrc and ~/.bashrc.
+# This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/shell/profile.tmpl.
 
 # set PATH so it includes user's private bin if it exists and is not already in $PATH.
 if [ -d "$HOME/.local/bin" ] ; then
@@ -32,14 +25,13 @@ if [ -d /usr/lib/ccache ] ; then
     fi
 fi
 
-
-# if running bash
-# if [ -n "$BASH_VERSION" ]; then
-#     # include .bashrc if it exists
-#     if [ -f "$HOME/.bashrc" ]; then
-# 	. "$HOME/.bashrc"
-#     fi
-# fi
+# Deactive ctrl-s sending xoff
+# so that it can be used for something else
+stty ixany
+stty ixoff
+stty -ixon
+# Deactive showing ^C when ctrl-c
+stty -echoctl
 
 # 256-color terminal
 if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
@@ -56,12 +48,12 @@ fi
 
 export EDITOR=vim
 
-if [[ $HOST -eq "pcgael" ]]; then
-    # The ${VAR+foo} construct expands to the empty string if VAR is unset or to
-    # foo if VAR is set to anything (including the empty string).
-    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH+:}/usr/local/lib64/pkgconfig
-    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH+:}/usr/local/lib64
-fi
+{{- if eq .chezmoi.hostname "pcgael" }}
+# The ${VAR+foo} construct expands to the empty string if VAR is unset or to
+# foo if VAR is set to anything (including the empty string).
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH+:}/usr/local/lib64/pkgconfig
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH+:}/usr/local/lib64
+{{- end}}
 
 # Eclipse home, for Eclipse to see eclipse.ini
 export ECLIPSE_HOME=$HOME/.config/eclipse
@@ -81,39 +73,40 @@ if command -v gr >/dev/null 2>&1; then
     source <(gr completion)
 fi
 
-get_ip_eno1()
+{{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+{{- if (index . "eth_device")}}
+
+get_ip_eth()
 {
-	ip=$(ifconfig eno1 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	{{- if (index . "wifi_device")}}
 	if [ -z "$ip" ]; then
-		ip=$(ifconfig wlp3s0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+		ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	fi
+	{{- end}}
 	if [ -z "$ip" ]; then
 		ip='127.0.0.1'
 	fi
 	echo $ip
 }
+{{- end}}
+
+{{- if (index . "wifi_device")}}
 
 get_ip_wifi()
 {
-    HOST=$(hostname -f)
-    if [[ "$HOST" = "pcgael4" ]]; then
-	WIFI_DEVICE=wlp63s0
-    elif [[ "$HOST" = "pcgael3" ]]; then
-	WIFI_DEVICE=wlp3s0
-    elif [[ "$HOST" = "pcgael2" ]]; then
-	WIFI_DEVICE=wlp3s0
-    fi
-    ip=$(ifconfig $WIFI_DEVICE | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+    ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
     if [ -z "$ip" ]; then
 	ip='127.0.0.1'
     fi
     echo $ip
 }
+{{- end }}
 
 ros_master_local()
 {
     export ROS_MASTER_URI="http://localhost:11311"
-    export ROS_IP=$(get_ip_eno1)
+    export ROS_IP=$(get_ip_eth)
 }
 
 ros_master_host_wifi()
@@ -168,12 +161,15 @@ weather()
     curl -Ss 'https://wttr.in?0'
 }
 
+{{- if eq .chezmoi.hostname "pcgael4"}}
+
 # Update the QuickFix data for my tomtom watch
 # Uses https://github.com/dlenski/ttblue.
 tomtom-updategps()
 {
   ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
 }
+{{end}}
 
 # connected_displays
 # Return a space separated list of connected displays
@@ -186,4 +182,3 @@ export HOST
 
 # Delete shortcut created by Office Setup.
 #rm -f "/home/gael/.local/share/applications/wine/Programs/Microsoft Office/Microsoft Office 2010 Tools/Digital Certificate for VBA Projects.desktop"
-
