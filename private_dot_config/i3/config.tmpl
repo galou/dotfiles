@@ -5,12 +5,22 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $left_monitor DP-0
-set $right_monitor DVI-D-0
+set $main_monitor DVI-D-0
+{{- if (index . "second_monitor")}}
+set $second_monitor DP-0
+{{- end}}
 
 # General configuration
 exec --no-startup-id setxkbmap gael
-exec --no-startup-id xrandr --output $right_monitor --primary --output $left_monitor --left-of $right_monitor --rotate right
+{{- if (index . "second_monitor")}}
+{{- if eq .second_monitor_position "left"}}
+exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --left-of $main_monitor --rotate {{.second_monitor_rotation}}
+{{- else}}
+exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --right-of $main_monitor --rotate {{.second_monitor_rotation}}
+{{- end}}
+{{- else}}
+exec --no-startup-id xrandr --output $main_monitor --primary
+{{- end}}
 exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms standby 120 600 600
@@ -37,18 +47,30 @@ font pango:monospace 8
 # Use GTK theme.
 #exec --no-startup-id gnome-settings-daemon
 
+{{- if (index . "second_monitor")}}
+
 # Workspace and windows assignments
-workspace "1:mail" output $left_monitor
-workspace "2:misc" output $left_monitor
-workspace "3:web" output $right_monitor
-workspace "4:files" output $right_monitor
+workspace "1:" output $second_monitor
+workspace "2:misc" output $second_monitor
+workspace "3:" output $main_monitor
+workspace "4:files" output $main_monitor
 # Alternatively with icons from "Font Awesome 5".
-# workspace "1:" output $left_monitor
-# workspace "3:" output $right_monitor
-# workspace "4:" output $right_monitor
-# workspace "5:" output $right_monitor
+# workspace "4:" output $main_monitor
+# workspace "5:" output $main_monitor
 assign [instance="^Mail$"] "1:mail"
 assign [instance="^vlc$"] "2:misc"
+{{- else}}
+# Workspace and windows assignments
+workspace "1:mail" output $main_monitor
+workspace "2:misc" output $main_monitor
+workspace "3:web" output $main_monitor
+workspace "4:files" output $main_monitor
+# Alternatively with icons from "Font Awesome 5".
+# workspace "1:" output $main_monitor
+# workspace "3:" output $main_monitor
+# workspace "4:" output $main_monitor
+# workspace "5:" output $main_monitor
+{{- end}}
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
