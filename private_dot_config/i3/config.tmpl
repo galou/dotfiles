@@ -49,27 +49,29 @@ font pango:monospace 8
 
 {{- if (index . "second_monitor")}}
 
-# Workspace and windows assignments
-workspace "1:" output $second_monitor
+# Workspace and windows assignments.
+{{- if (and (index . "i3_use_fontawesome") .i3_use_fontawesome)}}
+# With icons from "Font Awesome 5".
+set $ws_mail "1:"
+set $ws_web "3:"
+set $ws_term "5:"
+{{- else}}
+set $ws_mail "1:mail"
+set $ws_web "3:web"
+set $ws_term "5:term"
+{{- end}}
+workspace $ws_mail output $second_monitor
 workspace "2:misc" output $second_monitor
-workspace "3:" output $main_monitor
+workspace $ws_web output $main_monitor
 workspace "4:files" output $main_monitor
-# Alternatively with icons from "Font Awesome 5".
-# workspace "4:" output $main_monitor
-# workspace "5:" output $main_monitor
-assign [instance="^Mail$"] "1:mail"
+# workspace $ws_term output $main_monitor
+assign [instance="^Mail$"] $ws_mail
 assign [instance="^vlc$"] "2:misc"
 {{- else}}
-# Workspace and windows assignments
-workspace "1:mail" output $main_monitor
-workspace "2:misc" output $main_monitor
-workspace "3:web" output $main_monitor
+workspace $ws_mail output $main_monitor
+workspace $ws_web output $main_monitor
 workspace "4:files" output $main_monitor
-# Alternatively with icons from "Font Awesome 5".
-# workspace "1:" output $main_monitor
-# workspace "3:" output $main_monitor
-# workspace "4:" output $main_monitor
-# workspace "5:" output $main_monitor
+workspace $ws_term output $main_monitor
 {{- end}}
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -203,7 +205,7 @@ mode "resize" {
 bindsym $mod+Shift+r mode "resize"
 
 # Interactively rename workspace
-bindsym $mod+r exec --no-startup-id i3-rename-workspace
+bindsym $mod+r exec --no-startup-id $HOME/.local/bin/i3-rename-workspace
 
 focus_follows_mouse yes
 

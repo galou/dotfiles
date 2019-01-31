@@ -2,15 +2,33 @@
 # interactively rename workspace with dmenu
 # Original version from https://github.com/tlegutko/dotfiles/blob/master/.config/scripts/rename-workspace.sh
 
+declare -A replacements=( \
+  ["mail"]="" \
+  ["web"]="" \
+  ["term"]="" \
+  )
+
+replace()
+{
+    for key in "${!replacements[@]}"; do
+        # TODO: match "term" and not "terminal" for example
+        if [[ "$1" =~ [0-9]?:?$key ]]; then
+	    echo ${1//$key/${replacements[$key]}}
+	    return
+	fi
+    done
+    echo $1
+}
+
 full_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
 name=$(echo $full_name | grep -Po '(?<=:).*(?=")')
 number=$(echo $full_name | grep -Po '(?<=^")[0-9]+')
 new_name=$(printf "\n${name}" | dmenu -b -p "rename-workspace-${number}")
 if [[ $new_name =~ [0-9].* ]]; then
-    new_workspace_name="${new_name}"
+    new_workspace_name=$(replace "${new_name}")
 elif [[ -n "${new_name}" ]]; then
-    new_workspace_name="${number}:${new_name}"
+    new_workspace_name=$(replace "${number}:${new_name}")
 else
-    new_workspace_name="${number}"
+    new_workspace_name=$(replace "${number}")
 fi
 i3-msg "rename workspace to \"${new_workspace_name}\""
