@@ -74,11 +74,12 @@ if command -v gr >/dev/null 2>&1; then
 fi
 
 {{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
-{{- if (index . "eth_device")}}
 
-get_ip_eth()
+get_ip_first_available()
 {
+	{{- if (index . "eth_device")}}
 	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	{{- end}}
 	{{- if (index . "wifi_device")}}
 	if [ -z "$ip" ]; then
 		ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
@@ -89,6 +90,19 @@ get_ip_eth()
 	fi
 	echo $ip
 }
+
+{{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+{{- if (index . "eth_device")}}
+
+get_ip_eth()
+{
+	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	if [ -z "$ip" ]; then
+		ip='xx.xx.xx.xx'
+	fi
+	echo $ip
+}
+
 {{- end}}
 
 {{- if (index . "wifi_device")}}
@@ -97,7 +111,7 @@ get_ip_wifi()
 {
     ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
     if [ -z "$ip" ]; then
-	ip='127.0.0.1'
+	ip='xx.xx.xx.xx'
     fi
     echo $ip
 }
