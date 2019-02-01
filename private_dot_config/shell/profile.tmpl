@@ -153,7 +153,7 @@ conda_activate()
 
 # MP3 manipulation
 mp3_list() {
-  find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
+    find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
 }
 
 # fcd file
@@ -173,6 +173,28 @@ mkcd()
 weather()
 {
     curl -Ss 'https://wttr.in?0'
+}
+
+psaux()
+{
+    if [[ -z "$1" ]]; then
+        ps aux
+    elif [[ "$1"  = grep ]]; then
+        ps aux | grep grep
+    else
+        ps aux | grep -v grep | grep "$1"
+    fi
+}
+
+psux()
+{
+    if [[ -z "$1" ]]; then
+        ps ux
+    elif [[ "$1" = grep ]]; then
+        ps ux | grep grep
+    else
+        ps ux | grep -v grep | grep "$1"
+    fi
 }
 
 {{- if eq .chezmoi.hostname "pcgael4"}}

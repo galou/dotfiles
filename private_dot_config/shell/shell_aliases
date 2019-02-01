@@ -18,17 +18,14 @@ alias l1='ls -a1lF'
 alias rm='/bin/rm -i'
 alias cp='/bin/cp -i'
 alias mv='/bin/mv -i'
-#alias vim='/usr/bin/gvim -v'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
 alias rubber-clean='/usr/bin/rubber --clean'
 alias o='xdg-open'
 # Alias for fasd
-alias v='f -e vim' # quick opening files with vim
-alias oo='a -e xdg-open' # quick opening files with xdg-open
-alias j='z'
+alias v='f -e vim' # quick opening files with vim. f='fasd -f'
+alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
 alias lama-status='gr @lama status'
-alias catkin_create_pkg_gael='catkin_create_pkg -l BSD -a "Gael Ecorchard" -m "Gael Ecorchard"'
 
 # Instead of git gui.
 alias gg='git grep'
