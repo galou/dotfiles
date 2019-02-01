@@ -1,3 +1,5 @@
 # zsh-specific aliases, completing ~/.config/shell/shell_aliases.
 
 alias -s pdf='xdg-open'
+
+alias apt='noglob apt'
