@@ -84,15 +84,39 @@ interval=30
 #label=
 #interval=10
 
+{{- if eq .chezmoi.hostname "pcgael4"}}
+
 # Network interface monitoring
 #
 # If the instance is not specified, use the interface used for default route.
 # The address can be forced to IPv4 or IPv6 with -4 or -6 switches.
-[iface]
-label=
-#instance=wlan0
+[iface-wifi]
+command=$HOME/.local/share/i3blocks/iface
+label=
+instance={{.wifi_device}}
 color=#00FF00
 interval=10
+separator=false
+
+[iface-eth]
+command=$HOME/.local/share/i3blocks/iface
+label=
+instance={{.eth_device}}
+color=#00FF00
+interval=10
+separator=false
+
+# OpenVPN support
+#
+# Support multiple VPN, with colors.
+[openvpn]
+interval=20
+
+[battery]
+command=$HOME/.local/share/i3blocks/battery
+interval=30
+
+{{- end}}
 
 # Volume indicator
 #
@@ -128,12 +152,6 @@ interval=5
 #instance=spotify
 #interval=5
 #signal=10
-
-# OpenVPN support
-#
-# Support multiple VPN, with colors.
-#[openvpn]
-#interval=20
 
 # Key indicators
 #
