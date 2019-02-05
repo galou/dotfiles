@@ -1,6 +1,9 @@
 #!/bin/bash
 # interactively rename workspace with dmenu
-# Original version from https://github.com/tlegutko/dotfiles/blob/master/.config/scripts/rename-workspace.sh
+# Original version at https://github.com/tlegutko/dotfiles/blob/master/.config/scripts/rename-workspace.sh
+# Dependencies:
+# - i3-msg
+# - jq (https://github.com/stedolan/jq)
 
 declare -A replacements=( \
   ["mail"]="" \

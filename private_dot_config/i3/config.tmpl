@@ -5,13 +5,17 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $main_monitor DVI-D-0
+set $main_monitor {{.main_monitor}}
 {{- if (index . "second_monitor")}}
 set $second_monitor DP-0
 {{- end}}
 
 # General configuration
 exec --no-startup-id setxkbmap gael
+{{- if eq .chezmoi.hostname "pcgael4"}}
+exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
+exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Middle Emulation Enabled' 1
+{{- end}}
 {{- if (index . "second_monitor")}}
 {{- if eq .second_monitor_position "left"}}
 exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --left-of $main_monitor --rotate {{.second_monitor_rotation}}
@@ -26,7 +30,8 @@ exec --no-startup-id numlockx on
 exec --no-startup-id xset dpms standby 120 600 600
 
 # Main key for interacting with i3.
-# Alt = Mod4.
+# Alt = Mod1.
+# Super = Mod4
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -47,10 +52,8 @@ font pango:monospace 8
 # Use GTK theme.
 #exec --no-startup-id gnome-settings-daemon
 
-{{- if (index . "second_monitor")}}
-
-# Workspace and windows assignments.
 {{- if (and (index . "i3_use_fontawesome") .i3_use_fontawesome)}}
+
 # With icons from "Font Awesome 5".
 set $ws_mail "1:"
 set $ws_web "3:"
@@ -60,19 +63,22 @@ set $ws_mail "1:mail"
 set $ws_web "3:web"
 set $ws_term "5:term"
 {{- end}}
+
+{{- if (index . "second_monitor")}}
+
+# Workspace and windows assignments.
 workspace $ws_mail output $second_monitor
 workspace "2:misc" output $second_monitor
 workspace $ws_web output $main_monitor
 workspace "4:files" output $main_monitor
 # workspace $ws_term output $main_monitor
-assign [instance="^Mail$"] $ws_mail
-assign [instance="^vlc$"] "2:misc"
 {{- else}}
 workspace $ws_mail output $main_monitor
 workspace $ws_web output $main_monitor
 workspace "4:files" output $main_monitor
 workspace $ws_term output $main_monitor
 {{- end}}
+assign [instance="^Mail$"] $ws_mail
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -171,6 +177,15 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
+bindsym $mod+Mod1+Up workspace next_on_output
+bindsym $mod+Mod1+Down workspace prev_on_output
+bindsym $mod+Mod1+Left workspace prev_on_output
+bindsym $mod+Mod1+Right workspace next_on_output
+bindsym $mod+Mod1+Control+Up workspace next
+bindsym $mod+Mod1+Control+Down workspace prev
+bindsym $mod+Mod1+Control+Left workspace prev
+bindsym $mod+Mod1+Control+Right workspace next
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -218,13 +233,20 @@ bar {
 
 # Multimedia shortcuts
 # Pulse Audio controls
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5%
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} toggle
+{{- if (index . "pulseaudio_source")}}
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} toggle
+{{- end}}
 # Signals for i3blocks (use signal=10 in the volume section).
 bindsym --release XF86AudioLowerVolume exec pkill -SIGRTMIN+10 i3blocks
 bindsym --release XF86AudioRaiseVolume exec pkill -SIGRTMIN+10 i3blocks
 bindsym --release XF86AudioMute exec pkill -SIGRTMIN+10 i3blocks
+
+# Brightness control
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 10%+
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 
 # Media player controls
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
