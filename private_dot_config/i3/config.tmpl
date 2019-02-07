@@ -256,20 +256,24 @@ bindsym Shift+XF86AudioLowerVolume exec --no-startup-id playerctl previous
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 
 # Shortcuts to start applications
+bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+w exec x-www-browser
 bindsym $mod+m exec vlc ~/Music/fip_mp3-128k.m3u
 bindsym $mod+y exec freecad-daily
-bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+n exec caja
+bindsym $mod+o exec gnome-terminal -- htop
 bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec caja
 bindsym XF86Calculator exec --no-startup-id "i3-launch-or-toggle mate-calculator calc mate-calc"
 bindsym Shift+XF86Calculator exec --no-startup-id "i3-launch-or-toggle qalculate qalc qalculate"
 bindsym XF86Launch5 exec gnome-terminal -- vim
-bindsym $mod+o exec gnome-terminal -- htop
 bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Mod1+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Shift+Print exec --no-startup-id "scrot -s $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
+{{- if eq .chezmoi.hostname "pcgael3"}}
+bindsym XF86Favorites exec i3lock
+bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
+{{- end}}
 
 # Autostart
 exec thunderbird
