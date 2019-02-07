@@ -74,6 +74,10 @@ workspace $ws_web output $main_monitor
 workspace $ws_term output $main_monitor
 {{- end}}
 assign [instance="^Mail$"] $ws_mail
+for_window [class="(?i)gsimplecal"] floating enable, move position mouse, move up 40 px 
+for_window [class="Nm-connection-editor"] floating enable
+for_window [class="Gnome-power-statistics"] floating enable, move position mouse, move up 40 px
+for_window [class="Pavucontrol"] floating enable, move position mouse, move up 40 px
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -276,5 +280,5 @@ exec owncloud
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
 {{- end}}
-workspace $ws_web; exec x-www-browser
-workspace $ws_term; exec i3-sensible-terminal
+exec i3-msg --no-startup-id workspace $ws_web; exec x-www-browser
+exec i3-msg --no-startup-id workspace $ws_term; exec i3-sensible-terminal
