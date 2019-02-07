@@ -2,3 +2,8 @@
 
 date '+%Y-%m-%d %H:%M'
 date '%H:%M'
+
+case $BLOCK_BUTTON in
+  1) gsimplecal & ;;
+  3) date '+%Y-%m-%d--%H-%M-%S' | xclip -quiet -selection clipboard ;;
+esac

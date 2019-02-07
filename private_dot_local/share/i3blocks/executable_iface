@@ -24,6 +24,11 @@ else
   IF=$(ip route | awk '/^default/ { print $5 ; exit }')
 fi
 
+case $BLOCK_BUTTON in
+  1) nm-connection-editor & ;;
+  3) echo -n "$IPADDR" | xclip -q -se c ;;
+esac
+
 #------------------------------------------------------------------------
 
 if [[ ! -d /sys/class/net/${IF} ]]; then
@@ -54,6 +59,8 @@ esac
 # if no interface is found, use the first device with a global scope
 IPADDR=$(ip addr show $IF | perl -n -e "/$AF ([^\/]+).* scope global/ && print \$1 and exit")
 
+AP=$(iwconfig $IF 2>/dev/null | head -n 1 | perl -n -e "/ESSID:\"([^\"]+)/ && print \$1 and exit")
+
 case $BLOCK_BUTTON in
   1) nm-connection-editor & ;;
   3) echo -n "$IPADDR" | xclip -q -se c ;;
@@ -61,5 +68,9 @@ esac
 
 #------------------------------------------------------------------------
 
-echo "$IPADDR" # full text
-echo "" # short text
+if [[ -z "$AP" ]]; then
+  echo "$IPADDR" # full text
+else
+  echo "$AP" # full text
+fi
+echo "up" # short text
