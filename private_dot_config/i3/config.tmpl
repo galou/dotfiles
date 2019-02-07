@@ -11,10 +11,12 @@ set $second_monitor DP-0
 {{- end}}
 
 # General configuration
+# The scaling is somehow managed by i3 by writing 'Xft.dpi: 180' in ~/.Xresources.
 exec --no-startup-id setxkbmap gael
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
 exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Middle Emulation Enabled' 1
+exec --no-startup-id ~/.local/bin/catch-orientation
 {{- end}}
 {{- if (index . "second_monitor")}}
 {{- if eq .second_monitor_position "left"}}
@@ -56,26 +58,19 @@ font pango:monospace 8
 
 # With icons from "Font Awesome 5".
 set $ws_mail "1:"
-set $ws_web "3:"
-set $ws_term "5:"
+set $ws_web "2:"
+set $ws_term "3:"
 {{- else}}
 set $ws_mail "1:mail"
-set $ws_web "3:web"
-set $ws_term "5:term"
+set $ws_web "2:web"
+set $ws_term "3:term"
 {{- end}}
 
 {{- if (index . "second_monitor")}}
 
 # Workspace and windows assignments.
 workspace $ws_mail output $second_monitor
-workspace "2:misc" output $second_monitor
 workspace $ws_web output $main_monitor
-workspace "4:files" output $main_monitor
-# workspace $ws_term output $main_monitor
-{{- else}}
-workspace $ws_mail output $main_monitor
-workspace $ws_web output $main_monitor
-workspace "4:files" output $main_monitor
 workspace $ws_term output $main_monitor
 {{- end}}
 assign [instance="^Mail$"] $ws_mail
@@ -278,3 +273,8 @@ bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
 # Autostart
 exec thunderbird
 exec owncloud
+{{- if eq .chezmoi.hostname "pcgael4"}}
+exec onboard
+{{- end}}
+workspace $ws_web; exec x-www-browser
+workspace $ws_term; exec i3-sensible-terminal
