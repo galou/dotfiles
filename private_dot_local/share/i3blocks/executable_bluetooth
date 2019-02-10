@@ -1,0 +1,11 @@
+#!/bin/bash
+
+bluetooth | grep on >/dev/null
+
+if [[ $? = 0 ]]; then
+	echo 
+	echo 
+else
+	echo
+	echo
+fi
