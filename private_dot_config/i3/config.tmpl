@@ -263,8 +263,8 @@ bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
 bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec caja
-bindsym XF86Calculator exec --no-startup-id "i3-launch-or-toggle mate-calculator calc mate-calc"
-bindsym Shift+XF86Calculator exec --no-startup-id "i3-launch-or-toggle qalculate qalc qalculate"
+bindsym XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle mate-calculator calc mate-calc"
+bindsym Shift+XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle qalculate qalc qalculate"
 bindsym XF86Launch5 exec gnome-terminal -- vim
 bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Mod1+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
@@ -280,5 +280,3 @@ exec owncloud
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
 {{- end}}
-exec i3-msg --no-startup-id workspace $ws_web; exec x-www-browser
-exec i3-msg --no-startup-id workspace $ws_term; exec i3-sensible-terminal
