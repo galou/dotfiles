@@ -1,5 +1,5 @@
-rofi.modi: window,drun,run,ssh,combi,calc,recent:~/.local/share/rofi/recently-used,locate:~/.local/share/rofi/rofi-locate.sh,fb:~/.local/share/rofi/rofi-file-browser.sh
-rofi.combi-modi: window,drun,run
+rofi.modi: combi,fb:~/.local/share/rofi/rofi-file-browser.sh,locate:~/.local/share/rofi/rofi-locate.sh,calc,recent:~/.local/share/rofi/recently-used,window,drun,run,ssh
+rofi.combi-modi: drun,recent
 rofi.show-icons: true
 
 configuration {

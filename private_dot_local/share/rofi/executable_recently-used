@@ -39,5 +39,4 @@ if __name__ == '__main__':
 
     from subprocess import Popen, PIPE
     Popen(['xdg-open', sys.argv[1]], stdout=PIPE, stderr=PIPE)
-    # Popen(['gio', 'open', sys.argv[1]], stdout=PIPE, stderr=PIPE)
     sys.exit(0)
