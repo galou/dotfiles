@@ -29,7 +29,7 @@ exec --no-startup-id xrandr --output $main_monitor --primary
 {{- end}}
 exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
-exec --no-startup-id xset dpms standby 120 600 600
+exec --no-startup-id xset dpms 120 600 600
 
 # Main key for interacting with i3.
 # Alt = Mod1.
@@ -59,21 +59,31 @@ font pango:monospace 8
 # With icons from "Font Awesome 5".
 set $ws_mail "1:"
 set $ws_web "2:"
-set $ws_term "3:"
 {{- else}}
 set $ws_mail "1:mail"
 set $ws_web "2:web"
-set $ws_term "3:term"
 {{- end}}
 
 {{- if (index . "second_monitor")}}
+{{- /* Double monitor setup */}}
 
 # Workspace and windows assignments.
-workspace $ws_mail output $second_monitor
-workspace $ws_web output $main_monitor
-workspace $ws_term output $main_monitor
+workspace 1 output $second_monitor
+workspace 2 output $main_monitor
+
+exec --no-startup-id i3-msg workspace 1
+exec --no-startup-id i3-msg append_layout ~/.config/i3/mail_layout.json
+exec --no-startup-id i3-msg workspace $ws_mail
+exec --no-startup-id i3-msg workspace 2
+exec --no-startup-id i3-msg append_layout ~/.config/i3/web_term_layout.json
+exec --no-startup-id i3-msg workspace $ws_web
+{{- else}}
+{{- /* Single monitor setup */}}
+
+exec --no-startup-id i3-msg rename workspace to $ws_mail
+exec --no-startup-id i3-msg append_layout ~/.config/i3/web_term_layout.json
 {{- end}}
-assign [instance="^Mail$"] $ws_mail
+
 for_window [class="(?i)gsimplecal"] floating enable, move position mouse, move up 40 px 
 for_window [class="Nm-connection-editor"] floating enable
 for_window [class="Gnome-power-statistics"] floating enable, move position mouse, move up 40 px
@@ -232,8 +242,8 @@ bar {
 
 # Multimedia shortcuts
 # Pulse Audio controls
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} toggle
 {{- if (index . "pulseaudio_source")}}
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} toggle
@@ -276,6 +286,8 @@ bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
 
 # Autostart
 exec thunderbird
+exec firefox
+exec i3-sensible-terminal
 exec owncloud
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard

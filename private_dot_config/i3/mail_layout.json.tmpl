@@ -1,0 +1,29 @@
+{
+    // workspace with Thunderbird
+    "border": "normal",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": 0.25,
+    "type": "workspace",
+{{- if (and (index . "i3_use_fontawesome") .i3_use_fontawesome)}}
+    "name": "1:",
+{{- else}}
+    "name": "1:mail",
+{{- end}}
+    "nodes": [
+        {
+            "border": "normal",
+            "current_border_width": 5,
+            "floating": "auto_off",
+            "name": "Mozilla Thunderbird",
+            "percent": 1,
+            "swallows": [
+               {
+                   "instance": "^Mail$"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
