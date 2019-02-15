@@ -69,8 +69,15 @@ esac
 #------------------------------------------------------------------------
 
 if [[ -z "$AP" ]]; then
-  echo "$IPADDR" # full text
+  if [[ -z "$IPADDR" ]]; then
+    echo down
+    echo down
+    echo \#FF0000 # color
+  else
+    echo "$IPADDR" # full text
+    echo up
+  fi
 else
   echo "$AP" # full text
+  echo "up" # short text
 fi
-echo "up" # short text
