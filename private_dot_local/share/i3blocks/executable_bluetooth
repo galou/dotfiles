@@ -5,6 +5,7 @@ bluetooth | grep on >/dev/null
 if [[ $? = 0 ]]; then
 	echo 
 	echo 
+	echo \#0000FF
 else
 	echo
 	echo
