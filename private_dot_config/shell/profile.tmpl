@@ -203,7 +203,17 @@ psux()
 # Uses https://github.com/dlenski/ttblue.
 tomtom-updategps()
 {
-  ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
+    TURN_OFF = 1
+    bluetooth | grep on >/dev/null
+    if [[ $? != 0 ]]; then
+        TURN_OFF = 0
+	bluetooth on >/dev/null
+	sleep 1
+    fi
+    ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
+    if [[ TURN_OFF ]]; then
+	bluetooth off >/dev/null
+    fi
 }
 {{end}}
 
