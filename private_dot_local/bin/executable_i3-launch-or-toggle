@@ -110,9 +110,10 @@ exec_and_mark()
 	executable_name="$1"
 	mark_name="$2"
 	win_class="$3"
+	shift 3
 
 	win_ids_before=$(window_ids "$win_class")	
-	$executable_name &
+	$executable_name $@ &
 	win_id=$(wait_new_window "$win_class" "$win_ids_before")
 	if [ -z $win_id ]; then
 		return
@@ -128,14 +129,20 @@ i3_launch_or_toggle()
 	executable_name="$1"
 	mark_name="$2"
 	win_class="$3"
+	shift 3
 
 	if ! has_mark "$mark_name"; then
-		exec_and_mark "$executable_name" "$mark_name" "$win_class"
+		exec_and_mark "$executable_name" "$mark_name" "$win_class" $@
 	else
 		# Toggle visibility.
 		i3-msg "[con_mark=$mark_name] scratchpad show"
 	fi
 }
+
+if [[ $# < 4 ]]; then
+	echo Usage: $0 executable_name mark_name win_class \[extra_arg_1, extra_arg_2, ...\] 1>&2
+	exit 1
+fi
 
 i3_launch_or_toggle $@
 
