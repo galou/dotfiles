@@ -242,8 +242,8 @@ bar {
 
 # Multimedia shortcuts
 # Pulse Audio controls
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} toggle
 {{- if (index . "pulseaudio_source")}}
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} toggle
