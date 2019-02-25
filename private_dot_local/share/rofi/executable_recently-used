@@ -18,7 +18,7 @@ def parse_recently_used():
     recently_used = []
     for child in root:
         if child.tag == 'bookmark':
-            recently_used.append(child.attrib['href'].replace('file://', ''))
+            recently_used.append(child.attrib['href'])
     return recently_used[::-1]
 
 
