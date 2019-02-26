@@ -1,0 +1,37 @@
+#!/bin/bash
+
+NOTIFY_TIMEOUT_MS=2000
+
+if [[ -z $1 ]]; then
+    SINK=0
+else
+    SINK=$1
+fi
+
+python3 << EOF
+import pulsectl
+
+with pulsectl.Pulse('notify-mic-status') as pulse:
+    if pulse.source_info($SINK).mute:
+        exit(1)
+    else:
+        exit(0)
+EOF
+
+if [[ $? = 1 ]]; then
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/microphone-sensitivity-muted-symbolic.svg \
+        --app-name=notify-mic-status \
+        --urgency=low \
+        --category=device \
+        "Microphone muted"
+else
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/microphone-sensitivity-medium-symbolic.svg \
+        --app-name=notify-mic-status \
+        --urgency=low \
+        --category=device \
+        "Microphone unmuted"
+fi
