@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/zsh
+# Unicode support only in zsh.
 # Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
 # Copyright (C) 2014 Alexander Keller <github@nycroth.com>
 
@@ -59,7 +60,8 @@ esac
 # if no interface is found, use the first device with a global scope
 IPADDR=$(ip addr show $IF | perl -n -e "/$AF ([^\/]+).* scope global/ && print \$1 and exit")
 
-AP=$(iwconfig $IF 2>/dev/null | head -n 1 | perl -n -e "/ESSID:\"([^\"]+)/ && print \$1 and exit")
+# Use echo to support unicode characters.
+AP=$(echo $(iwconfig $IF 2>/dev/null | head -n 1 | perl -n -e "/ESSID:\"([^\"]+)/ && print \$1 and exit"))
 
 case $BLOCK_BUTTON in
   1) nm-connection-editor & ;;
