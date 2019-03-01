@@ -1,3 +1,4 @@
+#!/bin/zsh
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/dot_zshrc.tmpl.
 
 # If not running interactively, don't do anything
@@ -114,6 +115,9 @@ zstyle ':completion:newest-files:*' matcher-list 'b:=*' # important
 
 # 'ctrl-x *' will expand the current word.
 bindkey '^X*' expand-word
+
+# toggle autosuggestion because it doesn't work well with non 256-color terminals.
+bindkey '^ ' autosuggest-toggle
 
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
