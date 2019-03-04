@@ -290,6 +290,10 @@ bindsym Shift+Print exec --no-startup-id "scrot -s $HOME/Pictures/%Y-%m-%d--%H-%
 bindsym XF86Favorites exec i3lock
 bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
 {{- end}}
+{{- if eq .chezmoi.hostname "pcgael4"}}
+bindsym XF86TouchpadOn exec --no-startup-id notify-send --icon=$HOME/.local/share/icons/input-touchpad-symbolic.svg --urgency=low --category=device --expire-time 2000 --app-name i3 "Touchpad enabled"
+bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/share/icons/touchpad-disabled-symbolic.svg --urgency=low --category=device --expire-time 2000 --app-name i3 "Touchpad disabled"
+{{- end}}
 
 # Autostart
 exec thunderbird

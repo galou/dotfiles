@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg7384"
+   width="40"
+   height="40"
+   version="1.1"
+   sodipodi:docname="touchpad-disabled-symbolic.svg"
+   inkscape:version="0.92.4 (33fec40, 2019-01-16)">
+  <defs
+     id="defs37" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1270"
+     inkscape:window-height="2082"
+     id="namedview35"
+     showgrid="false"
+     inkscape:zoom="8.96875"
+     inkscape:cx="21.427451"
+     inkscape:cy="9.2039395"
+     inkscape:window-x="1280"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg7384" />
+  <metadata
+     id="metadata90">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Gnome Symbolic Icon Theme</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <title
+     id="title9167">Gnome Symbolic Icon Theme</title>
+  <g
+     id="layer9"
+     transform="matrix(2.5,0,0,2.5,-302.4985,-792.49987)">
+    <path
+       id="rect5837-1"
+       d="m 124.03,317 c -1.6692,0 -3.0312,1.3621 -3.0312,3.0312 v 7.9375 c 0,1.6692 1.3621,3.0312 3.0312,3.0312 h 6.9688 v -2 h -2 v -2 h 7 v -6.9688 c 0,-1.6692 -1.3621,-3.0312 -3.0312,-3.0312 z m 0,2 h 8.9375 c 0.59578,0 1.0312,0.43547 1.0312,1.0312 V 326 h -11 v -5.9688 c 0,-0.59578 0.43547,-1.0312 1.0312,-1.0312 z m -1.0312,8 h 5 v 2 H 124.03 c -0.59578,0 -1.0312,-0.43547 -1.0312,-1.0312 z"
+       style="color:#bebebe;text-indent:0;text-transform:none;opacity:0.5;fill:#bebebe"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path3761-2-3-5-4-8-9-8-0-9-3"
+       d="m 132,328 h 1.375 L 134.5,329.0938 135.5938,328 H 137 v 1.4688 l -1.0938,1.0625 1.0938,1.0625 V 333 h -1.4375 L 134.5,331.9375 133.4375,333 H 132 v -1.4062 l 1.0625,-1.0625 L 132,329.4688 Z"
+       style="color:#bebebe;fill:#bebebe"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
