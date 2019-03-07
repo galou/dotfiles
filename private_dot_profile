@@ -1,0 +1,5 @@
+# This file is used by sh but not zsh nor bash.
+# This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_profile.
+
+ENV=$HOME/.config/sh/shrc
+export ENV

@@ -1,0 +1,219 @@
+# This file is used by sh and zsh emulating zsh because the variable ENV is set to it in ~/.profile.
+# This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/sh/shrc.tmpl
+
+# set PATH so it includes user's private bin if it exists and is not already in $PATH.
+if [ -d "$HOME/.local/bin" ] ; then
+    echo "$PATH" | grep "$HOME/.local/bin" > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+fi
+
+# set PATH so it includes npm bin if it exists and is not already in $PATH.
+if [ -d "$HOME/.cache/npm-global/bin" ] ; then
+    echo "$PATH" | grep "$HOME/.cache/npm-global/bin" > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="$HOME/.cache/npm-global/bin:$PATH"
+    fi
+fi
+
+# Prefix /usr/lib/ccache to use ccache by default
+if [ -d /usr/lib/ccache ] ; then
+    echo "$PATH" | grep /usr/lib/ccache > /dev/null
+    if [ $? = 1 ]; then
+        export PATH="/usr/lib/ccache:$PATH"
+    fi
+fi
+
+# Deactive ctrl-s sending xoff
+# so that it can be used for something else
+stty ixany
+stty ixoff
+stty -ixon
+# Deactive showing ^C when ctrl-c
+stty -echoctl
+
+# 256-color terminal
+if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
+	export TERM=xterm-256color
+fi
+
+#function jvim
+#{
+#       	file="$(AUTOJUMP_DATA_DIR=~/.autojump.vim/global autojump $@)"
+#	if [ -n "$file" ]; then 
+#		vim "$file";
+#       	fi
+#}
+
+export EDITOR=vim
+
+# Eclipse home, for Eclipse to see eclipse.ini
+export ECLIPSE_HOME=$HOME/.config/eclipse
+
+# Since IPython 2.0, the config directory is ~/.ipython, override this
+export IPYTHONDIR=$HOME/.config/ipython
+export JUPYTER_CONFIG_DIR=$HOME/.config/jupyter
+
+# Matplotlib configuration (instead of ~/.matploblib).
+export MPLCONFIGDIR=$HOME/.config/matplotlib
+
+# Personal cheatsheets for cheat.
+# mkcd $HOME/.local/share/cheat && gcl https://github.com/cheat/cheat.git cheat-src
+export CHEAT_USER_DIR=$HOME/.local/share/cheat/cheat-src/cheat/cheatsheets
+
+# ROS configuration
+export ROS_LANG_DISABLE=genlisp
+
+{{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+
+get_ip_first_available()
+{
+	{{- if (index . "eth_device")}}
+	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	{{- end}}
+	{{- if (index . "wifi_device")}}
+	if [ -z "$ip" ]; then
+		ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	fi
+	{{- end}}
+	if [ -z "$ip" ]; then
+		ip='127.0.0.1'
+	fi
+	echo $ip
+}
+
+{{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+{{- if (index . "eth_device")}}
+
+get_ip_eth()
+{
+	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	if [ -z "$ip" ]; then
+		ip='xx.xx.xx.xx'
+	fi
+	echo $ip
+}
+
+{{- end}}
+
+{{- if (index . "wifi_device")}}
+
+get_ip_wifi()
+{
+    ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+    if [ -z "$ip" ]; then
+	ip='xx.xx.xx.xx'
+    fi
+    echo $ip
+}
+{{- end }}
+
+ros_master_local()
+{
+    export ROS_MASTER_URI="http://localhost:11311"
+    export ROS_IP=$(get_ip_eth)
+}
+
+ros_master_host_wifi()
+{
+    export ROS_MASTER_URI="http://$1:11311"
+    export ROS_IP=$(get_ip_wifi)
+}
+
+# cf. http://wiki.ros.org/rosconsole
+ros_rosconsole_format_default()
+{
+    export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}'
+}
+
+ros_rosconsole_format_node_message()
+{
+    export ROSCONSOLE_FORMAT='[${severity}] [${node}]: ${message}'
+}
+
+conda_activate()
+{
+    # set PATH so it includes npm bin if it exists and is not already in $PATH.
+    if [ -d "$HOME/.local/lib/conda/bin" ] ; then
+	echo "$PATH" | grep "$HOME/.local/lib/conda/bin" > /dev/null
+	if [ $? = 1 ]; then
+	    export PATH="$HOME/.local/lib/conda/bin:$PATH"
+	fi
+    fi
+}
+
+# MP3 manipulation
+mp3_list() {
+    find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
+}
+
+# fcd file
+# cd to the directory containing file.
+fcd()
+{
+    cd "$(dirname "$1")"
+}
+
+# mkcd directory
+# mkdir directory && cd directory
+mkcd()
+{
+    mkdir -p "$1" && cd "$1"
+}
+
+weather()
+{
+    curl -Ss 'https://wttr.in?0'
+}
+
+psaux()
+{
+    if [[ -z "$1" ]]; then
+        ps aux
+    elif [[ "$1"  = grep ]]; then
+        ps aux | grep grep
+    else
+        ps aux | grep -v grep | grep "$1"
+    fi
+}
+
+psux()
+{
+    if [[ -z "$1" ]]; then
+        ps ux
+    elif [[ "$1" = grep ]]; then
+        ps ux | grep grep
+    else
+        ps ux | grep -v grep | grep "$1"
+    fi
+}
+
+{{- if eq .chezmoi.hostname "pcgael4"}}
+
+# Update the QuickFix data for my tomtom watch
+# Uses https://github.com/dlenski/ttblue.
+tomtom-updategps()
+{
+    TURN_OFF = 1
+    bluetooth | grep on >/dev/null
+    if [[ $? != 0 ]]; then
+        TURN_OFF = 0
+	bluetooth on >/dev/null
+	sleep 1
+    fi
+    ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
+    if [[ TURN_OFF ]]; then
+	bluetooth off >/dev/null
+    fi
+}
+{{end}}
+
+# connected_displays
+# Return a space separated list of connected displays
+connected_displays()
+{
+    xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
+}
+
+export HOST
