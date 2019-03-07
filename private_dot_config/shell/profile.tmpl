@@ -21,7 +21,7 @@ fi
 local_bin_path=$HOME/.local/bin
 if [ -n "${PATH##*${local_bin_path}}" -a -n "${PATH##*${local_bin_path}:*}" ]; then
     if [ -d $local_bin_path ] ; then
-        export PATH=$local_bin:$PATH
+        export PATH=$local_bin_path:$PATH
     fi
 fi
 
