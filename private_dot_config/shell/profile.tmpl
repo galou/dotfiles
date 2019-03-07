@@ -1,27 +1,27 @@
 # This file is sourced by ~/.zshrc and ~/.bashrc.
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/shell/profile.tmpl.
 
-# set PATH so it includes user's private bin if it exists and is not already in $PATH.
-if [ -d "$HOME/.local/bin" ] ; then
-    echo "$PATH" | grep "$HOME/.local/bin" > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-fi
-
 # set PATH so it includes npm bin if it exists and is not already in $PATH.
-if [ -d "$HOME/.cache/npm-global/bin" ] ; then
-    echo "$PATH" | grep "$HOME/.cache/npm-global/bin" > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="$HOME/.cache/npm-global/bin:$PATH"
+npm_global_path=$HOME/.cache/npm-global/bin
+if [ -n "${PATH##*${npm_global_path}}" -a -n "${PATH##*${npm_global_path}:*}" ]; then
+    if [ -d $npm_global_path ] ; then
+        export PATH=$npm_global_path:$PATH
     fi
 fi
 
 # Prefix /usr/lib/ccache to use ccache by default
-if [ -d /usr/lib/ccache ] ; then
-    echo "$PATH" | grep /usr/lib/ccache > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="/usr/lib/ccache:$PATH"
+ccache_path=/usr/lib/ccache
+if [ -n "${PATH##*${ccache_path}}" -a -n "${PATH##*${ccache_path}:*}" ]; then
+    if [ -d $ccache_path ] ; then
+        export PATH=$ccache_path:$PATH
+    fi
+fi
+
+# set PATH so it includes user's private bin if it exists and is not already in $PATH.
+local_bin_path=$HOME/.local/bin
+if [ -n "${PATH##*${local_bin_path}}" -a -n "${PATH##*${local_bin_path}:*}" ]; then
+    if [ -d $local_bin_path ] ; then
+        export PATH=$local_bin:$PATH
     fi
 fi
 
@@ -47,13 +47,6 @@ fi
 #}
 
 export EDITOR=vim
-
-{{- if eq .chezmoi.hostname "pcgael" }}
-# The ${VAR+foo} construct expands to the empty string if VAR is unset or to
-# foo if VAR is set to anything (including the empty string).
-export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH+:}/usr/local/lib64/pkgconfig
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH+:}/usr/local/lib64
-{{- end}}
 
 # Eclipse home, for Eclipse to see eclipse.ini
 export ECLIPSE_HOME=$HOME/.config/eclipse
@@ -229,6 +222,3 @@ connected_displays()
 }
 
 export HOST
-
-# Delete shortcut created by Office Setup.
-#rm -f "/home/gael/.local/share/applications/wine/Programs/Microsoft Office/Microsoft Office 2010 Tools/Digital Certificate for VBA Projects.desktop"
