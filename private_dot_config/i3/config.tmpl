@@ -7,7 +7,7 @@
 
 set $main_monitor {{.main_monitor}}
 {{- if (index . "second_monitor")}}
-set $second_monitor DP-0
+set $second_monitor {{.second_monitor}}
 {{- end}}
 
 # General configuration
@@ -19,11 +19,11 @@ exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput 
 exec --no-startup-id ~/.local/bin/catch-orientation
 {{- end}}
 {{- if (index . "second_monitor")}}
-{{- if eq .second_monitor_position "left"}}
+    {{- if eq .second_monitor_position "left"}}
 exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --left-of $main_monitor --rotate {{.second_monitor_rotation}}
-{{- else}}
+    {{- else}}
 exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --right-of $main_monitor --rotate {{.second_monitor_rotation}}
-{{- end}}
+    {{- end}}
 {{- else}}
 exec --no-startup-id xrandr --output $main_monitor --primary
 {{- end}}
@@ -72,11 +72,10 @@ workspace 1 output $second_monitor
 workspace 2 output $main_monitor
 
 exec --no-startup-id i3-msg workspace 1
-exec --no-startup-id i3-msg append_layout ~/.config/i3/mail_layout.json
-exec --no-startup-id i3-msg workspace $ws_mail
+exec --no-startup-id i3-msg rename workspace to $ws_mail
 exec --no-startup-id i3-msg workspace 2
-exec --no-startup-id i3-msg append_layout ~/.config/i3/web_term_layout.json
-exec --no-startup-id i3-msg workspace $ws_web
+exec --no-startup-id i3-msg rename workspace to $ws_web
+exec --no-startup-id i3-msg append_layout ~/.config/i3/term_layout.json
 {{- else}}
 {{- /* Single monitor setup */}}
 
@@ -282,7 +281,9 @@ bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec caja
 bindsym XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle mate-calculator calc mate-calc"
 bindsym Shift+XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle qalculate qalc qalculate"
-bindsym XF86Launch5 exec gnome-terminal -- vim
+bindsym XF86Launch5 exec gnome-terminal -- $HOME/.local/bin/ranger
+bindsym XF86Launch6 exec caja
+bindsym XF86Launch7 exec gnome-terminal -- vim
 bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Mod1+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Shift+Print exec --no-startup-id "scrot -s $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
