@@ -1,30 +1,6 @@
 # This file is used by sh and zsh emulating zsh because the variable ENV is set to it in ~/.profile.
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/sh/shrc.tmpl
 
-# set PATH so it includes user's private bin if it exists and is not already in $PATH.
-if [ -d "$HOME/.local/bin" ] ; then
-    echo "$PATH" | grep "$HOME/.local/bin" > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-fi
-
-# set PATH so it includes npm bin if it exists and is not already in $PATH.
-if [ -d "$HOME/.cache/npm-global/bin" ] ; then
-    echo "$PATH" | grep "$HOME/.cache/npm-global/bin" > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="$HOME/.cache/npm-global/bin:$PATH"
-    fi
-fi
-
-# Prefix /usr/lib/ccache to use ccache by default
-if [ -d /usr/lib/ccache ] ; then
-    echo "$PATH" | grep /usr/lib/ccache > /dev/null
-    if [ $? = 1 ]; then
-        export PATH="/usr/lib/ccache:$PATH"
-    fi
-fi
-
 # Deactive ctrl-s sending xoff
 # so that it can be used for something else
 stty ixany
