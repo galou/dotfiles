@@ -121,6 +121,17 @@ command=$HOME/.local/share/i3blocks/bluetooth
 interval=10
 {{- end}}
 
+{{- if eq .chezmoi.hostname "pcgael3"}}
+
+[iface-eth]
+command=$HOME/.local/share/i3blocks/iface-only-down
+label=
+instance={{.eth_device}}
+color=#00FF00
+interval=10
+
+{{- end}}
+
 # Volume indicator
 #
 # The first parameter sets the step (and units to display)
