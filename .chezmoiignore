@@ -7,4 +7,5 @@ README.rst
 
 {{- if ne .chezmoi.hostname "pcgael4"}}
 .Xresources
+.config/dunst
 {{- end}}
