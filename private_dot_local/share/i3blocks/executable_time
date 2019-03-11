@@ -1,6 +1,6 @@
 #!/bin/sh
 
-date '+%Y-%m-%d %H:%M'
+date '+%m-%d %H:%M'
 date '+%H:%M'
 
 case $BLOCK_BUTTON in
