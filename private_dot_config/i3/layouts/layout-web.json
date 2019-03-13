@@ -1,0 +1,16 @@
+[
+	{
+		"name": "2:web",
+		"nodes": [
+			{
+				"name": "Web browser",
+				"swallows": [
+					{
+						"instance": "^Navigator$"
+					}
+				],
+				"type": "con"
+			}
+		]
+	}
+]
