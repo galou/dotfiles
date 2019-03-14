@@ -139,7 +139,7 @@ i3_launch_or_toggle()
 	fi
 }
 
-if [[ $# < 4 ]]; then
+if [[ $# < 3 ]]; then
 	echo Usage: $0 executable_name mark_name win_class \[extra_arg_1, extra_arg_2, ...\] 1>&2
 	exit 1
 fi
