@@ -274,12 +274,13 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 
 # Shortcuts to start applications
 bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+w exec x-www-browser
 bindsym $mod+c exec $HOME/.local/share/rofi/rofi-commands
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
-bindsym $mod+y exec freecad-daily
 bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
+bindsym $mod+w exec x-www-browser
+bindsym $mod+y exec freecad-daily
+bindsym $mod+v exec vim
 bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec caja
 bindsym XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle mate-calculator calc mate-calc"
