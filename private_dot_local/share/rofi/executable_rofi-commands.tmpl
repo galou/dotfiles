@@ -1,0 +1,40 @@
+#!//bin/sh
+
+options=" lock
+ logout
+  sleep
+  hibernate
+ reboot
+ shutdown
+{{- if eq .chezmoi.hostname "pcgael4"}}
+ bluetooth on
+ bluetooth off
+ connect to headphones
+ Update QuickFix on TomTom Watch{{- end}}"
+
+selection=$(echo "${options}" | rofi -dmenu -p action)
+
+case "${selection}" in
+    " lock")
+        i3lock;;
+    " logout")
+        i3-msg exit;;
+    "  sleep")
+        lock && systemctl suspend;;
+    "  hibernate")
+        i3lock && systemctl hibernate;;
+    " reboot")
+        systemctl reboot;;
+    " shutdown")
+        systemctl poweroff;;
+{{- if eq .chezmoi.hostname "pcgael4"}}
+    " bluetooth on")
+        bluetooth on 1>/dev/null;;
+    " bluetooth off")
+        bluetooth off 1>/dev/null;;
+    " connect to headphones")
+        bluetooth-connect 05:15:17:14:3C:92;;
+    " Update QuickFix on TomTom Watch")
+        tomtom-updategps;;
+{{- end}}
+esac
