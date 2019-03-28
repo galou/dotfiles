@@ -1,0 +1,24 @@
+#!/bin/sh
+# Startup workspace configuration for dual monitor setup.
+
+{{- if (and (index . "i3_use_fontawesome") .i3_use_fontawesome)}}
+
+# With icons from "Font Awesome 5".
+ws_mail="1:"
+ws_web="2:"
+ws_term="3:"
+{{- else}}
+
+ws_mail="1:mail"
+ws_web="2:web"
+ws_term="3:term"
+{{- end}}
+
+i3-msg "workspace number 1; rename workspace to $ws_mail; exec --no-startup-id i3-layout-manager mail; \
+        workspace number 2; rename workspace to $ws_web; exec --no-startup-id i3-layout-manager web; \
+        workspace number 3; rename workspace to $ws_term; exec --no-startup-id i3-layout-manager term"
+
+sleep 1
+thunderbird &
+firefox &
+gnome-terminal &
