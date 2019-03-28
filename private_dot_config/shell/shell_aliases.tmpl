@@ -2,40 +2,37 @@
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias l1='ls -a1lF'
-alias rm='/bin/rm -i'
+
 alias cp='/bin/cp -i'
+# Instead of git gui.
+alias gg='git grep'
+alias i='ipython3'
+alias j='jupyter console'
+# some more ls aliases
+alias l1='ls -a1lF'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
 alias mv='/bin/mv -i'
+alias o='gio open'
+alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
+alias r='ranger'
+alias rm='/bin/rm -i'
+alias v='f -e vim' # quick opening files with vim. f='fasd -f'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
 alias rubber-clean='/usr/bin/rubber --clean'
-alias o='gio open'
-# Alias for fasd
-alias v='f -e vim' # quick opening files with vim. f='fasd -f'
-alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
-alias lama-status='gr @lama status'
-alias i='ipython3'
-alias j='jupyter console'
 {{- if eq .chezmoi.hostname "pcgael4"}}
 alias bon='bluetooth on'
 alias boff='bluetooth off'
 alias bctl='bluetooth ctl'
 {{- end}}
-
-# Instead of git gui.
-alias gg='git grep'
 
 # Strip color codes from STDIN to save into a file
 # Ex: command_with_color | stripcolor > file.txt
