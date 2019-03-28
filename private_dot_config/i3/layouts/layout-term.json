@@ -1,16 +1,14 @@
-[
-	{
-		"name": "3:term",
-		"nodes": [
-			{
-				"name": "Terminal",
-				"swallows": [
-					{
-						"instance": "^gnome-terminal-server$"
-					}
-				],
-				"type": "con"
-			}
-		]
-	}
-]
+{
+	"name": "3:term",
+	"nodes": [
+		{
+			"name": "Terminal",
+			"swallows": [
+				{
+					"instance": "^gnome-terminal-server$"
+				}
+			],
+			"type": "con"
+		}
+	]
+}

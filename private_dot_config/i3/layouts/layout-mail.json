@@ -1,15 +1,13 @@
-[
-	{
-		"nodes": [
-			{
-				"name": "Email client",
-				"layout": "splitv",
-				"swallows": [
-					{
-						"instance": "^Mail$"
-					}
-				]
-			}
-		]
-	}
-]
+{
+	"nodes": [
+		{
+			"name": "Email client",
+			"layout": "splitv",
+			"swallows": [
+				{
+					"instance": "^Mail$"
+				}
+			]
+		}
+	]
+}
