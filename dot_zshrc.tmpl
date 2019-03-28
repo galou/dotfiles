@@ -29,6 +29,9 @@ antigen bundle zsh-users/zsh-autosuggestions
 # support approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in
 # http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/
 antigen bundle zsh-navigation-tools
+# Treat new lines from paste differently than typed ones.
+# Cf. https://cirw.in/blog/bracketed-paste.
+antigen bundle safe-paste
 antigen theme agnoster
 antigen apply
 # tweak to agnoster theme
