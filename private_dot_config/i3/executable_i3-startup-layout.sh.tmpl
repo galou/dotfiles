@@ -14,11 +14,21 @@ ws_web="2:web"
 ws_term="3:term"
 {{- end}}
 
+{{- if (index . "second_monitor")}}
+{{- /* Double monitor setup */}}
+
 i3-msg "workspace number 1; rename workspace to $ws_mail; exec --no-startup-id i3-layout-manager mail; \
         workspace number 2; rename workspace to $ws_web; exec --no-startup-id i3-layout-manager web; \
         workspace number 3; rename workspace to $ws_term; exec --no-startup-id i3-layout-manager term"
 
 sleep 1
+{{- else}}
+{{- /* Single monitor setup */}}
+
+i3-msg rename workspace to $ws_mail
+i3-msg append_layout ~/.config/i3/web_term_layout.json
+{{- end}}
+
 thunderbird &
 firefox &
 gnome-terminal &
