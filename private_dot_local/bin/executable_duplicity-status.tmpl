@@ -1,0 +1,39 @@
+#!/bin/zsh
+
+{{- if eq .chezmoi.hostname "pcgael3"}}
+
+MOUNT_POINT="/storage/cesnet-du4-storage"
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael3"
+PASSPHRASE_FILE="$HOME/.config/duplicity/passphrase.sh"
+{{- else if eq .chezmoi.hostname "pcgael4"}}
+
+MOUNT_POINT="/storage/cesnet-du4-storage"
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael4"
+PASSPHRASE_FILE="$HOME/.config/duplicity/passphrase.sh"
+{{- else}}
+
+echo "Unsupported host" >&2
+exit 1
+{{- end}}
+
+
+# Source the shell script defining PASSPHRASE
+if [ -e "$PASSPHRASE_FILE" ]; then
+	source "$PASSPHRASE_FILE"
+fi
+
+# Mount if not already mounted
+DO_UNMOUNT=false
+mount | grep "$MOUNT_POINT" > /dev/null
+if [ $? = 1 ]; then
+	mount "$MOUNT_POINT"
+	DO_UNMOUNT=true
+fi
+
+if [ -d "$MOUNT_POINT" ]; then
+	/usr/bin/duplicity collection-status "file://$BACKUP_DIR"
+fi
+
+if $DO_UNMOUNT; then
+	umount "$MOUNT_POINT"
+fi

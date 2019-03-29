@@ -1,0 +1,48 @@
+#!/bin/zsh
+
+{{- if eq .chezmoi.hostname "pcgael3"}}
+
+MOUNT_POINT="/storage/cesnet-du4-storage"
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael3"
+DIR_TO_BACKUP="$HOME"
+INCLUDE_FILELIST="$HOME/.config/duplicity/include-filelist"
+PASSPHRASE_FILE="$HOME/.config/duplicity/passphrase.sh"
+KEEP_FULL_COUNT=3
+{{- else if eq .chezmoi.hostname "pcgael4"}}
+
+MOUNT_POINT="/storage/cesnet-du4-storage"
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael4"
+DIR_TO_BACKUP="$HOME"
+INCLUDE_FILELIST="$HOME/.config/duplicity/include-filelist"
+PASSPHRASE_FILE="$HOME/.config/duplicity/passphrase.sh"
+KEEP_FULL_COUNT=3
+{{- else}}
+
+echo "Unsupported host" >&2
+exit 1
+{{- end}}
+
+# Source the shell script defining PASSPHRASE
+if [ -e "$PASSPHRASE_FILE" ]; then
+	source "$PASSPHRASE_FILE"
+fi
+
+# Mount if not already mounted
+DO_UNMOUNT=false
+mount | grep "$MOUNT_POINT" > /dev/null
+if [ $? = 1 ]; then
+	mount "$MOUNT_POINT"
+	DO_UNMOUNT=true
+fi
+
+if [ -d "$BACKUP_DIR" ]; then
+	/usr/bin/duplicity remove-all-but-n-full $KEEP_FULL_COUNT \
+		--force file://"${BACKUP_DIR}"
+	/usr/bin/duplicity --full-if-older-than 3M \
+		--include-filelist "$INCLUDE_FILELIST" \
+		"$DIR_TO_BACKUP" "file://$BACKUP_DIR"
+fi
+
+if $DO_UNMOUNT; then
+	umount "$MOUNT_POINT"
+fi
