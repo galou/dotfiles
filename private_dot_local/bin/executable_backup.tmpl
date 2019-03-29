@@ -1,4 +1,11 @@
 #!/bin/zsh
+# Backup with duplicity
+# Run for example as a cron job /etc/cron.weekly/backup
+# '''
+#   #!/bin/sh
+#   
+#   su -c /home/gael/.local/bin/backup gael
+# '''
 
 {{- if eq .chezmoi.hostname "pcgael3"}}
 
