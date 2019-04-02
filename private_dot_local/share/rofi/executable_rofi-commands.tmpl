@@ -6,6 +6,7 @@ options=" lock
   hibernate
  reboot
  shutdown
+ toggle presentation mode
 {{- if eq .chezmoi.hostname "pcgael4"}}
  bluetooth on
  bluetooth off
@@ -27,6 +28,8 @@ case "${selection}" in
         systemctl reboot;;
     " shutdown")
         systemctl poweroff;;
+    " toggle presentation mode")
+        toggle-presentation-mode;;
 {{- if eq .chezmoi.hostname "pcgael4"}}
     " bluetooth on")
         bluetooth on 1>/dev/null;;

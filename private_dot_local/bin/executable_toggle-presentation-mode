@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Check if DPMS is active
+xset -q | grep 'DPMS is Disabled' >/dev/null
+if (( $? )); then
+    # DPMS was disabled
+    xset -dpms
+else
+    xset dpms 120 600 600
+fi
+
