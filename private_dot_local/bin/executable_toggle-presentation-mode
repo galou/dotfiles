@@ -1,11 +1,27 @@
 #!/bin/bash
 
+NOTIFY_TIMEOUT_MS=2000
+
 # Check if DPMS is active
 xset -q | grep 'DPMS is Disabled' >/dev/null
 if (( $? )); then
-    # DPMS was disabled
+    # DPMS was enabled.
     xset -dpms
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/toggle-on-solid.svg \
+        --app-name=toggle-presentation-mode \
+        --urgency=low \
+        --category=device \
+        "Monitor on"
 else
     xset dpms 120 600 600
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/toggle-off-solid.svg \
+        --app-name=toggle-presentation-mode \
+        --urgency=low \
+        --category=device \
+        "Monitor off"
 fi
 

@@ -25,3 +25,12 @@ Example of uses:
 - `chezmoi edit ~/.zshrc`
 - `chezmoi source status`
 - `chezmoi chattr executable ~/.zshrc`
+
+Licenses:
+
+Unless otherwise specified the files are available under the `CC0 license <https://creativecommons.org/share-your-work/public-domain/cc0/>`_.
+
+The icons `input-touchpad-symbolic.svg`, `touchpad-disabled-symbolic.svg`, `microphone-sensitivity-muted-symbolic.svg` and `microphone-sensitivity-medium-symbolic.svg` are part of the Adwaita icon theme and are licensed under the `is licenced under the terms of either the GNU LGPL v3 or
+Creative Commons Attribution-Share Alike 3.0 United States License <http://creativecommons.org/licenses/by-sa/3.0/>`_.
+The icons `toggle-on-solid.svg` and `toggle-off-solid.svg` are part of the Font Awesome project and licensed under the `Creative Commons Attribution 4.0 International <https://fontawesome.com/license>`_.
+
