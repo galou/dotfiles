@@ -1,0 +1,4 @@
+# Get a Kerberos ticket for CESNET storage.
+if [[ (( $+commands[/usr/bin/kinit] )) && -e $HOME/.cache/krb5.keytab.ecorcgae ]]; then
+	/usr/bin/kinit -k -t $HOME/.cache/krb5.keytab.ecorcgae nfs/ecorcgae@EINFRA
+fi
