@@ -36,8 +36,8 @@ case "${selection}" in
     " bluetooth off")
         bluetooth off 1>/dev/null;;
     " connect to headphones")
-        bluetooth-connect 05:15:17:14:3C:92;;
+        $HOME/.local/bin/bluetooth-connect 05:15:17:14:3C:92;;
     " Update QuickFix on TomTom Watch")
-        tomtom-updategps;;
+        $HOME/.local/bin/tomtom-updategps;;
 {{- end}}
 esac
