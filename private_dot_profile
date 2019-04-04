@@ -28,3 +28,7 @@ if [ -d "$HOME/.local/bin" ] ; then
     fi
 fi
 
+type "/usr/bin/kinit" 2>&1 >/dev/null
+if [ $? = 0 -a -e $HOME/.cache/krb5.keytab.ecorcgae ]; then
+	/usr/bin/kinit -k -t $HOME/.cache/krb5.keytab.ecorcgae nfs/ecorcgae@EINFRA
+fi
