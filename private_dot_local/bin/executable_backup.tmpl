@@ -39,15 +39,28 @@ DO_UNMOUNT=false
 mount | grep "$MOUNT_POINT" > /dev/null
 if [ $? = 1 ]; then
 	mount "$MOUNT_POINT"
+	if (( $? )); then
+		# Previous command failed.
+		echo Cannot mount "$MOUNT_POINT" >&2
+		exit 1
+	fi
 	DO_UNMOUNT=true
 fi
 
 if [ -d "$BACKUP_DIR" ]; then
-	/usr/bin/duplicity remove-all-but-n-full $KEEP_FULL_COUNT \
+	/usr/bin/nice -n 19 /usr/bin/duplicity remove-all-but-n-full $KEEP_FULL_COUNT \
 		--force file://"${BACKUP_DIR}"
-	/usr/bin/duplicity --full-if-older-than 3M \
+	/usr/bin/nice -n 19 /usr/bin/duplicity --full-if-older-than 3M \
 		--include-filelist "$INCLUDE_FILELIST" \
 		"$DIR_TO_BACKUP" "file://$BACKUP_DIR"
+	if (( $? )); then
+		# Previous command failed.
+		echo duplicity failed >&2
+		exit 1
+	fi
+else
+	echo Cannot access "$BACKUP_DIR" >&2
+	exit 1
 fi
 
 if $DO_UNMOUNT; then
