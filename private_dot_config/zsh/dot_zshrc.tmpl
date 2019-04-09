@@ -15,7 +15,8 @@ if [ -f ~/.config/shell/profile ]; then
 fi
 
 # antigen configuration
-ADOTDIR=$HOME/.config/antigen
+# mkdir ~/.cache/antigen && cd ~/.cache/antigen && git clone https://github.com/zsh-users/antigen.git.
+ADOTDIR=$HOME/.cache/antigen
 source $ADOTDIR/antigen/antigen.zsh
 antigen use oh-my-zsh
 antigen bundle common-aliases
