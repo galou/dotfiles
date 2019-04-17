@@ -11,6 +11,7 @@ options=" lock
  bluetooth on
  bluetooth off
  connect to headphones
+ connect to JBL
  Update QuickFix on TomTom Watch{{- end}}"
 
 selection=$(echo "${options}" | rofi -dmenu -p action)
@@ -37,6 +38,8 @@ case "${selection}" in
         bluetooth off 1>/dev/null;;
     " connect to headphones")
         $HOME/.local/bin/bluetooth-connect 05:15:17:14:3C:92;;
+    " connect to JBL")
+        $HOME/.local/bin/bluetooth-connect 00:12:6F:E2:66:3F;;
     " Update QuickFix on TomTom Watch")
         $HOME/.local/bin/tomtom-updategps;;
 {{- end}}
