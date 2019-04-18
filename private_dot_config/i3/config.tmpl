@@ -282,7 +282,9 @@ bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/sha
 
 # Autostart
 exec owncloud
-exec udiskie
+exec --no-startup-id udiskie
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
+exec --no-startup-id libinput-gestures-setup start
+exec --no-startup-id easystroke
 {{- end}}
