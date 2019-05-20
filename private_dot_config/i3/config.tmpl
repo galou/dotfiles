@@ -254,7 +254,8 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 
 # Shortcuts to start applications
 bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+c exec $HOME/.local/share/rofi/rofi-commands
+bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
+bindsym $mod+d exec --no-startup-id $HOME/.local/bin/dofi
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
