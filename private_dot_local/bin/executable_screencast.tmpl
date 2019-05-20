@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# start|stop screencast
+# Inspired by https://cloudbuilder.io/documentation/i3wm-Block-Status-Screen/.
+
+set -o errexit
+set -o pipefail
+
+PIDFILE="/tmp/${USER}/.screencast.pid"
+OUTFILE="/tmp/screencast-out.avi"
+FINALFILE="${HOME}/Videos/screencast--$(date +'%Y-%m-%d--%H-%M-%S').avi"
+
+# check if this script is already running
+if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
+
+    # send SIG_TERM to screen recorder
+    kill $(cat $PIDFILE)
+
+    # clear the pidfile
+    rm $PIDFILE
+
+    # move the screencast into the user's video directory
+{{- /* TODO: get the time of $OUTFILE to name $FINALFILE. */}}
+    mv $OUTFILE $FINALFILE
+else
+    # screen resolution
+{{- if eq .chezmoi.hostname "pcgael3"}}
+{{- /* The command with xrandr would need to be improved to support multiple screens. Meanwhile hard-code. */}}
+    SCREENRES=3120x1920
+{{- else}}
+    SCREENRES=$(xrandr -q --current | grep '*' | awk '{print $1}' | head -n 1)
+{{- end}}
+
+    # write to the pidfile
+    echo $$ > $PIDFILE &&
+
+    # let the recording process take over this pid
+    exec ffmpeg \
+      -f x11grab \
+      -r 25 \
+      -s ${SCREENRES} \
+      -i ${DISPLAY}.0 \
+      -vcodec libx264 ${OUTFILE}
+fi
+

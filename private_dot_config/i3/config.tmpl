@@ -271,6 +271,7 @@ bindsym XF86Launch7 exec gnome-terminal -- vim
 bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Mod1+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Shift+Print exec --no-startup-id "scrot -s $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
+bindsym $mod+Shift+Print exec --no-startup-id $HOME/.local/bin/screencast
 {{- if eq .chezmoi.hostname "pcgael3"}}
 bindsym XF86Favorites exec i3lock
 bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
