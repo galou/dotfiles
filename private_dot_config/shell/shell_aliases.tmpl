@@ -32,6 +32,8 @@ alias v='f -e vim' # quick opening files with vim. f='fasd -f'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
 alias rubber-clean='/usr/bin/rubber --clean'
+alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
+alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
 {{- if eq .chezmoi.hostname "pcgael4"}}
 alias bon='bluetooth on'
 alias boff='bluetooth off'
