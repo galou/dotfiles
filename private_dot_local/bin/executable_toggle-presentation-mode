@@ -6,6 +6,7 @@ NOTIFY_TIMEOUT_MS=2000
 xset -q | grep 'DPMS is Disabled' >/dev/null
 if (( $? )); then
     # DPMS was enabled.
+    xset dpms 60000 60000 60000
     xset -dpms
     notify-send \
         --expire-time=$NOTIFY_TIMEOUT_MS \
