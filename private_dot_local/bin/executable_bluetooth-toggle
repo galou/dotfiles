@@ -1,0 +1,10 @@
+#!/bin/bash
+# Toggle bluetooth status (on/off).
+# Depends on the bluetooth executable, provided by the tlp package on Ubuntu.
+
+bluetooth | grep on > /dev/null
+if [[ $? != 0 ]]; then
+	bluetooth on > /dev/null
+else
+	bluetooth off > /dev/null
+fi

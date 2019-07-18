@@ -8,8 +8,7 @@ options=" lock
  shutdown
  toggle presentation mode
 {{- if eq .chezmoi.hostname "pcgael4"}}
- bluetooth on
- bluetooth off
+ toggle bluetooth
  connect to headphones
  connect to JBL
  Update QuickFix on TomTom Watch{{- end}}"
@@ -32,10 +31,8 @@ case "${selection}" in
     " toggle presentation mode")
         toggle-presentation-mode;;
 {{- if eq .chezmoi.hostname "pcgael4"}}
-    " bluetooth on")
-        bluetooth on 1>/dev/null;;
-    " bluetooth off")
-        bluetooth off 1>/dev/null;;
+    " toggle bluetooth")
+        bluetooth-toggle;;
     " connect to headphones")
         $HOME/.local/bin/bluetooth-connect 05:15:17:14:3C:92;;
     " connect to JBL")
