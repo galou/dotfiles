@@ -5,7 +5,7 @@
 set -o errexit
 set -o pipefail
 
-PIDFILE="/tmp/${USER}/.screencast.pid"
+PIDFILE="/tmp/${USER}-screencast.pid"
 OUTFILE="/tmp/screencast-out.avi"
 FINALFILE="${HOME}/Videos/screencast--$(date +'%Y-%m-%d--%H-%M-%S').avi"
 
@@ -16,18 +16,21 @@ if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
     kill $(cat $PIDFILE)
 
     # clear the pidfile
-    rm $PIDFILE
+    /bin/rm $PIDFILE
 
     # move the screencast into the user's video directory
 {{- /* TODO: get the time of $OUTFILE to name $FINALFILE. */}}
-    mv $OUTFILE $FINALFILE
+    /bin/mv $OUTFILE $FINALFILE
 else
     # screen resolution
 {{- if eq .chezmoi.hostname "pcgael3"}}
 {{- /* The command with xrandr would need to be improved to support multiple screens. Meanwhile hard-code. */}}
-    SCREENRES=3120x1920
+{{- /*    SCREEN_RES=3120x1920 */}}
+    SCREEN_RES=${SCREEN_RES:-1920x1200}
+    OFFSET_X=${OFFSET_X:-1200}
 {{- else}}
-    SCREENRES=$(xrandr -q --current | grep '*' | awk '{print $1}' | head -n 1)
+    SCREEN_RES=${SCREEN_RES:-$(xrandr -q --current | grep '*' | awk '{print $1}' | head -n 1)}
+    OFFSET_X=${OFFSET_X:-0}
 {{- end}}
 
     # write to the pidfile
@@ -37,8 +40,8 @@ else
     exec ffmpeg \
       -f x11grab \
       -r 25 \
-      -s ${SCREENRES} \
-      -i ${DISPLAY}.0 \
+      -s ${SCREEN_RES} \
+      -i ${DISPLAY}.0+${OFFSET_X},0 \
       -vcodec libx264 ${OUTFILE}
 fi
 
