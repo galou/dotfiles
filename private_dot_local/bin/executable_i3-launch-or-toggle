@@ -57,7 +57,6 @@ wait_new_window()
 	win_class="$1"
 	old_win_ids="$2"
 
-
 	# Max. number of iteration to wait for the correct window.
 	# The time out will be $max_iteration * sleep_time_in_loop.
 	max_iteration=10

@@ -1,0 +1,74 @@
+#!/bin/bash
+# Echoes "ON" if a window with the given mark exists.
+# Some special echo can be defined.
+
+declare -A replacements=( \
+	["terminals"]="" \
+	["calc"]="" \
+	["qalc"]="" \
+)
+
+# has_mark mark_name
+# Return true if the mark mark_name is set to a window.
+has_mark()
+{
+	mark_name="$1"
+
+	i3-msg -t get_marks | grep "$mark_name" 1>/dev/null
+	if [ $? = 0 ]; then
+		true
+	else
+		false
+	fi
+}
+
+replace()
+{
+	for key in "${!replacements[@]}"; do
+		# TODO: match "term" and not "terminal" for example
+		if [[ "$1" =~ [0-9]?:?$key ]]; then
+			echo ${1//$key/${replacements[$key]}}
+			return
+		fi
+	done
+	echo $1
+}
+
+show_scratchpad()
+{
+	mark_name="$1"
+
+	i3-msg "[con_mark=$mark_name] scratchpad show" 2>1 >/dev/null
+}
+
+show_all_scratchpads()
+{
+	for candidate in "$@"; do
+		if has_mark $candidate; then
+			show_scratchpad $candidate
+		fi
+	done
+}
+
+case $BLOCK_BUTTON in
+  1) show_all_scratchpads "$@" ;;
+  3) show_all_scratchpads "$@" ;;
+esac
+
+marked=""
+for candidate in "$@"; do
+	if has_mark $candidate; then
+		marked="$marked"¡"$(replace $candidate)"
+	fi
+done
+# Replace ¡ with spaces.
+marked=$(echo -n $marked | sed -e 's/¡/ /g')
+
+if [[ "$marked" = "" ]]; then
+	echo
+	echo
+else
+	echo "$marked"
+	echo "$marked"
+	echo \#FF9100
+fi
