@@ -4,6 +4,27 @@
 # i3 config file (v4)
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+#
+# Public dependencies: setxkbmap, xinput, xrandr, numlockx, xset, rofi,
+#   i3-nagbar, brightnessctl, playerctl, i3-sensible-terminal, pactl, pkill,
+#   i3blocks, dofi terminator, vlc, caja, gnome-terminal, x-www-browser,
+#   freecad-daily, vim, mate-calculator, qalculate, ranger, scrot, owncloud,
+#   udiskie, zathura
+{{- if eq .chezmoi.hostname "pcgael3"}}
+#   i3lock
+{{- end}}
+{{- if eq .chezmoi.hostname "pcgael4"}}
+#   notify-send, onboard, libinput-gestures-setup, easystroke
+{{- end}}
+# Custom dependencies: ~/.local/bin/catch-orientation,
+#   ~/.config/i3/i3-startup-layout.sh, ~/.local/bin/i3-rename-workspace,
+#   ~/.local/bin/notify-mic-status, ~/.local/bin/notify-mic-status,
+#   ~/.local/share/rofi/rofi-commands, ~/.local/bin/i3-launch-or-toggle,
+#   ~/.local/bin/screencast
+{{- if eq .chezmoi.hostname "pcgael4"}}
+#   ~/.local/share/icons/input-touchpad-symbolic.svg,
+#   ~/.local/share/icons/touchpad-disabled-symbolic.svg
+{{- end}}
 
 set $main_monitor {{.main_monitor}}
 {{- if (index . "second_monitor")}}
@@ -260,9 +281,10 @@ bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle termina
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
+bindsym $mod+v exec vim
 bindsym $mod+w exec x-www-browser
 bindsym $mod+y exec freecad-daily
-bindsym $mod+v exec vim
+bindsym $mod+z exec zathura
 bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec caja
 bindsym XF86Calculator exec --no-startup-id "$HOME/.local/bin/i3-launch-or-toggle mate-calculator calc mate-calc"
