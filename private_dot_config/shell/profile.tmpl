@@ -65,6 +65,8 @@ export CHEAT_USER_DIR=$HOME/.local/share/cheat/cheat-src/cheat/cheatsheets
 # ROS configuration
 export ROS_LANG_DISABLE=genlisp
 
+export LC_ALL=C.UTF-8
+
 # Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
     source <(gr completion)
