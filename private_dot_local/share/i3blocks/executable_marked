@@ -6,6 +6,7 @@ declare -A replacements=( \
 	["terminals"]="" \
 	["calc"]="" \
 	["qalc"]="" \
+	["divercities"]="" \
 )
 
 # has_mark mark_name
