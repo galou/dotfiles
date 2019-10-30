@@ -1,0 +1,6 @@
+{
+    "build": {
+        "merge-install": true,
+        "symlink-install": true
+    }
+}
