@@ -8,6 +8,8 @@ set -o pipefail
 PIDFILE="/tmp/${USER}-screencast.pid"
 OUTFILE="/tmp/screencast-out.avi"
 FINALFILE="${HOME}/Videos/screencast--$(date +'%Y-%m-%d--%H-%M-%S').avi"
+# VIDEO_CODEC must be one from 'ffmpeg -codecs'.
+VIDEO_CODEC=${VIDEO_CODEC:-libx264}
 
 # check if this script is already running
 if [ -s $PIDFILE ] && [ -d "/proc/$(cat $PIDFILE)" ]; then
@@ -42,6 +44,6 @@ else
       -r 25 \
       -s ${SCREEN_RES} \
       -i ${DISPLAY}.0+${OFFSET_X},0 \
-      -vcodec libx264 ${OUTFILE}
+      -vcodec "$VIDEO_CODEC" ${OUTFILE}
 fi
 

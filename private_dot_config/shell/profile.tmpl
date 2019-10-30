@@ -194,6 +194,11 @@ psux()
     fi
 }
 
+extract-images()
+{
+    ffmpeg -i $1 $1-%05d.jpg -hide_banner
+}
+
 # connected_displays
 # Return a space separated list of connected displays
 connected_displays()
