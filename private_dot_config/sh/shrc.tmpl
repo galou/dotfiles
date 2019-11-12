@@ -165,26 +165,6 @@ psux()
     fi
 }
 
-{{- if eq .chezmoi.hostname "pcgael4"}}
-
-# Update the QuickFix data for my tomtom watch
-# Uses https://github.com/dlenski/ttblue.
-tomtom_updategps()
-{
-    TURN_OFF = 1
-    bluetooth | grep on >/dev/null
-    if [[ $? != 0 ]]; then
-        TURN_OFF = 0
-	bluetooth on >/dev/null
-	sleep 1
-    fi
-    ttblue --device=E4:04:39:82:7E:A0 --code=636453 --update-gps
-    if [[ TURN_OFF ]]; then
-	bluetooth off >/dev/null
-    fi
-}
-{{end}}
-
 # connected_displays
 # Return a space separated list of connected displays
 connected_displays()
