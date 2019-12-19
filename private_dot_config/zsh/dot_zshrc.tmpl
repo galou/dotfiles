@@ -31,7 +31,7 @@ antigen bundle zsh-users/zsh-autosuggestions
 # http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/
 antigen bundle zsh-navigation-tools
 {{- if 0}}
-{{/* Deactivated because conflicts with up-line-or-beginning-search as of 2019-03-27*/}}
+{{/* Deactivated because conflicts with up-line-or-beginning-search as of 2019-03-27. */}}
 # Treat new lines from paste differently than typed ones.
 # Cf. https://cirw.in/blog/bracketed-paste.
 antigen bundle safe-paste
@@ -205,6 +205,18 @@ if [ -e /tmp/activate_ros ]; then
   ros_activate
 fi
 {{- end}}
+
+# Activate timestamping before running a command.
+show_timestamp()
+{
+  echo "  timestamp $(now)"
+}
+
+activate_timestamp()
+{
+  # Cf. http://zsh.sourceforge.net/Doc/Release/Functions.html#Functions, 9.3.1.
+  preexec_functions+=show_timestamp
+}
 
 # Aliases
 if [ -f ~/.config/shell/shell_aliases ]; then
