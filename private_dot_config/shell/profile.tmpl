@@ -210,4 +210,9 @@ connected_displays()
     xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
 }
 
+now()
+{
+    date '+%Y-%m-%d--%H-%M-%S'
+}
+
 export HOST
