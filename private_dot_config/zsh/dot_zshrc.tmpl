@@ -206,6 +206,29 @@ if [ -e /tmp/activate_ros ]; then
 fi
 {{- end}}
 
+# ROS2 setup
+ros2_activate() {
+  export ROS_WORKSPACE=$HOME/ros2_ws
+
+  if [ -e $ROS_WORKSPACE/install/setup.zsh ]; then
+    source $ROS_WORKSPACE/install/setup.zsh
+  fi
+
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
+  source /usr/share/colcon_cd/function/colcon_cd.sh
+  
+  _cwd=$(pwd)
+  cd $ROS_WORKSPACE/src
+  colcon_cd --set > /dev/null
+  cd $_cwd
+  unset _cwd
+}
+
+# Activate ROS if /tmp/activate_ros exists.
+if [ -e /tmp/activate_ros2 ]; then
+  ros2_activate
+fi
+
 # Activate timestamping before running a command.
 show_timestamp()
 {
