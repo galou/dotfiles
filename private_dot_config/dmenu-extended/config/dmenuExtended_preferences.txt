@@ -2,14 +2,19 @@
     "alias_applications": true,
     "alias_display_format": "{name}",
     "exclude_items": [],
-    "filebrowser": "xdg-open",
-    "fileopener": "xdg-open",
+    "filebrowser": "gio open",
+    "fileopener": "gio open",
     "filter_binaries": false,
     "follow_symlinks": true,
     "frequently_used": 6,
-    "global_ignore_folders": [],
-    "ignore_folders": [
+    "global_ignore_folders": [
+        ".git",
+        ".svn",
+        "__pycache__",
         "build"
+    ],
+    "ignore_folders": [
+        "/home/gael/80-build"
     ],
     "include_applications": true,
     "include_binaries": false,
@@ -31,14 +36,18 @@
     ],
     "path_aliasFile": "",
     "path_shellCommand": "",
-    "prompt": "Open:",
+    "prompt": "Open",
     "scan_hidden_folders": false,
     "terminal": "gnome-terminal",
     "valid_extensions": [
+        "3mf",
+        "amf",
         "avi",
         "bib",
         "doc",
         "docx",
+        "fcstd",
+        "fcmacro",
         "gif",
         "html",
         "iso",
@@ -49,6 +58,7 @@
         "mp3",
         "mp4",
         "mpg",
+        "obj",
         "odf",
         "odp",
         "ods",
@@ -74,5 +84,5 @@
     "watch_folders": [
         "~/"
     ],
-    "webbrowser": "xdg-open"
+    "webbrowser": "gio open"
 }
