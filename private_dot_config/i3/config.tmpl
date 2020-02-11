@@ -108,8 +108,8 @@ bindsym $mod+Shift+q kill
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 #bindsym $mod+space exec --no-startup-id i3-dmenu-desktop
-#bindsym $mod+space exec --no-startup-id /usr/bin/rofi -plugin-path ~/.local/lib/rofi -show drun
 bindsym $mod+space exec --no-startup-id dmenu_extended_run
+bindsym $mod+d exec --no-startup-id /usr/bin/rofi -plugin-path ~/.local/lib/rofi -show drun
 
 # change focus
 bindsym $mod+h focus left
@@ -277,7 +277,7 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 # Shortcuts to start applications
 bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
-bindsym $mod+d exec --no-startup-id $HOME/.local/bin/dofi
+bindsym $mod+Shift+d exec --no-startup-id $HOME/.local/bin/dofi
 bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle terminator terminals terminator
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=/home/gael/.config/BraveSoftware/Divercities
