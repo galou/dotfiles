@@ -53,7 +53,7 @@ if [ "$preview_images" = "True" ]; then
         image/svg+xml)
            convert "$path" "$cached" && exit 6 || exit 1;;
         application/pdf)
-            inkscape --without-gui --export-png="$cached" --file="$path" && exit 6 || exit 1;;
+            atril-thumbnailer --size=300 "$path" "$cached" && exit 6 || exit 1;;
         # Image previews for image files. w3mimgdisplay will be called for all
         # image files (unless overriden as above), but might fail for
         # unsupported types.
