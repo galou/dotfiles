@@ -222,4 +222,21 @@ now()
     date '+%Y-%m-%d--%H-%M-%S'
 }
 
+# countdown time_in_seconds.
+# Inspired by https://www.unix.com/302302337-post6.html but the original, called with
+# "countdown 00:01:00" e.g. didn't work with zsh.
+countdown()
+{
+  secs=${1}
+  while [ $secs -gt 0 ]
+  do
+    sleep 1 &
+    printf "\r%02d:%02d:%02d" $((secs/3600)) $(( (secs/60)%60)) $((secs%60))
+    secs=$(($secs - 1))
+    wait
+  done
+  beep
+  echo
+}
+
 export HOST
