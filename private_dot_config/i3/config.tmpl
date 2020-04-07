@@ -213,16 +213,16 @@ mode "resize" {
     # Pressing right will grow the window’s width.
     # Pressing up will shrink the window’s height.
     # Pressing down will grow the window’s height.
-    bindsym h resize shrink width 10 px or 10 ppt
-    bindsym j resize grow height 10 px or 10 ppt
-    bindsym k resize shrink height 10 px or 10 ppt
-    bindsym l resize grow width 10 px or 10 ppt
+    bindsym h resize shrink width 5 px or 5 ppt
+    bindsym j resize grow height 5 px or 5 ppt
+    bindsym k resize shrink height 5 px or 5 ppt
+    bindsym l resize grow width 5 px or 5 ppt
 
     # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 5 px or 5 ppt
+    bindsym Down resize grow height 5 px or 5 ppt
+    bindsym Up resize shrink height 5 px or 5 ppt
+    bindsym Right resize grow width 5 px or 5 ppt
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -271,6 +271,7 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym Shift+XF86AudioMute exec --no-startup-id playerctl play-pause
 bindsym Shift+XF86AudioLowerVolume exec --no-startup-id playerctl previous
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 
@@ -285,7 +286,7 @@ bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
 bindsym $mod+v exec vim
 bindsym $mod+w exec x-www-browser
-bindsym $mod+y exec i3-layout-manager
+bindsym $mod+y exec --no-startup-id i3-layout-manager
 bindsym $mod+Shift+y exec freecad-daily
 bindsym $mod+z exec zathura
 bindsym XF86HomePage exec x-www-browser
