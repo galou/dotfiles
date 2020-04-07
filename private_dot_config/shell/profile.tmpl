@@ -227,6 +227,7 @@ now()
 # "countdown 00:01:00" e.g. didn't work with zsh.
 countdown()
 {
+  setopt LOCAL_OPTIONS NO_NOTIFY NO_MONITOR
   secs=${1}
   while [ $secs -gt 0 ]
   do

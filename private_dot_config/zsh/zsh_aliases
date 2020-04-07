@@ -3,3 +3,5 @@
 alias -s pdf='gio open'
 
 alias apt='noglob apt'
+
+alias B='| bat'
