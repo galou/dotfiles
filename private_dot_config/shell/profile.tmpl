@@ -180,7 +180,7 @@ mkcd()
 
 weather()
 {
-    curl -Ss 'https://wttr.in?0'
+    curl -Ss 'https://wttr.in?0' || echo "No weather"
 }
 
 psaux()

@@ -153,7 +153,7 @@ command=$HOME/.local/share/i3blocks/$BLOCK_NAME 5% pulse
 
 # Guess the weather hourly
 [weather]
-command=curl -Ss 'https://wttr.in?0&T&Q' | cut -c 16- | head -2 | xargs echo | sed -e 's/unning out of queries to the weather service at the moment./no weather/'
+command=curl -Ss 'https://wttr.in?0&T&Q' | cut -c 16- | head -2 | xargs echo | sed -e 's/unning out of queries to the weather service at the moment./no weather/' || echo "no weather"
 interval=3600
 #color=#A4C2F4
 

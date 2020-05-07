@@ -216,6 +216,7 @@ ros2_activate() {
 
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
   source /usr/share/colcon_cd/function/colcon_cd.sh
+  source $HOME/ros2_ws/build/ros2cli/completion/ros2-argcomplete.zsh
   
   _cwd=$(pwd)
   cd $ROS_WORKSPACE/src
