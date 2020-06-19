@@ -20,15 +20,11 @@
     "include_binaries": false,
     "include_hidden_files": false,
     "include_hidden_folders": false,
-{{- if eq .chezmoi.hostname "pcgael4"}}
     "include_items": [
         "/usr/local/TomTomSportsConnect/bin/TomTomSportsConnect",
         "keepassxc",
         "/usr/bin/teams"
     ],
-{{- else}}
-    "include_items": [],
-{{- end}}
     "indicator_alias": "",
     "indicator_edit": "*",
     "indicator_submenu": "->",
