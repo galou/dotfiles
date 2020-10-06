@@ -18,7 +18,7 @@
 {{- end}}
 # Custom dependencies: ~/.local/bin/catch-orientation,
 #   ~/.config/i3/i3-startup-layout.sh, ~/.local/bin/i3-rename-workspace,
-#   ~/.local/bin/notify-mic-status, ~/.local/bin/notify-mic-status,
+#   ~/.local/bin/notify-mic-status, ~/.local/bin/notify-airplane-mode-status,
 #   ~/.local/share/rofi/rofi-commands, ~/.local/bin/i3-launch-or-toggle,
 #   ~/.local/bin/screencast
 {{- if eq .chezmoi.hostname "pcgael4"}}
@@ -254,9 +254,9 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute {{.pulseaudi
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute 0 toggle
 {{- end}}
 # Signals for i3blocks (use signal=10 in the volume section).
-bindsym --release XF86AudioLowerVolume exec pkill -SIGRTMIN+10 i3blocks
-bindsym --release XF86AudioRaiseVolume exec pkill -SIGRTMIN+10 i3blocks
-bindsym --release XF86AudioMute exec pkill -SIGRTMIN+10 i3blocks
+bindsym --release XF86AudioLowerVolume exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
+bindsym --release XF86AudioRaiseVolume exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
+bindsym --release XF86AudioMute exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
 {{- if (index . "pulseaudio_source")}}
 bindsym --release XF86AudioMicMute exec --no-startup-id $HOME/.local/bin/notify-mic-status {{.pulseaudio_source}}
 {{- else}}
