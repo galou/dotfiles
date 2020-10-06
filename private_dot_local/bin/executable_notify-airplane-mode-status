@@ -1,0 +1,29 @@
+#!/bin/bash
+# Dependencies: nmcli.
+
+NOTIFY_TIMEOUT_MS=2000
+
+
+function notify-airplane-mode-active ()
+{
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/plane-slash-solid.svg \
+        --app-name=notify-mic-status \
+        --urgency=low \
+        --category=device \
+        "Airplane mode active"
+}
+
+function notify-airplane-mode-inactive ()
+{
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon=$HOME/.local/share/icons/plane-solid.svg \
+        --app-name=notify-mic-status \
+        --urgency=low \
+        --category=device \
+        "Airplane mode inactive"
+}
+
+nmcli radio wifi | grep 'disabled' && notify-airplane-mode-active || notify-airplane-mode-inactive
