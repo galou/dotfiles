@@ -25,6 +25,7 @@
 #   ~/.local/share/icons/input-touchpad-symbolic.svg,
 #   ~/.local/share/icons/touchpad-disabled-symbolic.svg
 {{- end}}
+{{- /* Interesting: https://cedaei.com/posts/vim-like-layer-for-xorg-wayland. */}}
 
 set $main_monitor {{.main_monitor}}
 {{- if (index . "second_monitor")}}
