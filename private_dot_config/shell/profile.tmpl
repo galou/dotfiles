@@ -1,29 +1,27 @@
 # This file is sourced by ~/.zshrc and ~/.bashrc.
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/shell/profile.tmpl.
 
-# set PATH so it includes npm bin if it exists and is not already in $PATH.
-npm_global_path=$HOME/.cache/npm-global/bin
-if [ -n "${PATH##*${npm_global_path}}" -a -n "${PATH##*${npm_global_path}:*}" ]; then
-    if [ -d $npm_global_path ] ; then
-        export PATH=$npm_global_path:$PATH
+# Prefix PATH with the given directory if not alreay present.
+add_to_path()
+{
+    if [ -z ${1} ]; then
+	return
     fi
-fi
+    if [ -n "${PATH##*${1}}" -a -n "${PATH##*${1}:*}" ]; then
+	if [ -d ${1} ] ; then
+	    export PATH=${1}:$PATH
+	fi
+    fi
+}
+
+# set PATH so it includes npm bin if it exists and is not already in $PATH.
+add_to_path $HOME/.cache/npm-global/bin
 
 # Prefix /usr/lib/ccache to use ccache by default
-ccache_path=/usr/lib/ccache
-if [ -n "${PATH##*${ccache_path}}" -a -n "${PATH##*${ccache_path}:*}" ]; then
-    if [ -d $ccache_path ] ; then
-        export PATH=$ccache_path:$PATH
-    fi
-fi
+add_to_path /usr/lib/ccache
 
-# set PATH so it includes user's private bin if it exists and is not already in $PATH.
-local_bin_path=$HOME/.local/bin
-if [ -n "${PATH##*${local_bin_path}}" -a -n "${PATH##*${local_bin_path}:*}" ]; then
-    if [ -d $local_bin_path ] ; then
-        export PATH=$local_bin_path:$PATH
-    fi
-fi
+add_to_path $HOME/.cargo/bin
+add_to_path $HOME/.local/bin
 
 # Deactive ctrl-s sending xoff
 # so that it can be used for something else
