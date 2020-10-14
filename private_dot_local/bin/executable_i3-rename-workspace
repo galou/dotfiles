@@ -9,6 +9,7 @@ declare -A replacements=( \
   ["mail"]="" \
   ["web"]="" \
   ["term"]="" \
+  ["ssh"]="" \
   )
 
 replace()
