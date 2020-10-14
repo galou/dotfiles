@@ -53,8 +53,10 @@ exec --no-startup-id xrandr --output $main_monitor --primary
 exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms 120 600 600
-{{- if (and (index . "laptop") (.laptop))}}
+{{- if index . "laptop"}}
+    {{- if .laptop}}
 exec --no-startup-id ~/.local/bin/bato
+    {{- end}}
 {{- end}}
 
 # Main key for interacting with i3.
