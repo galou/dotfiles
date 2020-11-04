@@ -34,6 +34,12 @@ def index(index_or_name: str):
 
     # Not an index, try as name.
     names = [s.name for s in pulse.source_list()]
+
+    # Special case, name is '@DEFAULT_SOURCE@'.
+    if index_or_name == '@DEFAULT_SOURCE@':
+        name = pulse.get_source_by_name('@DEFAULT_SOURCE@').name
+        return indexes[names.index(name)]
+ 
     try:
         return indexes[names.index(index_or_name)]
     except ValueError:

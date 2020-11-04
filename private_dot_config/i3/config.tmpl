@@ -252,13 +252,19 @@ bar {
 
 # Multimedia shortcuts
 # Pulse Audio controls
+{{- if (index . "pulseaudio_sink")}}
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} -5%
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} off; exec --no-startup-id pactl set-sink-volume {{.pulseaudio_sink}} +5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute {{.pulseaudio_sink}} toggle
+{{- else}}
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ off; exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ off; exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+{{- end}}
 {{- if (index . "pulseaudio_source")}}
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute {{.pulseaudio_source}} toggle
 {{- else}}
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute 0 toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 {{- end}}
 # Signals for i3blocks (use signal=10 in the volume section).
 bindsym --release XF86AudioLowerVolume exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
@@ -267,7 +273,7 @@ bindsym --release XF86AudioMute exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
 {{- if (index . "pulseaudio_source")}}
 bindsym --release XF86AudioMicMute exec --no-startup-id $HOME/.local/bin/notify-mic-status {{.pulseaudio_source}}
 {{- else}}
-bindsym --release XF86AudioMicMute exec --no-startup-id $HOME/.local/bin/notify-mic-status 0
+bindsym --release XF86AudioMicMute exec --no-startup-id $HOME/.local/bin/notify-mic-status @DEFAULT_SOURCE@
 {{- end}}
 
 # Airplane-mode notification and redraw i3blocks (use signal=10 in the iface-wifi section).
@@ -294,6 +300,7 @@ bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc mus
 bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=/home/gael/.config/BraveSoftware/Divercities
 bindsym $mod+n exec caja
 bindsym $mod+o exec gnome-terminal -- htop
+bindsym $mod+p exec pavucontrol
 bindsym $mod+v exec vim
 bindsym $mod+w exec x-www-browser
 bindsym $mod+y exec --no-startup-id i3-layout-manager
