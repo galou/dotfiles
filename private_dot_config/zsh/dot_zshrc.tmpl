@@ -208,21 +208,28 @@ fi
 
 # ROS2 setup
 ros2_activate() {
-  export ROS_WORKSPACE=$HOME/ros2_ws
+  export ROS_WORKSPACE=${HOME}/creobot_eloquent_ws
+  # For some reason, the default RMW implementation is something else.
+  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
   if [ -e $ROS_WORKSPACE/install/setup.zsh ]; then
     source $ROS_WORKSPACE/install/setup.zsh
   fi
 
+  source /opt/ros/eloquent/share/ros2cli/environment/ros2-argcomplete.zsh
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
   source /usr/share/colcon_cd/function/colcon_cd.sh
-  source $HOME/ros2_ws/build/ros2cli/completion/ros2-argcomplete.zsh
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
   
   _cwd=$(pwd)
   cd $ROS_WORKSPACE/src
   colcon_cd --set > /dev/null
   cd $_cwd
   unset _cwd
+
+  # ROS2 has no roscd command, alias it.
+  alias roscd=colcon_cd
 }
 
 # Activate ROS if /tmp/activate_ros exists.
