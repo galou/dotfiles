@@ -68,6 +68,10 @@ export LC_ALL=C.UTF-8
 
 export COLCON_HOME=$HOME/.config/colcon
 
+{{- if eq .chezmoi.hotsname "pcgael3"}}
+export CUDA_PATH=/usr/lib/x86_64-linux-gnu
+{{- end}}
+
 # Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
     source <(gr completion)
@@ -158,6 +162,14 @@ conda_activate()
     # <<< conda initialize <<<
 }
 
+{{- if eq .chezmoi.hotsname "pcgael3"}}
+# PlatformIO.
+platformio_activate()
+{
+  add_to_path $HOME/.platformio/penv/bin
+}
+{{- end}}
+
 # MP3 manipulation
 mp3_list() {
     find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
@@ -237,6 +249,79 @@ countdown()
   done
   beep
   echo
+}
+
+colcon()
+{
+  # Credit goes to https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475.
+
+  CURRENT_PATH=`pwd`
+
+  case $* in
+
+    init*)
+
+      if [ ! -e "build/COLCON_IGNORE" ]; then # we are NOT at the workspace root
+        command colcon build # this creates a new workspace
+      fi
+
+      ;;
+
+    build*|b*)
+
+      if [ -e "build/COLCON_IGNORE" ]; then # we are at the workspace root
+        command colcon "$@" # this creates a new workspace
+      else
+        while [ ! -e "build/COLCON_IGNORE" ]; do
+          cd ..
+
+          if [[ `pwd` == "/" ]]; then
+            echo "Cannot build, not in a workspace!"
+            break
+          elif [ -e "build/COLCON_IGNORE" ]; then
+            command colcon "$@"
+            break
+          fi
+        done
+
+        cd "$CURRENT_PATH"
+      fi
+
+      ;;
+
+    clean*)
+
+      if [ -e "build/COLCON_IGNORE" ]; then # we are at the workspace root
+        rm -rf build install log
+        mkdir build
+        cd build
+        touch COLCON_IGNORE
+      else
+        while [ ! -e "build/COLCON_IGNORE" ]; do
+          cd ..
+
+          if [[ `pwd` == "/" ]]; then
+            echo "Cannot clean, not in a workspace!"
+            break
+          elif [ -e "build/COLCON_IGNORE" ]; then
+            rm -rf build install log
+            mkdir build
+            cd build
+            touch COLCON_IGNORE
+            break
+          fi
+        done
+
+        cd "$CURRENT_PATH"
+      fi
+
+      ;;
+
+    *)
+      command colcon $@
+      ;;
+
+  esac
 }
 
 export HOST
