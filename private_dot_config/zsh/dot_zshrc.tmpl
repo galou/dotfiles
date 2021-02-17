@@ -62,9 +62,6 @@ ZSH_THEME_TERM_TITLE_IDLE="%20<..<%~%<<"
 # Old PS1, now set by agnoster theme
 #export PS1='%B%F{green}%n@%m%f %F{blue}%1~ %#%f%b '
 
-# antigen sets 'alias gr=git remote', gr is also a program to manage several git repos.
-unalias gr
-
 # History management
 HISTFILE=~/.bash_history
 HISTSIZE=1000
@@ -243,8 +240,6 @@ ros2_activate() {
 
 # ROS2 setup
 ros2_activate() {
-  # For some reason, the default RMW implementation is something else.
-  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
   # Colorized terminal output.
   export RCUTILS_COLORIZED_OUTPUT=1
 
