@@ -68,7 +68,7 @@ export LC_ALL=C.UTF-8
 
 export COLCON_HOME=$HOME/.config/colcon
 
-{{- if eq .chezmoi.hotsname "pcgael3"}}
+{{- if eq .chezmoi.hostname "pcgael3"}}
 export CUDA_PATH=/usr/lib/x86_64-linux-gnu
 {{- end}}
 
@@ -162,7 +162,7 @@ conda_activate()
     # <<< conda initialize <<<
 }
 
-{{- if eq .chezmoi.hotsname "pcgael3"}}
+{{- if eq .chezmoi.hostname "pcgael3"}}
 # PlatformIO.
 platformio_activate()
 {

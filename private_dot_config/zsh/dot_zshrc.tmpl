@@ -25,6 +25,8 @@ antigen bundle git
 antigen bundle pip
 # Proposes a package for a missing command
 antigen bundle command-not-found
+# Completions for cmake and others.
+antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 # support approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in
@@ -189,48 +191,85 @@ ros_activate() {
   elif [ -e $ROS_WORKSPACE/install/local_setup.zsh ]; then
     source $ROS_WORKSPACE/install/local_setup.zsh
   fi
-
-  {{- if eq .chezmoi.hostname "pcgael"}}
-
-  # Add /usr/lib/x86_64-linux-gnu for Gazebo urdf parser to work
-  # export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH+:}$LD_LIBRARY_PATH
-  {{- end}}
-
-  # slaunch as alias doesn't help because completion doesn't work (zsh 5.1.1)
-  alias slaunch='roslaunch safelog_launch'
 }
+{{- else}}
+
+# ROS setup
+ros_activate() {
+  if [ -e $ROS_WORKSPACE/devel/setup.zsh ]; then
+    source $ROS_WORKSPACE/devel/setup.zsh
+  elif [ -e $ROS_WORKSPACE/install/local_setup.zsh ]; then
+    source $ROS_WORKSPACE/install/local_setup.zsh
+  fi
+}
+{{- end}}
 
 # Activate ROS if /tmp/activate_ros exists.
 if [ -e /tmp/activate_ros ]; then
   ros_activate
 fi
-{{- end}}
+
+{{- /* ros2_distro may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
+{{- if (index . "ros2_distro")}}
 
 # ROS2 setup
 ros2_activate() {
-  export ROS_WORKSPACE=${HOME}/creobot_eloquent_ws
-  # For some reason, the default RMW implementation is something else.
-  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+  export ROS_WORKSPACE=${ROS_WORKSPACE-$HOME/ros_{{.ros2_distro}}_ws}
+  # Colorized terminal output.
+  export RCUTILS_COLORIZED_OUTPUT=1
 
   if [ -e $ROS_WORKSPACE/install/setup.zsh ]; then
     source $ROS_WORKSPACE/install/setup.zsh
   fi
 
-  source /opt/ros/eloquent/share/ros2cli/environment/ros2-argcomplete.zsh
+  source /opt/ros/{{.ros2_distro}}/share/ros2cli/environment/ros2-argcomplete.zsh
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
   source /usr/share/colcon_cd/function/colcon_cd.sh
   {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
   {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
   
-  _cwd=$(pwd)
-  cd $ROS_WORKSPACE/src
-  colcon_cd --set > /dev/null
-  cd $_cwd
-  unset _cwd
+  if [ -e ${ROS_WORKSPACE}/src ]; then
+    _cwd=$(pwd)
+    cd $ROS_WORKSPACE/src
+    colcon_cd --set > /dev/null
+    cd $_cwd
+    unset _cwd
+  fi
 
   # ROS2 has no roscd command, alias it.
   alias roscd=colcon_cd
 }
+{{- else}}
+
+# ROS2 setup
+ros2_activate() {
+  # For some reason, the default RMW implementation is something else.
+  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+  # Colorized terminal output.
+  export RCUTILS_COLORIZED_OUTPUT=1
+
+  if [ -e $ROS_WORKSPACE/install/setup.zsh ]; then
+    source $ROS_WORKSPACE/install/setup.zsh
+  fi
+
+  source /opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
+  source /usr/share/colcon_cd/function/colcon_cd.sh
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
+  
+  if [ -e ${ROS_WORKSPACE}/src ]; then
+    _cwd=$(pwd)
+    cd $ROS_WORKSPACE/src
+    colcon_cd --set > /dev/null
+    cd $_cwd
+    unset _cwd
+  fi
+
+  # ROS2 has no roscd command, alias it.
+  alias roscd=colcon_cd
+}
+{{- end}}
 
 # Activate ROS if /tmp/activate_ros exists.
 if [ -e /tmp/activate_ros2 ]; then
