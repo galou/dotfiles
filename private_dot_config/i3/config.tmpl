@@ -7,9 +7,10 @@
 #
 # Public dependencies: setxkbmap, xinput, xrandr, numlockx, xset, rofi,
 #   i3-nagbar, brightnessctl, playerctl, i3-sensible-terminal, pactl, pkill,
-#   i3blocks, dofi terminator, vlc, caja, gnome-terminal, x-www-browser,
+#   i3blocks, terminator, vlc, caja, gnome-terminal, x-www-browser,
 #   freecad-daily, vim, mate-calculator, qalculate, ranger, scrot, owncloud,
-#   udiskie, zathura, dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended).
+#   udiskie, zathura, dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended),
+#   gnome-pomodoro.
 {{- if eq .chezmoi.hostname "pcgael3"}}
 #   i3lock
 {{- end}}
@@ -294,7 +295,6 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 # Shortcuts to start applications
 bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
-bindsym $mod+Shift+d exec --no-startup-id $HOME/.local/bin/dofi
 bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle terminator terminals terminator
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=/home/gael/.config/BraveSoftware/Divercities
@@ -328,6 +328,7 @@ bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/sha
 # Autostart
 exec owncloud
 exec --no-startup-id udiskie
+exec --no-startup-id gnome-pomodoro --no-default-window
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
 exec --no-startup-id libinput-gestures-setup start

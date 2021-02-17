@@ -10,6 +10,7 @@ declare -A replacements=( \
   ["web"]="" \
   ["term"]="" \
   ["ssh"]="" \
+  ["src"]="" \
   )
 
 replace()
