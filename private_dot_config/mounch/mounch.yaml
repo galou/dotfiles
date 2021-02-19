@@ -1,0 +1,101 @@
+keepass:
+  description: "Keepass"
+  binary: keepassx
+
+inkscape:
+  description: "Inkscape AppImage"
+  binary: /home/gael/.cache/cesnet-owncloud/03-tmp/AppImage/Inkscape-3bc2e81-x86_64.AppImage
+  icon: inkscape
+
+teams:
+  description: "Teams"
+  binary: teams
+  icon: teams
+
+gimp:
+  description: "GIMP"
+  binary: gimp
+  icon: gimp
+
+terminal:
+  description: "Terminal"
+  binary: x-terminal-emulator
+
+prusa:
+  description: "Prusa Slicer"
+  binary: ~/03-tmp/AppImage/PrusaSlicer-2.3.0.AppImage
+
+arduino:
+  description: "Arduino IDE"
+  binary: /opt/arduino-1.8.13/arduino
+
+jabref:
+  description: "JabRef"
+  binary: jabref
+
+file_manager:
+  description: "File Manager"
+  binary: caja
+
+characters:
+  description: "Characters"
+  binary: gnome-characters
+
+retext:
+  description: "ReText"
+  binary: retext
+
+meshlab:
+  description: "MeshLab"
+  binary: meshlab
+
+kde_connect_indicator:
+  description: "KDE Connect Indicator"
+  binary: kdeconnect-indicator
+
+cheese:
+  description: "Cheese"
+  binary: cheese
+
+text_editor:
+  description: "Text Editor"
+  binary: pluma
+
+blender:
+  description: "Blender"
+  binary: blender
+
+qt5_designer:
+  description: "Qt5 Designer"
+  binary: designer
+
+zotero:
+  description: "Zotero"
+  binary: /opt/Zotero_linux-x86_64/zotero
+
+zathura:
+  description: "Zathura (PDF Viewer)"
+  binary: zathura
+
+wireshark:
+  description: "Wireshark"
+  binary: wireshark
+
+atril:
+  description: "Atril (PDF Viewer)"
+  binary: atril
+
+writer:
+  description: "LibreOffice Writer"
+  binary: libreoffice
+  args: --writer
+
+calc:
+  description: "LibreOffice Calc"
+  binary: libreoffice
+  args: --calc
+
+impress:
+  description: "LibreOffice Impress"
+  binary: libreoffice
+  args: --impress
