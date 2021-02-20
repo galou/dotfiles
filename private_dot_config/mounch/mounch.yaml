@@ -1,11 +1,12 @@
 keepass:
   description: "Keepass"
   binary: keepassx
+  icon: keepassx
 
 inkscape:
-  description: "Inkscape AppImage"
-  binary: /home/gael/.cache/cesnet-owncloud/03-tmp/AppImage/Inkscape-3bc2e81-x86_64.AppImage
-  icon: inkscape
+  description: "Inkscape"
+  binary: inkscape
+  icon: org.inkscape.Inkscape
 
 teams:
   description: "Teams"
@@ -20,82 +21,107 @@ gimp:
 terminal:
   description: "Terminal"
   binary: x-terminal-emulator
+  icon: terminal
 
 prusa:
   description: "Prusa Slicer"
   binary: ~/03-tmp/AppImage/PrusaSlicer-2.3.0.AppImage
+  icon: PrusaSlicer
 
 arduino:
   description: "Arduino IDE"
   binary: /opt/arduino-1.8.13/arduino
+  icon: /opt/arduino-1.8.13/lib/arduino.png
 
 jabref:
   description: "JabRef"
   binary: jabref
+  icon: JabRef-icon-48
 
 file_manager:
   description: "File Manager"
   binary: caja
+  icon: system-file-manager
 
 characters:
   description: "Characters"
   binary: gnome-characters
+  icon: gnome-characters
 
 retext:
   description: "ReText"
   binary: retext
+  icon: retext
 
 meshlab:
   description: "MeshLab"
   binary: meshlab
+  icon: /usr/share/icons/pixmaps/meshlab.png
 
 kde_connect_indicator:
   description: "KDE Connect Indicator"
   binary: kdeconnect-indicator
+  icon: kdeconnect
 
 cheese:
   description: "Cheese"
   binary: cheese
+  icon: cheese
 
 text_editor:
   description: "Text Editor"
   binary: pluma
+  icon: accessories-text-editor
 
 blender:
   description: "Blender"
   binary: blender
+  icon: blender
 
 qt5_designer:
   description: "Qt5 Designer"
   binary: designer
+  icon: designer-qt5
 
 zotero:
   description: "Zotero"
   binary: /opt/Zotero_linux-x86_64/zotero
+  icon: /opt/Zotero_linux-x86_64/chrome/icons/default/default48.png
 
 zathura:
   description: "Zathura (PDF Viewer)"
   binary: zathura
+  icon: org.pwmt.zathura
 
 wireshark:
   description: "Wireshark"
   binary: wireshark
+  icon: wireshark
 
 atril:
   description: "Atril (PDF Viewer)"
   binary: atril
+  icon: atril
 
 writer:
   description: "LibreOffice Writer"
   binary: libreoffice
   args: --writer
+  icon: libreoffice-writer
 
 calc:
   description: "LibreOffice Calc"
   binary: libreoffice
   args: --calc
+  icon: libreoffice-calc
 
 impress:
   description: "LibreOffice Impress"
   binary: libreoffice
   args: --impress
+  icon: libreoffice-impress
+
+vlc:
+  description: "VLC Media Player"
+  binary: vlc
+  icon: vlc

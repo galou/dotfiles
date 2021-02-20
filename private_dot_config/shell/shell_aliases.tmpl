@@ -44,6 +44,7 @@ alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
 alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
 alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device dc5b2368f3997134'
 {{- if eq .chezmoi.hostname "pcgael4"}}
+# `bluetooth` from the tlp package.
 alias bon='bluetooth on'
 alias boff='bluetooth off'
 alias bctl='bluetooth ctl'
