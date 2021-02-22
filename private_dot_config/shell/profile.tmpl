@@ -68,6 +68,9 @@ export LC_ALL=C.UTF-8
 
 export COLCON_HOME=$HOME/.config/colcon
 
+# $TERMINAL is used as first choice in x-terminal-emulator.
+export TERMINAL=$HOME/.local/bin/kitty
+
 {{- if eq .chezmoi.hostname "pcgael3"}}
 export CUDA_PATH=/usr/lib/x86_64-linux-gnu
 {{- end}}
