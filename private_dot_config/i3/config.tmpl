@@ -6,11 +6,11 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 #
 # Public dependencies: setxkbmap, xinput, xrandr, numlockx, xset, rofi,
-#   i3-nagbar, brightnessctl, playerctl, i3-sensible-terminal, pactl, pkill,
+#   i3-nagbar, brightnessctl, playerctl, pactl, pkill,
 #   i3blocks, terminator, vlc, caja, gnome-terminal, x-www-browser,
 #   freecad-daily, vim, mate-calculator, qalculate, ranger, scrot, owncloud,
 #   udiskie, zathura, dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended),
-#   gnome-pomodoro.
+#   gnome-pomodoro, picom (https://github.com/yshui/picom), kitty (https://sw.kovidgoyal.net/kitty/index.html).
 {{- if eq .chezmoi.hostname "pcgael3"}}
 #   i3lock
 {{- end}}
@@ -294,7 +294,8 @@ bindsym Shift+XF86AudioLowerVolume exec --no-startup-id playerctl previous
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 
 # Shortcuts to start applications
-bindsym $mod+Return exec i3-sensible-terminal
+{{- /* i3-sensible-terminal doesn't work, probably because the $TERMINAL variable is not yet defined. */}}
+bindsym $mod+Return exec $HOME/.local/bin/kitty
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
 bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle terminator terminals terminator
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
@@ -330,6 +331,8 @@ bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/sha
 exec owncloud
 exec --no-startup-id udiskie
 exec --no-startup-id gnome-pomodoro --no-default-window
+{{- /* Compositor. */}}
+exec --no-startup-id picom
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
 exec --no-startup-id libinput-gestures-setup start
