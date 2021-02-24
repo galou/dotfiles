@@ -178,7 +178,7 @@ fi
 # Completion for kitty
 which kitty 2>&1 >/dev/null && kitty + complete setup zsh | source /dev/stdin
 # Completion for kg, kitty hyperlinked grep based on ripgrep (~/.local/bin/kg)
-compdef _kg rg
+compdef _rg kg
 
 {{- /* ros_distro may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
 {{- if (index . "ros_distro")}}
