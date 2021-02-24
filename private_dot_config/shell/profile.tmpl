@@ -165,13 +165,11 @@ conda_activate()
     # <<< conda initialize <<<
 }
 
-{{- if eq .chezmoi.hostname "pcgael3"}}
 # PlatformIO.
 platformio_activate()
 {
   add_to_path $HOME/.platformio/penv/bin
 }
-{{- end}}
 
 # MP3 manipulation
 mp3_list() {
