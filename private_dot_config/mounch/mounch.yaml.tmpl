@@ -1,0 +1,175 @@
+# Applications
+
+arduino:
+  description: "Arduino IDE"
+  binary: /opt/arduino-1.8.13/arduino
+  icon: /opt/arduino-1.8.13/lib/arduino.png
+
+atril:
+  description: "Atril (PDF Viewer)"
+  binary: atril
+  icon: atril
+
+blender:
+  description: "Blender"
+  binary: blender
+  icon: blender
+
+calc:
+  description: "LibreOffice Calc"
+  binary: libreoffice
+  args: --calc
+  icon: libreoffice-calc
+
+characters:
+  description: "Characters"
+  binary: gnome-characters
+  icon: gnome-characters
+
+cheese:
+  description: "Cheese"
+  binary: cheese
+  icon: cheese
+
+cutecom:
+  description: "CuteCom"
+  binary: cutecom
+  icon: cutecom
+
+file_manager:
+  description: "File Manager"
+  binary: caja
+  icon: system-file-manager
+
+freecad:
+  description: "FreeCAD"
+  binary: freecad-daily
+  icon: freecad-daily
+
+gimp:
+  description: "GIMP"
+  binary: gimp
+  icon: gimp
+
+impress:
+  description: "LibreOffice Impress"
+  binary: libreoffice
+  args: --impress
+  icon: libreoffice-impress
+
+inkscape:
+  description: "Inkscape"
+  binary: inkscape
+  icon: org.inkscape.Inkscape
+
+jabref:
+  description: "JabRef"
+  binary: jabref
+  icon: JabRef-icon-48
+
+kde_connect_indicator:
+  description: "KDE Connect Indicator"
+  binary: kdeconnect-indicator
+  icon: kdeconnect
+
+keepass:
+  description: "Keepass"
+  binary: keepassx
+  icon: keepassx
+
+meshlab:
+  description: "MeshLab"
+  binary: meshlab
+  icon: /usr/share/icons/pixmaps/meshlab.png
+
+playonlinux:
+  description: "PlayOnLinux"
+  binary: playonlinux
+  icon: playonlinux
+
+prusa:
+  description: "Prusa Slicer"
+  binary: ~/03-tmp/AppImage/PrusaSlicer-2.3.0.AppImage
+  icon: PrusaSlicer
+
+qt5_designer:
+  description: "Qt5 Designer"
+  binary: designer
+  icon: designer-qt5
+
+retext:
+  description: "ReText"
+  binary: retext
+  icon: retext
+
+simplescan:
+  description: "Simple Scan"
+  binary: simple-scan
+  icon: org.gnome.SimpleScan
+
+teams:
+  description: "Teams"
+  binary: teams
+  icon: teams
+
+terminal:
+  description: "Terminal"
+  binary: x-terminal-emulator
+  icon: terminal
+
+text_editor:
+  description: "Text Editor"
+  binary: pluma
+  icon: accessories-text-editor
+
+vlc:
+  description: "VLC Media Player"
+  binary: vlc
+  icon: vlc
+
+wireshark:
+  description: "Wireshark"
+  binary: wireshark
+  icon: wireshark
+
+writer:
+  description: "LibreOffice Writer"
+  binary: libreoffice
+  args: --writer
+  icon: libreoffice-writer
+
+zathura:
+  description: "Zathura (PDF Viewer)"
+  binary: zathura
+  icon: org.pwmt.zathura
+
+zotero:
+  description: "Zotero"
+  binary: /opt/Zotero_linux-x86_64/zotero
+  icon: /opt/Zotero_linux-x86_64/chrome/icons/default/default48.png
+{{- if eq .chezmoi.hostname "pcgael4"}}
+
+calibre:
+  description: "Calibre"
+  binary: calibre
+  icon: calibre-gui
+
+musescore:
+  description: "MuseScore"
+  binary: mscore3
+  icon: mscore3
+
+viking:
+  description: "Viking"
+  binary: viking
+  icon: viking
+{{- end}}
+
+# Documents
+
+dictionary_ods:
+  description: "dictionary.ods"
+  binary: libreoffice
+  args: ["--calc", "/home/gael/06-common/dictionnary.ods"]
+  icon: libreoffice-calc
+
