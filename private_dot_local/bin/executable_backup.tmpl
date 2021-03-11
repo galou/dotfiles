@@ -7,13 +7,12 @@
 #   su -c /home/gael/.local/bin/backup gael
 # '''
 
+MOUNT_POINT="/storage/cesnet-du4"
 {{- if eq .chezmoi.hostname "pcgael3"}}
 
-MOUNT_POINT="/storage/cesnet-du4-storage"
 BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael3"
 {{- else if eq .chezmoi.hostname "pcgael4"}}
 
-MOUNT_POINT="/storage/cesnet-du4"
 BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael4"
 {{- else}}
 
