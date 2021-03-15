@@ -6,6 +6,7 @@ NOTIFY_TIMEOUT_MS=2000
 (xset -q | grep 'DPMS is Disabled' > /dev/null) \
     && (
     xset dpms 120 600 600
+    xset s on
     notify-send \
         --expire-time=$NOTIFY_TIMEOUT_MS \
         --icon=$HOME/.local/share/icons/toggle-off-solid.svg \
@@ -19,6 +20,7 @@ NOTIFY_TIMEOUT_MS=2000
     xset dpms 60000 60000 60000
     xset dpms force on
     xset -dpms
+    xset s off
     notify-send \
         --expire-time=$NOTIFY_TIMEOUT_MS \
         --icon=$HOME/.local/share/icons/toggle-on-solid.svg \
