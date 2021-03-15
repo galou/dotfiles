@@ -297,7 +297,7 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 {{- /* i3-sensible-terminal doesn't work, probably because the $TERMINAL variable is not yet defined. */}}
 bindsym $mod+Return exec $HOME/.local/bin/kitty
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
-bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle terminator terminals terminator
+bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle kitty terminals kitty
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=/home/gael/.config/BraveSoftware/Divercities
 bindsym $mod+n exec caja
