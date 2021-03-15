@@ -16,6 +16,7 @@
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
 #   notify-send, onboard, libinput-gestures-setup, easystroke,
+#   xsetwacom,
 #   ~/.local/bin/bato (https://github.com/doums/bato).
 {{- end}}
 # Custom dependencies: ~/.local/bin/catch-orientation,
@@ -41,6 +42,8 @@ exec --no-startup-id setxkbmap gael
 exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
 exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Middle Emulation Enabled' 1
 exec --no-startup-id ~/.local/bin/catch-orientation
+exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" Gesture on
+exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 300
 {{- end}}
 {{- if (index . "second_monitor")}}
     {{- if eq .second_monitor_position "left"}}
