@@ -6,11 +6,11 @@ Additionaly machine-specific configuration can be written in ~/.config/chezmoi/c
 
   data:
     main_monitor: eDP-1
-    second_monitor: eDP-1
-    second_monitor_position: right
+    second_monitor: HDMI-1
+    second_monitor_position: left
+    second_monitor_rotation: right
     eth_device: eth0
     wifi_device: wlan0
-    ros_distro: melodic
     i3_use_fontawesome: true
     pulseaudio_sink: 0
 
