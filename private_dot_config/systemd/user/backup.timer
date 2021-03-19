@@ -1,0 +1,10 @@
+[Unit]
+Description=Run backup.service every week
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=1w
+Persistent=true
+
+[Install]
+WantedBy=timers.target

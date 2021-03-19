@@ -1,0 +1,6 @@
+[Unit]
+Description=Backup with script ~/.local/bin/backup
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup
