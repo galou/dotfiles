@@ -1,0 +1,8 @@
+[Unit]
+Description=Run update-dmenu-extended-db.service every hour during work time
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 08..18:00:00
+
+[Install]
+WantedBy=timers.target
