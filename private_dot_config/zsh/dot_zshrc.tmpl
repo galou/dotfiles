@@ -183,76 +183,76 @@ compdef _rg kg
 # ROS setup
 ros1_activate()
 {
-  if [ -e /tmp/ros1_workspace.conf ]; then
-    export ROS_WORKSPACE=$(cat /tmp/ros1_workspace.conf)
-
-    if [ -e $ROS_WORKSPACE/devel/setup.zsh ]; then
-      source $ROS_WORKSPACE/devel/setup.zsh
-    elif [ -e $ROS_WORKSPACE/install/local_setup.zsh ]; then
-      source $ROS_WORKSPACE/install/local_setup.zsh
+  if [ ! ${ROS_WORKSPACE} ]; then
+    # Read the workspace from /tmp/ros1_workspace, if $ROS_WORKSPACE is not
+    # defined.
+    if [ -e /tmp/ros1_workspace.conf ]; then
+      export ROS_WORKSPACE=$(cat /tmp/ros1_workspace.conf)
     else
+      echo "$ROS_WORKSPACE is not defined and /tmp/ros1_workspace.conf does not exist" >&2
       return 1
     fi
-  else
-    echo "/tmp/ros1_workspace.conf does not exist" 1>&2
   fi
+
+  if [ ! ${ROS_WORKSPACE} ]; then
+    return 0
+  fi
+
+  source $ROS_WORKSPACE/devel/setup.zsh || return 1
 }
 
 # Activate ROS1 if /tmp/ros1_workspace.conf exists.
 if [ -e /tmp/ros1_workspace.conf ]; then
-  echo "Activating ROS1 workspace $(cat /tmp/ros1_workspace.conf)" 1>&2
+  echo "Activating ROS1 workspace $(cat /tmp/ros1_workspace.conf)" >&2
   ros1_activate || echo "Failed to activate ROS1 workspace $(cat /tmp/ros1_workspace.conf)"
 fi
 
 # ROS2 setup
 ros2_activate()
 {
-  if [ -e /tmp/ros2_workspace.conf ]; then
-    export ROS_WORKSPACE=$(cat /tmp/ros2_workspace.conf)
-    # Colorized terminal output.
-    export RCUTILS_COLORIZED_OUTPUT=1
-
-    if [ -e $ROS_WORKSPACE/install/setup.zsh ]; then
-      source $ROS_WORKSPACE/install/setup.zsh || return 1
-    fi
-
-    if [ -e /opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh ]; then
-      source /opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh
+  if [ ! ${ROS_WORKSPACE} ]; then
+    # Read the workspace from /tmp/ros1_workspace, if $ROS_WORKSPACE is not
+    # defined.
+    if [ -e /tmp/ros2_workspace.conf ]; then
+      export ROS_WORKSPACE=$(cat /tmp/ros2_workspace.conf)
     else
-      echo "/opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" 1>&2
+      echo "$ROS_WORKSPACE is not defined and /tmp/ros2_workspace.conf does not exist" >&2
+      return 1
     fi
-    if [ -e /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh ]; then
-      source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
-    else
-      echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" 1>&2
-    fi
-    if [ - /usr/share/colcon_cd/function/colcon_cd.sh ]; then
-      source /usr/share/colcon_cd/function/colcon_cd.sh
-    else
-      echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" 1>&2
-    fi
-    {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
-    {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
-
-    if [ -e ${ROS_WORKSPACE} ]; then
-      _cwd=$(pwd)
-      cd $ROS_WORKSPACE
-      colcon_cd --set > /dev/null
-      cd $_cwd
-      unset _cwd
-    fi
-
-    # ROS2 has no roscd command, alias it.
-    alias roscd=colcon_cd
-  else
-    echo "/tmp/ros2_workspace.conf does not exist" 1>&2
   fi
+
+  if [ ! ${ROS_WORKSPACE} ]; then
+    return 0
+  fi
+
+  # Colorized terminal output.
+  export RCUTILS_COLORIZED_OUTPUT=1
+
+  source $ROS_WORKSPACE/install/setup.zsh || return 1
+
+  source /opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
+  source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
+
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
+
+  if [ -e ${ROS_WORKSPACE} ]; then
+    _cwd=$(pwd)
+    cd $ROS_WORKSPACE
+    colcon_cd --set > /dev/null
+    cd $_cwd
+    unset _cwd
+  fi
+
+  # ROS2 has no roscd command, alias it.
+  alias roscd=colcon_cd
 }
 
 # Activate ROS2 if /tmp/ros2_workspace.conf exists.
 if [ -e /tmp/ros2_workspace.conf ]; then
-  echo "Activating ROS2 workspace $(cat /tmp/ros2_workspace.conf)" 1>&2
-  ros2_activate || echo "Failed to activate ROS2 workspace $(cat /tmp/ros2_workspace.conf)" 1>&2
+  echo "Activating ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
+  ros2_activate || echo "Failed to activate ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
 fi
 
 # Activate timestamping before running a command.
