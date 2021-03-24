@@ -1,0 +1,10 @@
+[Unit]
+Description=Run get-kerberos-ticket.service every day
+
+[Timer]
+OnActiveSec=0s
+OnUnitActiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

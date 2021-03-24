@@ -1,0 +1,6 @@
+[Unit]
+Description=Get a Kerberos ticket
+
+[Service]
+Type=oneshot
+ExecStart=kinit -k -t %h/.cache/krb5.keytab.ecorcgae nfs/ecorcgae@EINFRA
