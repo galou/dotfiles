@@ -1,0 +1,78 @@
+[
+	{
+		"border": "normal",
+		"floating": "auto_off",
+		"fullscreen_mode": 0,
+		"layout": "splith",
+		"percent": null,
+		"type": "con",
+		"nodes": [
+			{
+				"border": "normal",
+				"current_border_width": 2,
+				"floating": "auto_off",
+				"geometry": {
+					"height": 1161,
+					"width": 956,
+					"x": 0,
+					"y": 0
+				},
+				"name": "~",
+				"percent": 0.75,
+				"swallows": [
+					{
+						"instance": "^kitty$"
+					}
+				],
+				"type": "con"
+			},
+			{
+				"border": "normal",
+				"floating": "auto_off",
+				"layout": "splitv",
+				"percent": 0.25,
+				"type": "con",
+				"nodes": [
+					{
+						"border": "normal",
+						"current_border_width": 2,
+						"floating": "auto_off",
+						"geometry": {
+							"height": 1161,
+							"width": 956,
+							"x": 0,
+							"y": 0
+						},
+						"name": "~",
+						"percent": 0.5,
+						"swallows": [
+							{
+								"instance": "^kitty$"
+							}
+						],
+						"type": "con"
+					},
+					{
+						"border": "normal",
+						"current_border_width": 2,
+						"floating": "auto_off",
+						"geometry": {
+							"height": 1161,
+							"width": 956,
+							"x": 0,
+							"y": 0
+						},
+						"name": "~",
+						"percent": 0.5,
+						"swallows": [
+							{
+								"instance": "^kitty$"
+							}
+						],
+						"type": "con"
+					}
+				]
+			}
+		]
+	}
+]
