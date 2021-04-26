@@ -302,9 +302,9 @@ bindsym $mod+Return exec $HOME/.local/bin/kitty
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
 bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle kitty terminals kitty
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
-bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=/home/gael/.config/BraveSoftware/Divercities
+bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities
 bindsym $mod+n exec caja
-bindsym $mod+o exec gnome-terminal -- htop
+bindsym $mod+o exec kitty -- $HOME/.cargo/bin/ytop
 bindsym $mod+p exec pavucontrol
 bindsym $mod+v exec vim
 bindsym $mod+w exec x-www-browser

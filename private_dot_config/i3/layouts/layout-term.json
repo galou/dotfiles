@@ -5,7 +5,7 @@
 			"name": "Terminal",
 			"swallows": [
 				{
-					"instance": "^gnome-terminal-server$"
+					"instance": "^kitty$"
 				}
 			],
 			"type": "con"
