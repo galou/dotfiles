@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+
+import datetime
+import os
+import subprocess
+import tempfile
+from pathlib import Path
+from typing import Dict, List
+
+BIRTHDAY_FILE = Path(os.path.expanduser('~/.config/i3blocks/birthdays.csv'))
+CACHE_FILE = Path(os.path.expanduser(
+    os.path.join(os.environ.get('XDG_RUNTIME_DIR', tempfile.mktemp()),
+                 'i3blocks_birthdays')))
+DEBUG = False
+
+
+class Birthday:
+    """Represent a birthday."""
+    def __init__(self, datestr: str, name: str):
+        """Create from a YYYY-MM-DD string and name.
+
+        An unknown birth year should have the value 0 or 1.
+
+        """
+        y, m, d = [int(v) for v in datestr.split('-')]
+        if y == 0:
+            # Minimum year for datetime.date is 1.
+            y = 1
+        self.year, self.month, self.day = y, m, d
+        self.date = datetime.date(self.year, self.month, self.day)
+        self.name = name
+        self.on_next_day = False
+
+        self.celebration_year = datetime.date.today().year
+
+    @property
+    def celebration_date(self) -> datetime.date:
+        """Celebration date in the current year."""
+        try:
+            date = datetime.date(self.celebration_year, self.month, self.day)
+        except ValueError:
+            self.on_next_day = True
+            return datetime.date(self.celebration_year, 3, 1)
+        return date
+
+    def __str__(self):
+        comment = ''
+        join_str = ''
+        if self.year != 1:
+            comment += str(self.celebration_year - self.year)
+            join_str = ', '
+        if self.on_next_day:
+            comment += join_str + '02-29'
+        if comment:
+            return self.name + ' (' + comment + ')'
+        else:
+            return self.name
+
+
+def get_birthdays(birthday_file: Path) -> List[Birthday]:
+    """Return the list of birthdays."""
+    if not birthday_file.exists():
+        return []
+    with open(birthday_file, 'r') as f:
+        birthdays = []
+        try:
+            for l in f.readlines():
+                datestr, name, nick = [s.strip() for s in l.split(',')]
+                if nick:
+                    birthday = Birthday(datestr, nick)
+                else:
+                    birthday = Birthday(datestr, name)
+                if DEBUG:
+                    print(f'In file: {birthday}')
+                birthdays.append(birthday)
+            return birthdays
+        except (IndexError, ValueError, IOError):
+            if DEBUG:
+                raise
+            return []
+
+
+def get_cached_birthdays(cache_file: Path) -> List[str]:
+    if not cache_file.exists():
+        return []
+    with open(cache_file, 'r') as f:
+        cache_date_str = f.readline().strip()
+        if cache_date_str != str(datetime.date.today()):
+            return []
+        today = f.readline().strip()
+        within_3days = f.readline().strip()
+        within_5days = f.readline().strip()
+        return [today, within_3days, within_5days]
+
+
+def get_sorted_birthdays(birthdays: List[Birthday]) -> List[List[Birthday]]:
+    """Return the birthdays according to their soon occurence."""
+    today = datetime.date.today()
+    within_1: List[Birthday] = []
+    within_3: List[Birthday] = []
+    within_5: List[Birthday] = []
+    for b in birthdays:
+        if (b.celebration_date - today).days == 0:
+            within_1.append(b)
+        elif 0 < (b.celebration_date - today).days <= 3:
+            within_3.append(b)
+        elif 3 < (b.celebration_date - today).days <= 5:
+            within_5.append(b)
+    return [within_1, within_3, within_5]
+
+
+def birthdays_str(birthdays: List[Birthday]) -> Dict[datetime.date, str]:
+    """Return a sorted dict of birthdays.
+
+    The keys are the dates, the values are strings with all birthdays on that
+    date.
+    """
+    birthdays_dict = {}
+    for b in birthdays:
+        if b.celebration_date in birthdays_dict:
+            birthdays_dict[b.celebration_date] += ' & '
+            birthdays_dict[b.celebration_date] += str(b)
+        else:
+            birthdays_dict[b.celebration_date] = str(b)
+    return dict(sorted(birthdays_dict.items()))
+
+
+def zenity_str(birthdays_dict: Dict[datetime.date, str]) -> str:
+    """Return a string with markup for zenity."""
+    strings = [f'{d.strftime("%m-%d")} <b>{n}</b>'.replace('&', '&amp;')
+               for d, n in birthdays_dict.items()]
+    return '\n'.join(strings)
+
+
+def main():
+    cache = get_cached_birthdays(CACHE_FILE)
+    if cache:
+        print('; '.join(cache))
+        print(cache[0])
+        return
+    birthdays = get_birthdays(BIRTHDAY_FILE)
+    within_1, within_3, within_5 = get_sorted_birthdays(birthdays)
+    d_str_1 = birthdays_str(within_1)
+    d_str_3 = birthdays_str(within_3)
+    if within_1:
+        print(f'{len(within_1)} ')
+        print('')
+        print('#FF0000')
+    elif within_3:
+        print('')
+        print('')
+        print('#FFAE00')
+
+    if os.environ.get('BLOCK_BUTTON', '') == '1':
+        text = ''
+        eol = ''
+        if within_1:
+            text += zenity_str(d_str_1)
+            eol = '\n'
+        if within_3:
+            text += eol + zenity_str(d_str_3)
+            eol = '\n'
+        if within_5:
+            d_str_5 = birthdays_str(within_5)
+            text += eol + zenity_str(d_str_5)
+
+        subprocess.call(['zenity', '--info', '--no-wrap', f'--text={text}'])
+
+
+if __name__ == '__main__':
+    main()

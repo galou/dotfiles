@@ -17,7 +17,7 @@
 {{- if eq .chezmoi.hostname "pcgael4"}}
 #   notify-send, onboard, libinput-gestures-setup, easystroke,
 #   xsetwacom,
-#   ~/.local/bin/bato (https://github.com/doums/bato).
+#   ~/.cargo/bin/bato (https://github.com/doums/bato).
 {{- end}}
 # Custom dependencies: ~/.local/bin/catch-orientation,
 #   ~/.config/i3/i3-startup-layout.sh, ~/.local/bin/i3-rename-workspace,
@@ -39,8 +39,10 @@ set $second_monitor {{.second_monitor}}
 # The scaling is somehow managed by i3 by writing 'Xft.dpi: 180' in ~/.Xresources.
 exec --no-startup-id setxkbmap gael
 {{- if eq .chezmoi.hostname "pcgael4"}}
-exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
+exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Disable While Typing Enabled' 1
 exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Middle Emulation Enabled' 1
+exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
+exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Tapping Enabled' 1
 exec --no-startup-id ~/.local/bin/catch-orientation
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" Gesture on
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 300
@@ -59,7 +61,7 @@ exec --no-startup-id numlockx on
 exec --no-startup-id xset dpms 120 600 600
 {{- if index . "laptop"}}
     {{- if .laptop}}
-exec --no-startup-id ~/.local/bin/bato
+exec --no-startup-id ~/.cargo/bin/bato
     {{- end}}
 {{- end}}
 
