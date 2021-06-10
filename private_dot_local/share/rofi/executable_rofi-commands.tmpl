@@ -8,6 +8,8 @@ options=" lock
  shutdown
  toggle presentation mode
 {{- if eq .chezmoi.hostname "pcgael4"}}
+{{- if (index . "pulseaudio_sink")}}
+ Set default Pulseaudio sink{{- end}}
  toggle bluetooth
  connect to headphones
  connect to JBL
@@ -31,6 +33,8 @@ case "${selection}" in
     " toggle presentation mode")
         toggle-presentation-mode;;
 {{- if eq .chezmoi.hostname "pcgael4"}}
+    " Set default Pulseaudio sink")
+        pactl set-default-sink {{.pulseaudio_sink}};;
     " toggle bluetooth")
         bluetooth-toggle;;
     " connect to headphones")
