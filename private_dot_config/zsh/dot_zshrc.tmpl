@@ -82,8 +82,11 @@ zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:
 # Add custom directory for completion.
 fpath+=$HOME/.config/zsh/completion
 
-# The following lines were added by compinstall
+if [ -e /usr/share/vcstool-completion/vcs.zsh ]; then
+  source /usr/share/vcstool-completion/vcs.zsh
+fi
 
+# The following lines were added by compinstall
 zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*' list-suffixes true
@@ -189,7 +192,7 @@ ros1_activate()
     if [ -e /tmp/ros1_workspace.conf ]; then
       export ROS_WORKSPACE=$(cat /tmp/ros1_workspace.conf)
     else
-      echo "$ROS_WORKSPACE is not defined and /tmp/ros1_workspace.conf does not exist" >&2
+      echo "\$ROS_WORKSPACE is not defined and /tmp/ros1_workspace.conf does not exist" >&2
       return 1
     fi
   fi
@@ -216,7 +219,7 @@ ros2_activate()
     if [ -e /tmp/ros2_workspace.conf ]; then
       export ROS_WORKSPACE=$(cat /tmp/ros2_workspace.conf)
     else
-      echo "$ROS_WORKSPACE is not defined and /tmp/ros2_workspace.conf does not exist" >&2
+      echo "\$ROS_WORKSPACE is not defined and /tmp/ros2_workspace.conf does not exist" >&2
       return 1
     fi
   fi
