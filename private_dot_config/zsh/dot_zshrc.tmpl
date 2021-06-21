@@ -1,5 +1,5 @@
 #!/bin/zsh
-# This file is managed by chezmoi, its source is ~/.local/share/chezmoi/dot_zshrc.tmpl.
+# This file is managed by chezmoi, its source is .../chezmoi/private_dot_config/dot_zshrc.tmpl.
 
 # If not running interactively, don't do anything
 if [[ ! -o interactive ]]; then
@@ -14,62 +14,76 @@ if [ -f ~/.config/shell/profile ]; then
 	. ~/.config/shell/profile
 fi
 
-# antigen configuration
-# mkdir ~/.cache/antigen && cd ~/.cache/antigen && git clone https://github.com/zsh-users/antigen.git.
-ADOTDIR=$HOME/.cache/antigen
-source $ADOTDIR/antigen.zsh
-antigen use oh-my-zsh
-antigen bundle common-aliases
-# Some useful git aliases
-antigen bundle git
-antigen bundle pip
-# Proposes a package for a missing command
-antigen bundle command-not-found
-# Completions for cmake and others.
-antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
-# support approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in
-# http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/
-antigen bundle zsh-navigation-tools
-{{- if 0}}
-{{/* Deactivated because conflicts with up-line-or-beginning-search as of 2019-03-27. */}}
-# Treat new lines from paste differently than typed ones.
-# Cf. https://cirw.in/blog/bracketed-paste.
-antigen bundle safe-paste
-{{- end}}
-antigen theme agnoster
-antigen apply
-# tweak to agnoster theme
-DEFAULT_USER=gael
-prompt_dir() {
-  prompt_segment blue black '%1~'
-}
+declare -A ZINIT  # initial Zinit's hash definition, if configuring before loading Zinit.
+ZINIT[HOME_DIR]=$HOME/.cache/zinit
 
-# Tweak to terminal title set by oh-my-zsh
-ZSH_THEME_TERM_TAB_TITLE_IDLE="%20<..<%~%<<" #20 char left truncated PWD, seems to have no effect with gnome-terminal
-ZSH_THEME_TERM_TITLE_IDLE="%20<..<%~%<<"
+### Added by Zinit's installer and tuned
+if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]]; then
+  print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+  command mkdir -p "$ZINIT[HOME_DIR]" && command chmod g-rwX "$ZINIT[HOME_DIR]"
+  command git clone https://github.com/zdharma/zinit "$ZINIT[HOME_DIR]/bin" && \
+    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+    print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+
+source "$ZINIT[HOME_DIR]/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+### End of Zinit's installer chunk
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node
+
+# Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+# Install if not present.
+[[ -f ~/.config/zsh/.p10k.zsh ]] || zinit ice depth=1; zinit light romkatv/powerlevel10k
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+zinit wait lucid for \
+  OMZL::directories.zsh \{{/* Aliases '-', '2', '...' and others. */}}
+  OMZP::command-not-found \{{/* Proposes a package for a missing command. */}}
+  OMZP::common-aliases \
+  OMZP::git \
+  OMZP::pip \
+  OMZP::safe-paste \{{/* Treat new lines from paste differently than typed ones. Cf. https://cirw.in/blog/bracketed-paste. */}}
+  OMZP::zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
+{{- if 0 }}
+  OMZP::zsh-interactive-cd \{{/* Interactive cd command. */}} Requires ENTER even on single entry.
+{{- end }}
+
+zinit load zsh-users/zsh-completions
+zinit load zsh-users/zsh-syntax-highlighting
+zinit load zsh-users/zsh-autosuggestions
+zinit load agkozak/zsh-z{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
+zinit load psprint/zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
 
 # Terminal title on directory change
 # cf. http://www.tldp.org/HOWTO/text/Xterm-Title
 # Deactivated because set by oh-my-zsh
-# case $TERM in
-# 	xterm*)
-# 		precmd() {print -Pn "\e]0;%20<..<%~\a"}
-# 		;;
-# esac
-
-# Old PS1, now set by agnoster theme
-#export PS1='%B%F{green}%n@%m%f %F{blue}%1~ %#%f%b '
+case $TERM in
+  xterm*)
+    precmd() {print -Pn "\e]0;%20<..<%~\a"}
+    ;;
+esac
 
 # History management
-HISTFILE=~/.bash_history
+HISTFILE=$HOME/.cache/zsh_history
 HISTSIZE=1000
 SAVEHIST=2000
-# save to history immediately but doesn't read history from other shells
+{{/* Save history immediately, so that history is available in all shells. */}}
 setopt inc_appendhistory
+{{/* Avoid duplicates in history. */}}
 setopt hist_ignore_dups
 setopt hist_save_no_dups
+{{/* Change directory without cd. */}}
+setopt autocd
 
 # Vim key bindings
 bindkey -v
@@ -91,13 +105,12 @@ zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle :compinstall filename '/home/gael/.zshrc'
+zstyle :compinstall filename '/home/gael/.config/zsh/.zshrc'
 
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-bindkey "^R" history-incremental-search-backward
 bindkey '^P' up-history
 bindkey '^N' down-history
 # Search with command starting with the same letters
@@ -147,25 +160,6 @@ bindkey '^X^D' fasd-complete-d  # C-x C-d to do fasd-complete-d (only dirs)
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
 
-# fasd initialization
-fasd_cache="$HOME/.cache/fasd-init-zsh"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-	fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
-
-fasd_cd() {
-  if [ $# -le 1 ]; then
-    fasd "$@"
-  else
-    local _fasd_ret="$(fasd -e 'printf %s' "$@")"
-    [ -z "$_fasd_ret" ] && return
-    [ -d "$_fasd_ret" ] && cd "$_fasd_ret" && printf "$_fasd_ret\\n"
-  fi
-}
-
-
 # Do not expand glob patterns, propose a list of matches instead.
 setopt globcomplete
 setopt interactivecomments # pound sign in interactive prompt as a comment
@@ -182,6 +176,11 @@ fi
 which kitty 2>&1 >/dev/null && kitty + complete setup zsh | source /dev/stdin
 # Completion for kg, kitty hyperlinked grep based on ripgrep (~/.local/bin/kg)
 compdef _rg kg
+
+# Configuration for z.
+ZSHZ_DATA=$HOME/.cache/z
+ZSHZ_ECHO=1{{/* displays the new path name when changing directories (default: 0). */}}
+ZSHZ_NO_RESOLVE_SYMLINKS=1 {{/* prevents symlink resolution (default: 0). */}}
 
 # ROS setup
 ros1_activate()
