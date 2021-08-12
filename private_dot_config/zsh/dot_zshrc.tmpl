@@ -188,7 +188,7 @@ fi
 # Configuration for z.
 ZSHZ_DATA=$HOME/.cache/z
 ZSHZ_ECHO=1{{/* displays the new path name when changing directories (default: 0). */}}
-ZSHZ_NO_RESOLVE_SYMLINKS=1 {{/* prevents symlink resolution (default: 0). */}}
+ZSHZ_NO_RESOLVE_SYMLINKS=1{{/* prevents symlink resolution (default: 0). */}}
 
 # ROS setup
 ros1_activate()
@@ -240,8 +240,7 @@ ros2_activate()
 
   source $ROS_WORKSPACE/install/setup.zsh || return 1
 
-  source /opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/foxy/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
-  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
+  {{/* source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2 */ -}}
   source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
 
   {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
