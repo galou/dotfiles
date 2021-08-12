@@ -5,27 +5,59 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 #
-# Public dependencies: setxkbmap, xinput, xrandr, numlockx, xset, rofi,
-#   i3-nagbar, brightnessctl, playerctl, pactl, pkill,
-#   i3blocks, terminator, vlc, caja, gnome-terminal, x-www-browser,
-#   freecad-daily, vim, mate-calculator, qalculate, ranger, scrot, owncloud,
-#   udiskie, zathura, dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended),
-#   gnome-pomodoro, picom (https://github.com/yshui/picom), kitty (https://sw.kovidgoyal.net/kitty/index.html).
+# Public dependencies:
+#   brightnessctl
+#   caja
+#   dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended)
+#   freecad-daily
+#   gnome-pomodoro
+#   gnome-terminal
+#   i3-nagbar
+#   i3blocks
+#   kitty (https://sw.kovidgoyal.net/kitty/index.html)
+#   mate-calculator
+#   numlockx
+#   owncloud
+#   pactl
+#   pkill
+#   playerctl
+#   qalculate
+#   ranger
+#   rofi
+#   scrot
+#   setxkbmap
+#   terminator
+#   udiskie
+#   vim
+#   vlc
+#   x-www-browser
+#   xinput
+#   xrandr
+#   xset
+#   zathura
 {{- if eq .chezmoi.hostname "pcgael3"}}
 #   i3lock
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
-#   notify-send, onboard, libinput-gestures-setup, easystroke,
-#   xsetwacom,
+#   easystroke
+#   libinput-gestures-setup
+#   notify-send
+#   onboard
+#   picom (https://github.com/yshui/picom)
+#   xsetwacom
 #   ~/.cargo/bin/bato (https://github.com/doums/bato).
 {{- end}}
-# Custom dependencies: ~/.local/bin/catch-orientation,
-#   ~/.config/i3/i3-startup-layout.sh, ~/.local/bin/i3-rename-workspace,
-#   ~/.local/bin/notify-mic-status, ~/.local/bin/notify-airplane-mode-status,
-#   ~/.local/share/rofi/rofi-commands, ~/.local/bin/i3-launch-or-toggle,
+# Custom dependencies:
+#   ~/.config/i3/i3-startup-layout.sh
+#   ~/.local/bin/catch-orientation
+#   ~/.local/bin/i3-launch-or-toggle
+#   ~/.local/bin/i3-rename-workspace
+#   ~/.local/bin/notify-airplane-mode-status
+#   ~/.local/bin/notify-mic-status
 #   ~/.local/bin/screencast
+#   ~/.local/share/rofi/rofi-commands
 {{- if eq .chezmoi.hostname "pcgael4"}}
-#   ~/.local/share/icons/input-touchpad-symbolic.svg,
+#   ~/.local/share/icons/input-touchpad-symbolic.svg
 #   ~/.local/share/icons/touchpad-disabled-symbolic.svg
 {{- end}}
 {{- /* Interesting: https://cedaei.com/posts/vim-like-layer-for-xorg-wayland. */}}
@@ -123,7 +155,7 @@ bindsym $mod+Shift+q kill
 #bindsym $mod+space exec --no-startup-id i3-dmenu-desktop
 bindsym $mod+space exec --no-startup-id mounch
 bindsym $mod+Shift+space exec --no-startup-id dmenu_extended_run
-bindsym $mod+d exec --no-startup-id /usr/bin/rofi -plugin-path ~/.local/lib/rofi -show drun
+bindsym $mod+d exec --no-startup-id /usr/bin/rofi -plugin-path ~/.local/lib/rofi -show run
 
 # change focus
 bindsym $mod+h focus left
@@ -336,8 +368,10 @@ bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/sha
 exec owncloud
 exec --no-startup-id udiskie
 exec --no-startup-id gnome-pomodoro --no-default-window
+{{- if ne .chezmoi.hostname "pcgael3"}}
 {{- /* Compositor. */}}
 exec --no-startup-id picom
+{{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
 exec onboard
 exec --no-startup-id libinput-gestures-setup start
