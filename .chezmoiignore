@@ -8,6 +8,7 @@
 .local/share/rofi/finder.sh.rst
 .local/share/rofi/rofi-bibbrowser.rst
 .local/share/rofi/rofi-locate.sh.rst
+.local/share/zsh/site-functions/pip3.rst
 README.rst
 
 {{- if ne .chezmoi.hostname "pcgael4"}}

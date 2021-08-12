@@ -94,7 +94,10 @@ bindkey -v
 zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02=01}:${(s.:.)LS_COLORS}")'
 
 # Add custom directory for completion.
-fpath+=$HOME/.config/zsh/completion
+# E.g.:
+# $ chezmoi completion zsh > ~/.local/share/zsh/site-functions/_chezmoi
+# $ rustup completions zsh rustup > ~/.local/share/zsh/site-functions/_rustup
+fpath+=$HOME/.local/share/zsh/site-functions
 
 if [ -e /usr/share/vcstool-completion/vcs.zsh ]; then
   source /usr/share/vcstool-completion/vcs.zsh
@@ -167,15 +170,20 @@ setopt interactivecomments # pound sign in interactive prompt as a comment
 # Use extendedglob (for example ^CMakeLists.txt for all but this file)
 setopt extendedglob
 
-# Completion for gr (Generated with `gr completion >> ...`
-if [ -e $HOME/.config/zsh/completion/gr.zsh ]; then
-  source $HOME/.config/zsh/completion/gr.zsh
+# Completion for gr (Generated with `gr completion > ...`).
+if [ -e $HOME/.local/share/zsh/site-functions/gr.zsh ]; then                                                                                                                                                       
+  source $HOME/.local/share/zsh/site-functions/gr.zsh
 fi
 
 # Completion for kitty
-which kitty 2>&1 >/dev/null && kitty + complete setup zsh | source /dev/stdin
+which kitty &>/dev/null && kitty + complete setup zsh | source /dev/stdin
 # Completion for kg, kitty hyperlinked grep based on ripgrep (~/.local/bin/kg)
 compdef _rg kg
+
+# Completion for pip3 (Generated with `pip3 completion --zsh > ...`).
+if [ -e $HOME/.local/share/zsh/site-functions/pip3.zsh ]; then
+  source $HOME/.local/share/zsh/site-functions/pip3.zsh
+fi
 
 # Configuration for z.
 ZSHZ_DATA=$HOME/.cache/z
