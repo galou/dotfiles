@@ -1,8 +1,3 @@
 device_config:
   - device_file: /dev/loop*
     ignore: true
-{{- /* /dev/sdc is the SD card reader on pcgael3 */ -}}
-{{- if eq .chezmoi.hostname "pcgael3"}}
-  - device_file: /dev/sdc
-    ignore: true
-{{- end}}
