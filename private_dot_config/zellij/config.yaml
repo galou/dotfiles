@@ -1,0 +1,6 @@
+---
+keybinds:
+    normal:
+        - unbind: [Ctrl: 's']
+        - action: [SwitchToMode: Scroll,]
+          key: [Ctrl: 'b',]
