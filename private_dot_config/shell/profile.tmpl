@@ -71,7 +71,17 @@ export COLCON_HOME=$HOME/.config/colcon
 # $TERMINAL is used as first choice in x-terminal-emulator.
 export TERMINAL=$HOME/.local/bin/kitty
 
-export WEBOTS_HOME=/opt/webots
+# Webots configuration.
+export WEBOTS_DISABLE_SAVE_SCREEN_PERSPECTIVE_ON_CLOSE=1  # If defined, Webots will not save screen specific perspective changes when closed.
+export WEBOTS_ALLOW_MODIFY_INSTALLATION=0                 # If defined, you are allowed to modify files in the Webots home using Webots.
+{{- if 0}}
+# export WEBOTS_DISABLE_WORLD_LOADING_DIALOG=1            # If defined, the loading world progress dialog will never be displayed.
+{{- end}}
+export WEBOTS_HOME=$HOME/04-sources/webots/webots                            # Defines the path to Webots home.
+{{- if 0}}
+{{/* Deactivated because Qt5 would be taken from there and the version there misses xcb. */ -}}
+export LD_LIBRARY_PATH=$WEBOTS_HOME/lib/webots:$LD_LIBRARY_PATH  # Add the Webots libraries to the library path (useful when launching Webots directly without using the launcher).
+{{- end}}
 
 {{- if eq .chezmoi.hostname "pcgael3"}}
 export CUDA_PATH=/usr/lib/x86_64-linux-gnu
@@ -239,6 +249,16 @@ now()
 today()
 {
   date '+%Y-%m-%d'
+}
+
+# Cf. https://superuser.com/a/611582/281191.
+function stopwatch()
+{
+  date1=`date +%s`
+  while true; do 
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"
+    sleep 0.1
+  done
 }
 
 # countdown time_in_seconds.
