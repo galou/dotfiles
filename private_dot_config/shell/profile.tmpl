@@ -77,7 +77,7 @@ export WEBOTS_ALLOW_MODIFY_INSTALLATION=0                 # If defined, you are 
 {{- if 0}}
 # export WEBOTS_DISABLE_WORLD_LOADING_DIALOG=1            # If defined, the loading world progress dialog will never be displayed.
 {{- end}}
-export WEBOTS_HOME=$HOME/04-sources/webots/webots                            # Defines the path to Webots home.
+export WEBOTS_HOME=/opt/webots                            # Defines the path to Webots home.
 {{- if 0}}
 {{/* Deactivated because Qt5 would be taken from there and the version there misses xcb. */ -}}
 export LD_LIBRARY_PATH=$WEBOTS_HOME/lib/webots:$LD_LIBRARY_PATH  # Add the Webots libraries to the library path (useful when launching Webots directly without using the launcher).
