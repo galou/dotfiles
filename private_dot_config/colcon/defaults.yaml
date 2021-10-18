@@ -2,7 +2,7 @@
     "build": {
         "merge-install": true,
         "symlink-install": true,
-        "cmake-args": ["-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
+        "cmake-args": ["-DCMAKE_EXPORT_COMPILE_COMMANDS=ON", "-Wall", "-Wextra", "-DCMAKE_BUILD_TYPE=Debug"],
+        "event-handlers": ["compile_commands+", "desktop_notification+", "status+", "terminal_title+"]
     }
-        #"cmake-concat-compile-commands": true,
 }
