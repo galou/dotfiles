@@ -4,14 +4,14 @@
 # Prefix PATH with the given directory if not alreay present.
 add_to_path()
 {
-    if [ -z ${1} ]; then
-	return
+  if [ -z ${1} ]; then
+    return
+  fi
+  if [ -n "${PATH##*${1}}" -a -n "${PATH##*${1}:*}" ]; then
+    if [ -d ${1} ] ; then
+      export PATH=${1}:$PATH
     fi
-    if [ -n "${PATH##*${1}}" -a -n "${PATH##*${1}:*}" ]; then
-	if [ -d ${1} ] ; then
-	    export PATH=${1}:$PATH
-	fi
-    fi
+  fi
 }
 
 # set PATH so it includes npm bin if it exists and is not already in $PATH.
@@ -34,16 +34,18 @@ stty -echoctl
 
 # 256-color terminal
 if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
-	export TERM=xterm-256color
+  export TERM=xterm-256color
 fi
 
-#function jvim
-#{
-#       	file="$(AUTOJUMP_DATA_DIR=~/.autojump.vim/global autojump $@)"
-#	if [ -n "$file" ]; then 
-#		vim "$file";
-#       	fi
-#}
+{{- /*
+function jvim
+{
+  file="$(AUTOJUMP_DATA_DIR=~/.autojump.vim/global autojump $@)"
+    if [ -n "$file" ]; then
+      vim "$file";
+    fi
+}
+*/}}
 
 export EDITOR=vim
 
@@ -94,18 +96,18 @@ fi
 
 get_ip_first_available()
 {
-	{{- if (index . "eth_device")}}
-	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-	{{- end}}
-	{{- if (index . "wifi_device")}}
-	if [ -z "$ip" ]; then
-		ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-	fi
-	{{- end}}
-	if [ -z "$ip" ]; then
-		ip='127.0.0.1'
-	fi
-	echo $ip
+{{- if (index . "eth_device")}}
+  ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+{{- end}}
+{{- if (index . "wifi_device")}}
+  if [ -z "$ip" ]; then
+  ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+  fi
+{{- end}}
+  if [ -z "$ip" ]; then
+    ip='127.0.0.1'
+  fi
+  echo $ip
 }
 
 {{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
@@ -113,11 +115,11 @@ get_ip_first_available()
 
 get_ip_eth()
 {
-	ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-	if [ -z "$ip" ]; then
-		ip='xx.xx.xx.xx'
-	fi
-	echo $ip
+  ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+  if [ -z "$ip" ]; then
+    ip='xx.xx.xx.xx'
+  fi
+  echo $ip
 }
 
 {{- end}}
@@ -126,11 +128,11 @@ get_ip_eth()
 
 get_ip_wifi()
 {
-    ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-    if [ -z "$ip" ]; then
-	ip='xx.xx.xx.xx'
-    fi
-    echo $ip
+  ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+  if [ -z "$ip" ]; then
+    ip='xx.xx.xx.xx'
+  fi
+  echo $ip
 }
 {{- end }}
 
@@ -159,20 +161,20 @@ ros_rosconsole_format_node_message()
 
 conda_activate()
 {
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/gael/.local/lib/conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-	eval "$__conda_setup"
+  # >>> conda initialize >>>
+  # !! Contents within this block are managed by 'conda init' !!
+  __conda_setup="$('/home/gael/.local/lib/conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+  else
+    if [ -f "/home/gael/.local/lib/conda/etc/profile.d/conda.sh" ]; then
+      . "/home/gael/.local/lib/conda/etc/profile.d/conda.sh"
     else
-	if [ -f "/home/gael/.local/lib/conda/etc/profile.d/conda.sh" ]; then
-	    . "/home/gael/.local/lib/conda/etc/profile.d/conda.sh"
-	else
-	    export PATH="/home/gael/.local/lib/conda/bin:$PATH"
-	fi
+      export PATH="/home/gael/.local/lib/conda/bin:$PATH"
     fi
-    unset __conda_setup
-    # <<< conda initialize <<<
+  fi
+  unset __conda_setup
+  # <<< conda initialize <<<
 }
 
 # PlatformIO.
@@ -183,65 +185,65 @@ platformio_activate()
 
 # MP3 manipulation
 mp3_list() {
-    find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
+  find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
 }
 
 # fcd file
 # cd to the directory containing file.
 fcd()
 {
-    cd "$(dirname "$1")"
+  cd "$(dirname "$1")"
 }
 
 # mkcd directory
 # mkdir directory && cd directory
 mkcd()
 {
-    mkdir -p "$1" && cd "$1"
+  mkdir -p "$1" && cd "$1"
 }
 
 weather()
 {
-    curl -Ss 'https://wttr.in?0' || echo "No weather"
+  curl -Ss 'https://wttr.in?0' || echo "No weather"
 }
 
 psaux()
 {
-    if [[ -z "$1" ]]; then
-        ps aux
-    elif [[ "$1"  = grep ]]; then
-        ps aux | grep grep
-    else
-        ps aux | grep -v grep | grep "$1"
-    fi
+  if [[ -z "$1" ]]; then
+    ps aux
+  elif [[ "$1"  = grep ]]; then
+    ps aux | grep grep
+  else
+    ps aux | grep -v grep | grep "$1"
+  fi
 }
 
 psux()
 {
-    if [[ -z "$1" ]]; then
-        ps ux
-    elif [[ "$1" = grep ]]; then
-        ps ux | grep grep
-    else
-        ps ux | grep -v grep | grep "$1"
-    fi
+  if [[ -z "$1" ]]; then
+    ps ux
+  elif [[ "$1" = grep ]]; then
+    ps ux | grep grep
+  else
+    ps ux | grep -v grep | grep "$1"
+  fi
 }
 
 extract-images()
 {
-    ffmpeg -i $1 $1-%05d.jpg -hide_banner
+  ffmpeg -i $1 $1-%05d.jpg -hide_banner
 }
 
 # connected_displays
 # Return a space separated list of connected displays
 connected_displays()
 {
-    xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
+  xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
 }
 
 now()
 {
-    date '+%Y-%m-%d--%H-%M-%S'
+  date '+%Y-%m-%d--%H-%M-%S'
 }
 
 today()
@@ -253,7 +255,7 @@ today()
 function stopwatch()
 {
   date1=`date +%s`
-  while true; do 
+  while true; do
     echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"
     sleep 0.1
   done
@@ -351,3 +353,8 @@ colcon()
 }
 
 export HOST
+
+{{- if (index . "github_pat")}}
+# Personnal Access Token for Github.
+export PAT={{.github_pat}}
+{{- end}}
