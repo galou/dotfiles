@@ -108,7 +108,7 @@ zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle :compinstall filename '/home/gael/.config/zsh/.zshrc'
+zstyle :compinstall filename "$HOME/.config/zsh/.zshrc"
 
 autoload -Uz compinit
 compinit
@@ -283,4 +283,19 @@ fi
 if [ -f ~/.config/zsh/zsh_aliases ]; then
     . ~/.config/zsh/zsh_aliases
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup=$("$HOME/.local/share/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="$HOME/.local/share/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
