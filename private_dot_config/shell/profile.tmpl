@@ -324,6 +324,7 @@ colcon()
         mkdir build
         cd build
         touch COLCON_IGNORE
+        cd ..
       else
         while [ ! -e "build/COLCON_IGNORE" ]; do
           cd ..
