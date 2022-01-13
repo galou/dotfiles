@@ -99,6 +99,7 @@
     todo                    # todo items (https://github.com/todotxt/todo.txt-cli)
     timewarrior             # timewarrior tracking status (https://timewarrior.net/)
     taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
+    ros_workspace           # content of $ROS_WORKSPACE
     # time                  # current time
     # =========================[ Line #2 ]=========================
     newline                 # \n
@@ -1537,6 +1538,16 @@
   #   P9K_WIFI_RSSI         | signal strength in dBm, from -120 to 0
   #   P9K_WIFI_NOISE        | noise in dBm, from -120 to 0
   #   P9K_WIFI_BARS         | signal strength in bars, from 0 to 4 (derived from P9K_WIFI_RSSI and P9K_WIFI_NOISE)
+
+  ####################################[ ros_workspace: $ROS_WORKSPACE ]#########################
+  # typeset -g POWERLEVEL9K_ROS_WORKSPACE_SHOW_ON_COMMAND='ros2|colcon|roscd|jupyter|python|python3|ipython|rviz|rqt'
+
+  function prompt_ros_workspace() {
+    if [ ${ROS_WORKSPACE} ]; then
+      local workspace=
+      p10k segment -f 130 -t "${ROS_WORKSPACE//$HOME\//}"
+    fi
+  }
 
   ####################################[ time: current time ]####################################
   # Current time color.

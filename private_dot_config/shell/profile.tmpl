@@ -353,6 +353,55 @@ colcon()
   esac
 }
 
+function grcat_rc() {
+  grcat $DIR/src/robocon_ros2_pkgs/jakub_tests/grc/grc-ros2.conf
+}
+
+function treat_debug_log() {
+  # handy filter and colorizer (!) for noisy ROS2 debug logs:
+  #
+  # - rcl
+  # - weird action related messages
+  # - tf2 message filter
+  # - rviz bugs
+  #
+  # needs grc (apt install grc)
+  #grc -c $DIR/src/robocon_ros2_pkgs/jakub_tests/grc/grc-ros2.conf -es --colour=on $@
+  $@ 2>&1 | grcat_rc
+}
+
+# Echo the latest log with optional filter (node name).
+function roslog() {
+  filter=${1:-.} # $1 or '.' to feed grep with something
+  echo $HOME/.ros/log/$(ls -1 -c $HOME/.ros/log/ | grep $filter | head -n 1)
+}
+
+# Echo the latest log with optional filter (for example node name), working also for Python nodes
+#  that has logs named python3_XXXXX_XXXXX.log => it has to search inside for `[something node name`
+function roslogex() {
+  filter=${1:-.} # $1 or '.' to feed grep with something
+  ls -1 -c $HOME/.ros/log/ | head -n 100 | xargs -I {} grep -m 1 -l -E "\[[^]]*?$filter" $HOME/.ros/log/{} 2>/dev/null | head -n 1
+}
+
+# returns all logs (!!!) for specified node; can be time consuming if you have a lot of ROS logs!
+# log names are returned from the oldest to the newest
+# use like this `roslogex_all robocon_app | xargs -I {} grep -E 'Time taken' {} | grcat_rc`
+# or `roslogex_all robocon_app | xargs -I {} cat {} | grcat_rc`
+function roslogex_all() {
+  filter=${1:-.} # $1 or '.' to feed grep with something
+  ls -1 -r -c $HOME/.ros/log/ | xargs -I {} grep -m 1 -l -E "\[[^]]*?$filter" $HOME/.ros/log/{} 2>/dev/null
+}
+
+# Open the latest log with optional filter (node name).
+function editor_roslog() {
+  editor=${EDITOR:-less} # $EDITOR or less
+  $editor $(roslog $1)
+}
+
+function roslogex_grc() {
+  cat $(roslogex $1) | grcat_rc
+}
+
 export HOST
 
 {{- if (index . "github_pat")}}
