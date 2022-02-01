@@ -342,7 +342,8 @@ bindsym $mod+n exec caja
 bindsym $mod+o exec kitty -- $HOME/.cargo/bin/ytop
 bindsym $mod+p exec pavucontrol
 bindsym $mod+v exec vim
-bindsym $mod+w exec x-www-browser
+bindsym $mod+w exec --no-startup-id $HOME/.local/share/rofi/rofi-wifi
+bindsym $mod+Shift+w exec x-www-browser
 bindsym $mod+y exec --no-startup-id i3-layout-manager
 bindsym $mod+Shift+y exec freecad-daily
 bindsym $mod+z exec zathura
