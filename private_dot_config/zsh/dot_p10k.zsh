@@ -1544,8 +1544,9 @@
 
   function prompt_ros_workspace() {
     if [ ${ROS_WORKSPACE} ]; then
-      local workspace=
       p10k segment -f 130 -t "${ROS_WORKSPACE//$HOME\//}"
+    elif [ ${ROS_DISTRO} ]; then
+      p10k segment -f 130 -t "${ROS_DISTRO}"
     fi
   }
 

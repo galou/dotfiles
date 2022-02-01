@@ -1,5 +1,6 @@
 # zsh-specific aliases, completing ~/.config/shell/shell_aliases.
 
+# 'alias -d pdf=acroread' is set in OMZP::common-aliases.
 alias -s pdf='gio open'
 
 alias apt='noglob apt'
