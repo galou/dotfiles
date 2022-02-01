@@ -14,6 +14,7 @@
 #   gnome-terminal
 #   i3-nagbar
 #   i3blocks
+#   kdeconnect-indicator
 #   kitty (https://sw.kovidgoyal.net/kitty/index.html)
 #   mate-calculator
 #   numlockx
@@ -368,6 +369,7 @@ bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/sha
 exec owncloud
 exec --no-startup-id udiskie
 exec --no-startup-id gnome-pomodoro --no-default-window
+exec --no-startup-id kdeconnect-indicator
 {{- if ne .chezmoi.hostname "pcgael3"}}
 {{- /* Compositor. */}}
 exec --no-startup-id picom
