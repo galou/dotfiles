@@ -86,6 +86,12 @@ export LD_LIBRARY_PATH=$WEBOTS_HOME/lib/webots:$LD_LIBRARY_PATH  # Add the Webot
 export CUDA_PATH=/usr/lib/x86_64-linux-gnu
 {{- end}}
 
+# Some programs use LC_NUMERIC to parse numbers and may expect a comma as
+# decimal separator.
+# There may be some inconsistency between formats of text such as dates and
+# numbers because of this setting.
+export LC_NUMERIC=en_US.UTF-8
+
 # Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
     source <(gr completion)
