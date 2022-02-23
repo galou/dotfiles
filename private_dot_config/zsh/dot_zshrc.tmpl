@@ -65,6 +65,9 @@ zinit load zsh-users/zsh-autosuggestions
 zinit load agkozak/zsh-z{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
 zinit load psprint/zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
 
+# Completion for GNU compatible executables.
+compdef _gnu_generic csv2freecad
+
 # Terminal title on directory change
 # cf. http://www.tldp.org/HOWTO/text/Xterm-Title
 # Deactivated because set by oh-my-zsh
@@ -239,13 +242,19 @@ ros2_activate()
   # Colorized terminal output.
   export RCUTILS_COLORIZED_OUTPUT=1
 
-  source $ROS_WORKSPACE/install/setup.zsh || return 1
-
-  {{/* source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2 */ -}}
   source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
 
-  {{/* source ${ROS_WORKSPACE}/install/share/ament_index_python/environment/ament_index-argcomplete.zsh */ -}}
-  {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh */ -}}
+  # Must be after `colcon-argcomplete.zsh`.
+  source $ROS_WORKSPACE/install/setup.zsh || return 1
+
+  {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh || echo "${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh does not exist" >&2 */ -}}
+
+  {{/* Both sourcing must be after source setup.zsh, so that $ROS_DISTRO is defined. */ -}}
+  {{/* Sourcing `ament_index-argcomplete.zsh` must be before sourcing `ros2-argcomplete.zsh`. */ -}}
+  {{/* It seems that argcomplete files are mutually exclusive, thus `ros2-argcomplete.zsh` as last. */ -}}
+  source /opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh does not exist" >&2
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
+  source /opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
 
   if [ -e ${ROS_WORKSPACE} ]; then
     _cwd=$(pwd)
