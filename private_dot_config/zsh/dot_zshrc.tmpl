@@ -52,6 +52,7 @@ zinit wait lucid for \
   OMZL::directories.zsh \{{/* Aliases '-', '2', '...' and others. */}}
   OMZP::command-not-found \{{/* Proposes a package for a missing command. */}}
   OMZP::git \
+  OMZP::per-directory-history \{{/* Problem with zinit-based installation, had to install manually. */}}
   OMZP::pip \
   OMZP::safe-paste \{{/* Treat new lines from paste differently than typed ones. Cf. https://cirw.in/blog/bracketed-paste. */}}
   OMZP::zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
@@ -79,6 +80,8 @@ esac
 
 # History management
 HISTFILE=$HOME/.cache/zsh_history
+HISTORY_BASE=$HOME/.cache/zsh_per_directory_history # For per-directory-history. Toggle with Ctrl-G.
+HISTORY_START_WITH_GLOBAL=true
 HISTSIZE=1000
 SAVEHIST=2000
 {{/* Save history immediately, so that history is available in all shells. */}}
