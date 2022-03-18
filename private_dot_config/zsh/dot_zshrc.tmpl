@@ -1,5 +1,5 @@
 #!/bin/zsh
-# This file is managed by chezmoi, its source is .../chezmoi/private_dot_config/dot_zshrc.tmpl.
+# This file is managed by chezmoi, its source is .../chezmoi/private_dot_config/zsh/dot_zshrc.tmpl.
 
 # If not running interactively, don't do anything
 if [[ ! -o interactive ]]; then
@@ -9,11 +9,6 @@ fi
 # Uncomment the following line and the first line to start profiling.
 # zprof
 
-# Profile
-if [ -f ~/.config/shell/profile ]; then
-	. ~/.config/shell/profile
-fi
-
 declare -A ZINIT  # initial Zinit's hash definition, if configuring before loading Zinit.
 ZINIT[HOME_DIR]=$HOME/.cache/zinit
 
@@ -21,7 +16,7 @@ ZINIT[HOME_DIR]=$HOME/.cache/zinit
 if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]]; then
   print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
   command mkdir -p "$ZINIT[HOME_DIR]" && command chmod g-rwX "$ZINIT[HOME_DIR]"
-  command git clone https://github.com/zdharma/zinit "$ZINIT[HOME_DIR]/bin" && \
+  command git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT[HOME_DIR]/bin" && \
     print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
     print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
@@ -32,15 +27,10 @@ autoload -Uz _zinit
 
 ### End of Zinit's installer chunk
 
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
-# Load OMZP::common-aliases without Turbo otherwise aliases cannot be overwritten by zsh_aliases.
-zinit light-mode for OMZP::common-aliases
+# Profile
+if [ -f ~/.config/shell/profile ]; then
+  zinit wait"0" lucid for is-snippet  ~/.config/shell/profile
+fi
 
 # Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
@@ -48,23 +38,24 @@ zinit light-mode for OMZP::common-aliases
 [[ -f ~/.config/zsh/.p10k.zsh ]] || zinit ice depth=1; zinit light romkatv/powerlevel10k
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
-zinit wait lucid for \
+zinit wait"!0" lucid for \
   OMZL::directories.zsh \{{/* Aliases '-', '2', '...' and others. */}}
   OMZP::command-not-found \{{/* Proposes a package for a missing command. */}}
   OMZP::git \
-  OMZP::per-directory-history \{{/* Problem with zinit-based installation, had to install manually. */}}
   OMZP::pip \
   OMZP::safe-paste \{{/* Treat new lines from paste differently than typed ones. Cf. https://cirw.in/blog/bracketed-paste. */}}
-  OMZP::zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
+  zdharma-continuum/zsh-navigation-tools \{{/* Approximate Ctrl-R matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
+  agkozak/zsh-z \{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
+  OMZP::common-aliases \{{/* A few useful aliases: gst, gp, gl, etc. */}}
+  zdharma-continuum/zsh-navigation-tools \{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
+  zsh-users/zsh-completions
 {{- if 0 }}
+  OMZP::per-directory-history \{{/* Toggle per-directory history. */}} Do not share history between open shells
   OMZP::zsh-interactive-cd \{{/* Interactive cd command. */}} Requires ENTER even on single entry.
 {{- end }}
 
-zinit load zsh-users/zsh-completions
-zinit load zsh-users/zsh-syntax-highlighting
-zinit load zsh-users/zsh-autosuggestions
-zinit load agkozak/zsh-z{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
-zinit load psprint/zsh-navigation-tools{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
+zinit load zsh-users/zsh-autosuggestions{{/* Show the last matching history in grey. Right arrow to use. Seems not to work with Turbo. */}}
+zinit load zsh-users/zsh-syntax-highlighting{{/* Must be loaded without Turbo because of fasd */}}
 
 # Completion for GNU compatible executables.
 compdef _gnu_generic csv2freecad
@@ -80,16 +71,15 @@ esac
 
 # History management
 HISTFILE=$HOME/.cache/zsh_history
-HISTORY_BASE=$HOME/.cache/zsh_per_directory_history # For per-directory-history. Toggle with Ctrl-G.
-HISTORY_START_WITH_GLOBAL=true
 HISTSIZE=1000
 SAVEHIST=2000
-{{/* Save history immediately, so that history is available in all shells. */}}
+
+{{- /* Save history immediately, so that history is available in all shells. */}}
 setopt inc_appendhistory
-{{/* Avoid duplicates in history. */}}
+{{- /* Avoid duplicates in history. */}}
 setopt hist_ignore_dups
 setopt hist_save_no_dups
-{{/* Change directory without cd. */}}
+{{- /* Change directory without cd. */}}
 setopt autocd
 
 # Vim key bindings
@@ -107,7 +97,7 @@ zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:
 fpath+=$HOME/.local/share/zsh/site-functions
 
 if [ -e /usr/share/vcstool-completion/vcs.zsh ]; then
-  source /usr/share/vcstool-completion/vcs.zsh
+  zinit wait"0" lucid for is-snippet /usr/share/vcstool-completion/vcs.zsh
 fi
 
 # The following lines were added by compinstall
@@ -178,8 +168,8 @@ setopt interactivecomments # pound sign in interactive prompt as a comment
 setopt extendedglob
 
 # Completion for gr (Generated with `gr completion > ...`).
-if [ -e $HOME/.local/share/zsh/site-functions/gr.zsh ]; then                                                                                                                                                       
-  source $HOME/.local/share/zsh/site-functions/gr.zsh
+if [ -e $HOME/.local/share/zsh/site-functions/gr.zsh ]; then
+  zinit wait"1" lucid for is-snippet $HOME/.local/share/zsh/site-functions/gr.zsh
 fi
 
 # Completion for kitty
@@ -189,7 +179,7 @@ compdef _rg kg
 
 # Completion for pip3 (Generated with `pip3 completion --zsh > ...`).
 if [ -e $HOME/.local/share/zsh/site-functions/pip3.zsh ]; then
-  source $HOME/.local/share/zsh/site-functions/pip3.zsh
+  zinit wait"1" lucid for is-snippet $HOME/.local/share/zsh/site-functions/pip3.zsh
 fi
 
 # Configuration for z.
@@ -298,23 +288,24 @@ activate_timestamp()
 
 # Aliases
 if [ -f ~/.config/shell/shell_aliases ]; then
-    . ~/.config/shell/shell_aliases
+  zinit wait"1" lucid for is-snippet ~/.config/shell/shell_aliases
 fi
 if [ -f ~/.config/zsh/zsh_aliases ]; then
-    . ~/.config/zsh/zsh_aliases
+  {{/* Load after OMZP::common-aliases */}}
+  zinit wait"1" lucid for is-snippet ~/.config/zsh/zsh_aliases
 fi
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup=$("$HOME/.local/share/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)
 if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
+  eval "$__conda_setup"
 else
-    if [ -f "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/.local/share/miniconda3/bin:$PATH"
-    fi
+  if [ -f "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh"
+  else
+    export PATH="$HOME/.local/share/miniconda3/bin:$PATH"
+  fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
