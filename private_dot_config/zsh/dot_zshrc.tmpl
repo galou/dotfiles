@@ -214,13 +214,17 @@ if [ -e /tmp/ros1_workspace.conf ]; then
   ros1_activate || echo "Failed to activate ROS1 workspace $(cat /tmp/ros1_workspace.conf)"
 fi
 
+# Prints the ROS distro for a given workspace, relies on the existence of the
+# file $ROS_WORKSPACE/install/ROS_DISTRO with the distro name as content
+# (without whitespaces).
 rosdistro_from_workspace()
 {
   WORKSPACE=${1:-$ROS_WORKSPACE}
-  grep COLCON_CURRENT_PREFIX=\"/opt/ros/ $WORKSPACE/install/setup.zsh | sed -e 's%COLCON_CURRENT_PREFIX="/opt/ros/\(.*\)"%\1%' || return 1
+  ROS_DISTRO=$(cat $ROS_WORKSPACE/install/ROS_DISTRO)
+  echo $ROS_DISTRO
 }
 
-# ROS2 setup
+# ROS2 setup, sources /opt/ros/$ROS_DISTRO/setup.zsh, then $WORKSPACE/install/setup.zsh.
 ros2_activate()
 {
   if [ ! ${ROS_WORKSPACE} ]; then
@@ -245,6 +249,7 @@ ros2_activate()
 
   source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
 
+  source /opt/ros/$ROS_DISTRO/setup.zsh || return 1
   source $ROS_WORKSPACE/install/setup.zsh || return 1
 
   {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh || echo "${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh does not exist" >&2 */ -}}
