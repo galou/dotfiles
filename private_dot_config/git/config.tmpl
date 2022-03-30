@@ -1,18 +1,26 @@
 [user]
-	email = {{.git.user.email}}
-	name = {{.git.user.name}}
+    email = {{.git.user.email}}
+    name = {{.git.user.name}}
 
 [credential]
-	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+    helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 
 [pager]
     diff = delta
     log = delta
     reflog = delta
     show = delta
+    tool = difftastic
+    difftool = true
 
 [diff]
     colorMoved = default
+
+[difftool]
+    prompt = false
+
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
 
 [interactive]
     diffFilter = delta --color-only --features=interactive
