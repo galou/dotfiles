@@ -244,6 +244,16 @@ ros2_activate()
 
   export ROS_DISTRO=$(rosdistro_from_workspace)
 
+  {{- /*
+  # Limit the communication to local host.
+  export ROS_LOCALHOST_ONLY=1
+  */}}
+
+  # Set a domain id.
+  _default_domain_id="$(( $(( 0x$(whoami | md5sum | cut -f 1 -d " " | cut -c 1-4) )) % 101 ))"
+  export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:=$_default_domain_id}"
+  unset _default_domain_id
+
   # Colorized terminal output.
   export RCUTILS_COLORIZED_OUTPUT=1
 
