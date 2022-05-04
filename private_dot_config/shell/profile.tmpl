@@ -409,7 +409,7 @@ function roslogex_grc() {
 
 export HOST
 
-{{- if (index . "github_pat")}}
+{{- if (index . "github.pat")}}
 # Personnal Access Token for Github.
-export PAT={{.github_pat}}
+export PAT={{.github.pat}}
 {{- end}}
