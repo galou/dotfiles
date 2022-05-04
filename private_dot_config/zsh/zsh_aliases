@@ -6,7 +6,9 @@ alias -s pdf='gio open'
 
 # 'alias -s {c,cc,cpp,cxx,h,hh}' are set in OMZP::common-aliases.
 alias -s hpp='$EDITOR'
+{{- /* alias -s py opens even executable files in the editor.
 alias -s py='$EDITOR'
+*/}}
 
 alias apt='noglob apt'
 
