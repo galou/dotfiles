@@ -8,7 +8,7 @@ function notify-airplane-mode-active ()
 {
     notify-send \
         --expire-time=$NOTIFY_TIMEOUT_MS \
-        --icon=$HOME/.local/share/icons/plane-slash-solid.svg \
+        --icon=$HOME/.local/share/icons/plane-solid.svg \
         --app-name=notify-mic-status \
         --urgency=low \
         --category=device \
@@ -19,7 +19,7 @@ function notify-airplane-mode-inactive ()
 {
     notify-send \
         --expire-time=$NOTIFY_TIMEOUT_MS \
-        --icon=$HOME/.local/share/icons/plane-solid.svg \
+        --icon=$HOME/.local/share/icons/plane-slash-solid.svg \
         --app-name=notify-mic-status \
         --urgency=low \
         --category=device \
