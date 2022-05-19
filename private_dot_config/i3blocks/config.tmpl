@@ -89,7 +89,7 @@ interval=30
 #label=
 #interval=10
 
-{{- if eq .chezmoi.hostname "pcgael4"}}
+{{- if and (index "laptop") .laptop}}
 
 # Network interface monitoring
 #

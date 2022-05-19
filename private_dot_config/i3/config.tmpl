@@ -6,31 +6,32 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 #
 # Public dependencies:
-#   brightnessctl
-#   caja
+#   brightnessctl (apt install brightnessctl)
+#   caja (apt install caja)
 #   dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended)
-#   freecad-daily
-#   gnome-pomodoro
+#   freecad-daily (https://freecad.org)
+#   gnome-pomodoro (apt install gnome-shell-pomodoro)
 #   gnome-terminal
-#   i3-nagbar
-#   i3blocks
-#   kdeconnect-indicator
+#   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager)
+#   i3-nagbar (apt install i3)
+#   i3blocks (apt install i3blocks)
+#   kdeconnect-indicator (apt install kdeconnect)
 #   kitty (https://sw.kovidgoyal.net/kitty/index.html)
-#   mate-calculator
-#   numlockx
+#   mate-calc (apt install mate-calc)
+#   numlockx (apt install numlockx)
 #   owncloud
-#   pactl
+#   pactl (apt install pulseaudio-utils)
 #   pkill
-#   playerctl
-#   qalculate
-#   ranger
-#   rofi
-#   scrot
+#   playerctl (apt install playerctl)
+#   qalc (apt install qalc)
+#   ranger (pip3 install ranger-fm)
+#   rofi (apt install rofi)
+#   scrot (apt install scrot)
 #   setxkbmap
-#   terminator
-#   udiskie
-#   vim
-#   vlc
+#   terminator (apt install terminator)
+#   udiskie (apt install udiskie)
+#   vim (https://neovim.io/)
+#   vlc (apt install vlc)
 #   x-www-browser
 #   xinput
 #   xrandr
@@ -46,20 +47,22 @@
 #   onboard
 #   picom (https://github.com/yshui/picom)
 #   xsetwacom
+{{- end}}
+{{- if and (index . "laptop") .laptop}}
 #   ~/.cargo/bin/bato (https://github.com/doums/bato).
 {{- end}}
 # Custom dependencies:
-#   ~/.config/i3/i3-startup-layout.sh
+#   ~/.config/i3/i3-startup-layout.sh (this repo)
 #   ~/.local/bin/catch-orientation
-#   ~/.local/bin/i3-launch-or-toggle
-#   ~/.local/bin/i3-rename-workspace
-#   ~/.local/bin/notify-airplane-mode-status
-#   ~/.local/bin/notify-mic-status
-#   ~/.local/bin/screencast
-#   ~/.local/share/rofi/rofi-commands
+#   ~/.local/bin/i3-launch-or-toggle (this repo)
+#   ~/.local/bin/i3-rename-workspace (this repo)
+#   ~/.local/bin/notify-airplane-mode-status (this repo)
+#   ~/.local/bin/notify-mic-status (this repo)
+#   ~/.local/bin/screencast (this repo)
+#   ~/.local/share/rofi/rofi-commands (this repo)
 {{- if eq .chezmoi.hostname "pcgael4"}}
-#   ~/.local/share/icons/input-touchpad-symbolic.svg
-#   ~/.local/share/icons/touchpad-disabled-symbolic.svg
+#   ~/.local/share/icons/input-touchpad-symbolic.svg (this repo)
+#   ~/.local/share/icons/touchpad-disabled-symbolic.svg (this repo)
 {{- end}}
 {{- /* Interesting: https://cedaei.com/posts/vim-like-layer-for-xorg-wayland. */}}
 
@@ -80,6 +83,12 @@ exec --no-startup-id ~/.local/bin/catch-orientation
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" Gesture on
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 300
 {{- end}}
+{{- if eq .chezmoi.hostname "pcgael5"}}
+exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Disable While Typing Enabled' 1
+exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Middle Emulation Enabled' 1
+exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Natural Scrolling Enabled' 1
+exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Tapping Enabled' 1
+{{- end}}
 {{- if (index . "second_monitor")}}
     {{- if eq .second_monitor_position "left"}}
 exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --left-of $main_monitor --rotate {{.second_monitor_rotation}}
@@ -92,10 +101,8 @@ exec --no-startup-id xrandr --output $main_monitor --primary
 exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms 120 600 600
-{{- if index . "laptop"}}
-    {{- if .laptop}}
+{{- if and (index . "laptop") .laptop}}
 exec --no-startup-id ~/.cargo/bin/bato
-    {{- end}}
 {{- end}}
 
 # Main key for interacting with i3.
@@ -374,6 +381,7 @@ exec --no-startup-id gnome-pomodoro --no-default-window
 exec --no-startup-id kdeconnect-indicator
 {{- if ne .chezmoi.hostname "pcgael3"}}
 {{- /* Compositor. */}}
+{{- /* Must be started manually after startup on pcgael3. */}}
 exec --no-startup-id picom
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
