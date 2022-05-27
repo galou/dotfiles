@@ -217,7 +217,7 @@ zotero:
   description: "Zotero"
   binary: /opt/Zotero_linux-x86_64/zotero
   icon: /opt/Zotero_linux-x86_64/chrome/icons/default/default48.png
-{{- if eq .chezmoi.hostname "pcgael4"}}
+{{- if and (index "laptop") .laptop}}
 
 calibre:
   description: "Calibre"
@@ -233,6 +233,11 @@ playonlinux:
   description: "PlayOnLinux"
   binary: playonlinux
   icon: playonlinux
+
+power_statistics:
+  description: "Power Statistics"
+  binary: gnome-power-statistics
+  icon: org.gnome.PowerStats
 
 telegram:
   description: "Telegram"
