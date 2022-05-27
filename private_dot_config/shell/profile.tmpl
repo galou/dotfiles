@@ -14,8 +14,14 @@ add_to_path()
   fi
 }
 
-# set PATH so it includes npm bin if it exists and is not already in $PATH.
-add_to_path $HOME/.cache/npm-global/bin
+# NPM global packages.
+export NPM_PACKAGES=$HOME/.cache/npm-global
+
+# Make sure `node` find the npm packages.
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+
+# set PATH so it includes npm bin.
+add_to_path $NPM_PACKAGES/bin
 
 # Prefix /usr/lib/ccache to use ccache by default
 add_to_path /usr/lib/ccache
@@ -91,6 +97,9 @@ export CUDA_PATH=/usr/lib/x86_64-linux-gnu
 # There may be some inconsistency between formats of text such as dates and
 # numbers because of this setting.
 export LC_NUMERIC=en_US.UTF-8
+
+# Path to npm configuration.
+export npm_config_userconfig=~/.config/npm/npmrc
 
 # Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
