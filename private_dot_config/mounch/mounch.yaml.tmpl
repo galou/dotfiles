@@ -2,8 +2,8 @@
 
 arduino:
   description: "Arduino IDE"
-  binary: /opt/arduino-1.8.13/arduino
-  icon: /opt/arduino-1.8.13/lib/arduino.png
+  binary: arduino  # From snap.
+  icon: arduino
 
 atril:
   description: "Atril (PDF Viewer)"
@@ -80,7 +80,7 @@ impress:
 inkscape:
   description: "Inkscape"
   binary: inkscape
-  icon: org.inkscape.Inkscape
+  icon: /usr/share/inkscape/icons/inkscape.svg
 
 jabref:
   description: "JabRef"
@@ -129,7 +129,7 @@ picom:
 
 prusa:
   description: "Prusa Slicer"
-  binary: ~/08-apps/PrusaSlicer.AppImage
+  binary: prusa-slicer  # From snap.
   icon: PrusaSlicer
 
 qt5_assistant:
@@ -153,7 +153,7 @@ retext:
   icon: retext
 
 slack:
-  description: "Slack"
+  description: "Slack"  # From snap.
   binary: slack
   icon: slack
 
@@ -205,8 +205,8 @@ writer:
 
 xournal:
   description: "Xournal"
-  binary: xournalpp
-  icon: /snap/xournalpp/current/usr/share/icons/hicolor/scalable/apps/com.github.xournalpp.xournalpp.svg
+  binary: xournalpp  # From snap.
+  icon: com.github.xournalpp.xournalpp.svg
 
 zathura:
   description: "Zathura (PDF Viewer)"
@@ -215,14 +215,19 @@ zathura:
 
 zotero:
   description: "Zotero"
-  binary: /opt/Zotero_linux-x86_64/zotero
-  icon: /opt/Zotero_linux-x86_64/chrome/icons/default/default48.png
+  binary: zotero-snap  # From snap zotero-snap.
+  icon: zotero-icon
 {{- if and (index "laptop") .laptop}}
 
 calibre:
   description: "Calibre"
   binary: calibre
   icon: calibre-gui
+
+digikam:
+  description: "Digikam"
+  binary: digikam  # From snap.
+  icon: digikam
 
 musescore:
   description: "MuseScore"
