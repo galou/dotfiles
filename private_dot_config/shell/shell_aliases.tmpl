@@ -67,6 +67,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias xclip='xclip -selection clipboard'
 
 # For the RUR project.
-{{- if eq .chezmoi.hostname "pcgael4"}}
+{{- if and (index "laptop") .laptop}}
 alias rhw='ros2 launch robocon_hw robocon_hw.launch.py robot_ip:=192.168.105.90 iolink_ip:=192.168.105.131 visual_camera_ip:=192.168.105.134 lidar_ip:=192.168.105.50'
 {{- end}}

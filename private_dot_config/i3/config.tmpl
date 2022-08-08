@@ -328,6 +328,9 @@ bindsym --release XF86AudioMicMute exec --no-startup-id $HOME/.local/bin/notify-
 bindsym --release XF86RFKill exec --no-startup-id sleep 0.5; exec --no-startup-id $HOME/.local/bin/notify-airplane-mode-status; exec --no-startup-id pkill -SIGRTMIN+10 i3blocks
 
 # Brightness control
+# Install
+# https://github.com/Hummer12007/brightnessctl/blob/master/90-brightnessctl.rules
+# for correct permissions.
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 10%+
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 
