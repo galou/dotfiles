@@ -73,6 +73,7 @@ esac
 HISTFILE=$HOME/.cache/zsh_history
 HISTSIZE=1000
 SAVEHIST=2000
+setopt hist_ignore_space
 
 {{- /* Save history immediately, so that history is available in all shells. */}}
 setopt inc_appendhistory
