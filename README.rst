@@ -9,6 +9,7 @@ Additionaly machine-specific configuration can be written in ~/.config/chezmoi/c
     second_monitor: HDMI-1
     second_monitor_position: left
     second_monitor_rotation: right
+    external_monitors: DP-1
     eth_device: eth0
     wifi_device: wlan0
     i3_use_fontawesome: true
@@ -34,3 +35,6 @@ The icons `input-touchpad-symbolic.svg`, `touchpad-disabled-symbolic.svg`, `micr
 Creative Commons Attribution-Share Alike 3.0 United States License <http://creativecommons.org/licenses/by-sa/3.0/>`_.
 The icons `toggle-on-solid.svg` and `toggle-off-solid.svg` are part of the Font Awesome project and licensed under the `Creative Commons Attribution 4.0 International <https://fontawesome.com/license>`_.
 
+Related tools:
+
+- https://github.com/VorpalBlade/chezmoi_modify_manager: Modify script helper addon for settings with runtime values like dates, most recent files (I look at you PrusaSlicer). Requires Python 3.10.
