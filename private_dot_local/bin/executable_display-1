@@ -1,0 +1,36 @@
+#!/bin/bash
+# One monitor.
+# Usage: display-1 MONITOR
+
+# Directory of current script.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
+
+if [ -e "$DIR/display-utilities" ]; then
+    source "$DIR/display-utilities"
+elif [ -e $HOME/.local/bin/display-utilities ]; then
+    source $HOME/.local/bin/display-utilities
+else
+    return 1
+fi
+
+# Usage: display_single OUTPUT
+display_single()
+{
+    PRIMARY=$(best_connected "$1")
+
+    if ! [[ -z "$PRIMARY" ]]; then
+        # Change ouputs only if primary is connected to avoid a blackout.
+        # Turn off all outputs not being cited as primary.
+        for OUTPUT in $(all_outputs_except $PRIMARY); do
+            xrandr --output "$OUTPUT" --off
+        done
+
+        xrandr --output "$PRIMARY" --auto --primary
+    fi
+}
+
+if [[ -z "$1" ]]; then
+    echo Usage: $0 MONITOR 1>&2
+else
+    display_single "$1"
+fi

@@ -1,0 +1,63 @@
+#!/bin/bash
+# Two monitors, secondary on the left or on the right.
+# Usage: display-2-secondary {left|right}.
+# Managed by chezmoi from ~/.local/share/chezmoi/private_dot_local/bin/executable_display-2-secondary.tmpl.
+
+# Directory of current script.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+if [ -e "$DIR/display-utilities" ]; then
+    source "$DIR/display-utilities"
+elif [ -e $HOME/.local/bin/display-utilities ]; then
+    source $HOME/.local/bin/display-utilities
+else
+    return 1
+fi
+
+# Usage: display_secondary_on {--left-of|--right-of}
+display_secondary_on()
+{
+    POSITION="$1"
+
+    PRIMARY={{.main_monitor}}
+    SECONDARY=$(best_connected {{.external_monitors}})
+
+    # Turn off all outputs not being cited as primary or secondary.
+    # Also save the first one to use in the case the none of
+    # {{.external_monitors}} is connected.
+    for OUTPUT in $(all_connected_outputs_except $PRIMARY); do
+        if [[ -z "$FALLBACK" ]]; then
+            # If $FALLBACK is not yet defined.
+            FALLBACK=$OUTPUT
+        fi
+        if [[ "$OUTPUT " != "$SECONDARY" ]]; then
+            xrandr --output "$OUTPUT" --off
+        fi
+    done
+
+    if [[ -n "$SECONDARY" ]]; then
+        # $SECONDARY is defined.
+        xrandr \
+            --output "$PRIMARY" --auto --primary \
+            --output "$SECONDARY" --auto $POSITION "$PRIMARY"
+    else
+        if [[ -n "$FALLBACK" ]]; then
+            # $FALLBACK is defined.
+            xrandr \
+                --output "$PRIMARY" --auto --primary \
+                --output "$FALLBACK" --auto $POSITION "$PRIMARY"
+        else
+            xrandr \
+                --output "$PRIMARY" --auto --primary
+        fi
+    fi
+}
+
+if [[ "$1" = left ]]; then
+    display_secondary_on --left-of
+elif [[ "$1" = right ]]; then
+    display_secondary_on --right-of
+else
+    echo Usage: $0 '{left|right}' 1>&2
+fi
+
