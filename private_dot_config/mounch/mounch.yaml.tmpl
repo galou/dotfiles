@@ -2,7 +2,7 @@
 
 arduino:
   description: "Arduino IDE"
-  binary: arduino  # From snap.
+  binary: ~/08-apps/arduino-ide_2.0.0_Linux_64bit.AppImage
   icon: arduino
 
 atril:
@@ -117,6 +117,11 @@ meshlab:
   binary: meshlab
   icon: /usr/share/icons/pixmaps/meshlab.png
 
+obs:
+  description: "OBS Studio (screencast)"
+  binary: obs
+  icon: com.obsproject.Studio
+
 owncloud:
   description: "OwnCloud Desktop Client"
   binary: owncloud
@@ -206,7 +211,7 @@ writer:
 xournal:
   description: "Xournal"
   binary: xournalpp  # From snap.
-  icon: com.github.xournalpp.xournalpp.svg
+  icon: com.github.xournalpp.xournalpp
 
 zathura:
   description: "Zathura (PDF Viewer)"
@@ -253,6 +258,13 @@ viking:
   description: "Viking"
   binary: viking
   icon: viking
+{{- end}}
+{{- if eq .chezmoi.hostname "pcgael3"}}
+lumi:
+  description: "Lumi, H5P Editor"
+  binary: lumi  # From snap.
+  icon: lumi
+
 {{- end}}
 
 # Documents
