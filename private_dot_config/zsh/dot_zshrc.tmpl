@@ -229,7 +229,7 @@ rosdistro_from_workspace()
 ros2_activate()
 {
   if [ ! ${ROS_WORKSPACE} ]; then
-    # Read the workspace from /tmp/ros1_workspace, if $ROS_WORKSPACE is not
+    # Read the workspace from /tmp/ros2_workspace, if $ROS_WORKSPACE is not
     # defined.
     if [ -e /tmp/ros2_workspace.conf ]; then
       export ROS_WORKSPACE=$(cat /tmp/ros2_workspace.conf)
@@ -255,9 +255,6 @@ ros2_activate()
   export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:=$_default_domain_id}"
   unset _default_domain_id
 
-  # Colorized terminal output.
-  export RCUTILS_COLORIZED_OUTPUT=1
-
   source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
 
   source /opt/ros/$ROS_DISTRO/setup.zsh || return 1
@@ -272,6 +269,7 @@ ros2_activate()
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
   source /opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
 
+  # Initialize colcon_cd.
   if [ -e ${ROS_WORKSPACE} ]; then
     _cwd=$(pwd)
     cd $ROS_WORKSPACE
@@ -279,6 +277,11 @@ ros2_activate()
     cd $_cwd
     unset _cwd
   fi
+
+  # Colorized terminal output.
+  export RCUTILS_COLORIZED_OUTPUT=1
+
+  export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/$ROS_DISTRO/share/turtlebot3_gazebo/models
 
   # ROS2 has no roscd command, alias it.
   alias roscd=colcon_cd
