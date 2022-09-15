@@ -12,7 +12,19 @@
 .local/share/zsh/site-functions/pip3.rst
 README.rst
 
+{{- if not (and (index . "laptop") .laptop)}}
+.local/bin/notify-airplane-mode-status
+{{- end}}
+
 {{- if ne .chezmoi.hostname "pcgael4"}}
 .Xresources
 {{- end}}
 
+{{- if eq .chezmoi.hostname "pcgael3"}}
+.local/bin/display-1
+.local/bin/display-1-laptop
+.local/bin/display-1-external
+.local/bin/display-2-secondary
+.local/bin/display-2-secondary-left
+.local/bin/display-2-secondary-right
+{{- end}}
