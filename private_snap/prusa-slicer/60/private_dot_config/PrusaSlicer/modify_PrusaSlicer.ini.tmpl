@@ -1,0 +1,34 @@
+#!/bin/bash
+
+src_path="{{ .chezmoi.sourceDir }}"
+script="{{ .chezmoi.sourceFile }}"
+
+src_file="${script/.tmpl/.src.ini}"
+src_file="${src_file/modify_}"
+
+# Add your options to chezmoi_ini_manager.py here
+options=(
+--ignore-key "<NO_SECTION>" auto_toolbar_size
+--ignore-key "<NO_SECTION>" last_output_path
+--ignore-key "<NO_SECTION>" last_output_path_removable
+--ignore-key "<NO_SECTION>" version_online
+--ignore-key "<NO_SECTION>" version_online_seen
+--ignore-key "<NO_SECTION>" version_system_info_sent
+--ignore-key "<NO_SECTION>" window_mainframe
+--ignore-key presets filament
+--ignore-key presets filament_1
+--ignore-key presets filament_2
+--ignore-key presets filament_3
+--ignore-key presets filament_4
+--ignore-key presets print
+--ignore-key presets printer
+--ignore-key presets sla_material
+--ignore-key presets sla_print
+--ignore-key-re "<NO_SECTION>" 'desktop_integration_.*'
+--ignore-section recent
+--ignore-section recent_projects
+)
+
+exec "${src_path}/.utils/chezmoi_modify_manager/bin/chezmoi_ini_manager.py" \
+    --source "${src_path}/${src_file}" \
+    "${options[@]}"

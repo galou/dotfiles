@@ -1,0 +1,15 @@
+#!/bin/bash
+
+src_path="{{ .chezmoi.sourceDir }}"
+script="{{ .chezmoi.sourceFile }}"
+
+src_file="${script/.tmpl/.src.ini}"
+src_file="${src_file/modify_}"
+
+# Add your options to chezmoi_ini_manager.py here
+options=(
+)
+
+exec "${src_path}/.utils/chezmoi_modify_manager/bin/chezmoi_ini_manager.py" \
+    -s "${src_path}/${src_file}" \
+    "${options[@]}"
