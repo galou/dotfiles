@@ -1,0 +1,4 @@
+[submodule ".utils/chezmoi_modify_manager"]
+	path = .utils/chezmoi_modify_manager
+	url = https://github.com/galou/chezmoi_modify_manager.git
+	branch = python3.8
