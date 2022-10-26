@@ -1,6 +1,6 @@
 #!/bin/bash
-# Two monitors, secondary on the left or on the right.
-# Usage: display-2-secondary {left|right}.
+# Two monitors, secondary on the left, on the right, above or below.
+# Usage: display-2-secondary {left|right|above|below}.
 # Managed by chezmoi from ~/.local/share/chezmoi/private_dot_local/bin/executable_display-2-secondary.tmpl.
 
 # Directory of current script.
@@ -14,7 +14,7 @@ else
     return 1
 fi
 
-# Usage: display_secondary_on {--left-of|--right-of}
+# Usage: display_secondary_on {--left-of|--right-of|--above|--below}
 display_secondary_on()
 {
     POSITION="$1"
@@ -57,7 +57,11 @@ if [[ "$1" = left ]]; then
     display_secondary_on --left-of
 elif [[ "$1" = right ]]; then
     display_secondary_on --right-of
+elif [[ "$1" = above ]]; then
+    display_secondary_on --above
+elif [[ "$1" = below ]]; then
+    display_secondary_on --below
 else
-    echo Usage: $0 '{left|right}' 1>&2
+    echo Usage: $0 '{left|right|above|below}' 1>&2
 fi
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+# Two monitors, secondary below.
+
+display-2-secondary below
