@@ -12,7 +12,7 @@
 .local/share/zsh/site-functions/pip3.rst
 README.rst
 
-# For plugin chezmoi_modify_manager.
+# Files for generation with plugin `chezmoi_modify_manager`.
 **/*.src.ini
 
 {{- if not (and (index . "laptop") .laptop)}}
