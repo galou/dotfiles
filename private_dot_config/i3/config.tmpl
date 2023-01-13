@@ -28,6 +28,8 @@
 #   rofi (apt install rofi)
 #   scrot (apt install scrot)
 #   setxkbmap
+#   slack
+#   teams
 #   terminator (apt install terminator)
 #   udiskie (apt install udiskie)
 #   vim (https://neovim.io/)
@@ -350,7 +352,7 @@ bindsym $mod+o exec kitty -- $HOME/.cargo/bin/ytop
 bindsym $mod+p exec pavucontrol
 bindsym $mod+v exec vim
 bindsym $mod+w exec --no-startup-id $HOME/.local/share/rofi/rofi-wifi
-bindsym $mod+Shift+w exec x-www-browser
+bindsym $mod+Shift+w exec firefox -p robocon
 bindsym $mod+y exec --no-startup-id i3-layout-manager
 bindsym $mod+Shift+y exec freecad-daily
 bindsym $mod+z exec zathura
@@ -378,6 +380,8 @@ exec owncloud
 exec --no-startup-id udiskie
 exec --no-startup-id gnome-pomodoro --no-default-window
 exec --no-startup-id kdeconnect-indicator
+exec slack
+exec teams
 {{- if ne .chezmoi.hostname "pcgael3"}}
 {{- /* Compositor. */}}
 {{- /* Must be started manually after startup on pcgael3. */}}
