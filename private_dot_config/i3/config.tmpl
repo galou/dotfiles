@@ -74,20 +74,16 @@ set $second_monitor {{.second_monitor}}
 # General configuration
 # The scaling is somehow managed by i3 by writing 'Xft.dpi: 180' in ~/.Xresources.
 exec --no-startup-id setxkbmap gael
+{{- if (index . "touchpad_device")}}
+exec --no-startup-id xinput set-prop '{{.touchpad_device}}' 'libinput Disable While Typing Enabled' 1
+exec --no-startup-id xinput set-prop '{{.touchpad_device}}' 'libinput Middle Emulation Enabled' 1
+exec --no-startup-id xinput set-prop '{{.touchpad_device}}' 'libinput Natural Scrolling Enabled' 1
+exec --no-startup-id xinput set-prop '{{.touchpad_device}}' 'libinput Tapping Enabled' 1
+{{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
-exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Disable While Typing Enabled' 1
-exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Middle Emulation Enabled' 1
-exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Natural Scrolling Enabled' 1
-exec --no-startup-id xinput set-prop 'MSFT0001:02 06CB:7F8F Touchpad' 'libinput Tapping Enabled' 1
 exec --no-startup-id ~/.local/bin/catch-orientation
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" Gesture on
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 300
-{{- end}}
-{{- if eq .chezmoi.hostname "pcgael5"}}
-exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Disable While Typing Enabled' 1
-exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Middle Emulation Enabled' 1
-exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Natural Scrolling Enabled' 1
-exec --no-startup-id xinput set-prop 'DELL0A67:00 0488:1024 Touchpad' 'libinput Tapping Enabled' 1
 {{- end}}
 {{- if (index . "second_monitor")}}
     {{- if eq .second_monitor_position "left"}}
