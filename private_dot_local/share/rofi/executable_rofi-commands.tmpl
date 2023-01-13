@@ -7,6 +7,8 @@ options=" lock
  reboot
  shutdown
  toggle presentation mode
+{{- if eq .chezmoi.hostname "pcgael5"}}
+ toggle touchpad{{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
 {{- if (index . "pulseaudio_sink")}}
  Set default Pulseaudio sink{{- end}}
@@ -32,6 +34,10 @@ case "${selection}" in
         systemctl poweroff;;
     " toggle presentation mode")
         toggle-presentation-mode;;
+{{- if (index . "touchpad_device")}}
+    " toggle touchpad")
+        toggle-touchpad;;
+{{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
     " Set default Pulseaudio sink")
         pactl set-default-sink {{.pulseaudio_sink}};;
