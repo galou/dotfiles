@@ -2,6 +2,11 @@
 
 bluetooth | grep on >/dev/null
 
+case $BLOCK_BUTTON in
+  1) bluetooth-wizard & ;;
+  3) bluetooth-sendto & ;;
+esac
+
 if [[ $? = 0 ]]; then
 	echo 
 	echo 
