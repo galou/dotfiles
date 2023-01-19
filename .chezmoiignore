@@ -10,6 +10,7 @@
 .local/share/rofi/rofi-locate.sh.rst
 .local/share/rofi/rofi-wifi.rst
 .local/share/zsh/site-functions/pip3.rst
+usr/
 README.rst
 
 # Files for generation with plugin `chezmoi_modify_manager`.

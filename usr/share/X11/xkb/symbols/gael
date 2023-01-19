@@ -1,0 +1,12 @@
+default
+partial alphanumeric_keys default
+xkb_symbols "basic" {
+
+   name[Group1]= "English (international AltGr dead key, plus quicker access for Czech characters and ediaeresis)";
+
+   include "us_cz"
+
+   // diversions from the us-cz layout:
+   key <AD01> {	[q, Q, ediaeresis, Ediaeresis] };
+};
+
