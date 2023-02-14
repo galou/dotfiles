@@ -123,8 +123,8 @@ font pango:monospace 8
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
-# Use GTK theme.
-#exec --no-startup-id gnome-settings-daemon
+# Use GTK theme and keyring.
+exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 
 {{- if (index . "second_monitor")}}
 {{- /* Double monitor setup */}}
@@ -345,6 +345,7 @@ bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl next
 bindsym $mod+Return exec $HOME/.local/bin/kitty
 bindsym $mod+c exec --no-startup-id $HOME/.local/share/rofi/rofi-commands
 bindsym $mod+i exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle kitty terminals kitty
+bindsym $mod+Shift+i exec inkscape
 bindsym $mod+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle vlc music vlc ~/Music/fip-midfi.m3u
 bindsym $mod+Shift+m exec --no-startup-id $HOME/.local/bin/i3-launch-or-toggle brave-browser divercities Brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities
 bindsym $mod+n exec caja
