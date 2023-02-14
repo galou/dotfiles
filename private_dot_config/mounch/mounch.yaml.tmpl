@@ -172,6 +172,11 @@ simplescan:
   binary: simple-scan
   icon: org.gnome.SimpleScan
 
+subtitleeditor:
+  description: "Subtitle Editor"
+  binary: subtitleeditor
+  icon: subtitleeditor
+
 teams:
   description: "Teams"
   binary: teams
@@ -265,11 +270,19 @@ viking:
   icon: viking
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael3"}}
+
 lumi:
   description: "Lumi, H5P Editor"
   binary: lumi  # From snap.
   icon: lumi
 
+{{- end}}
+{{- if or (eq .chezmoi.hostname "pcgael3") (eq .chezmoi.hostname "pcgael5")}}
+
+nvidia-settings:
+  description: "NVIDIA X Server Settings"
+  binary: nvidia-settings
+  icon: nvidia-settings
 {{- end}}
 
 # Documents
