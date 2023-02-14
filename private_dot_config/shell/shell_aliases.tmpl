@@ -12,6 +12,8 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 
+alias apt='noglob apt'
+alias beep='aplay -q /usr/share/sounds/sound-icons/prompt.wav'
 alias cbt='catkin build --this'
 alias cbtn='catkin build --this --no-deps'
 alias cp='/bin/cp -i'
@@ -19,9 +21,13 @@ alias dragon='dragon --and-exit'
 # extract-image is defined in ~/.config/shell/profile.
 alias ffmpeg-extract='extract-images'
 # Instead of git gui.
+alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias gg='git grep -I'
 alias i='ipython3'
 alias j='jupyter console'
+alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device dc5b2368f3997134'
+alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
+alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
 # some more ls aliases
 alias l1='ls -a1lF'
 alias l='ls -CF'
@@ -33,21 +39,18 @@ alias nload100='nload -i 100000 -o 100000'
 alias nload1000='nload -i 1000000 -o 1000000'
 alias o='gio open'
 alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
+alias q='noglob /usr/bin/qalc'
 alias qalc='noglob qalc'
 alias r='ranger'
+alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
+alias rubber-clean='/usr/bin/rubber --clean'
 alias rm='/bin/rm -i'
 alias rofi='rofi -plugin-path ~/.local/lib/rofi -show drun'
 {{- /* https://github.com/RazrFalcon/resvg */}}
 alias svg2usvg='usvg'
 alias svgcleaner='scour'
 alias v='f -e vim' # quick opening files with vim. f='fasd -f'
-alias beep='aplay -q /usr/share/sounds/sound-icons/prompt.wav'
-alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
-alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
-alias rubber-clean='/usr/bin/rubber --clean'
-alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
-alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
-alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device dc5b2368f3997134'
+alias youtube-dl='noglob youtube-dl'
 {{- if and (index . "laptop") .laptop}}
 # `bluetooth` from the tlp package.
 alias bon='bluetooth on'

@@ -416,6 +416,21 @@ function roslogex_grc() {
   cat $(roslogex $1) | grcat_rc
 }
 
+function showtermcolors() {
+  msgcat --color=test
+
+  for x in {0..9}; do
+      for i in {30..37}; do
+          for a in {40..47}; do
+              echo -ne "\e[$x;$i;$a""m$x;$i;$a""\e[0;37;40m "
+          done
+          echo
+      done
+  done
+  echo ""
+  echo '\\e[{style};{fg};{bg}m For example \\e[8;37;47m'
+}
+
 export HOST
 
 {{- if (index . "github.pat")}}
