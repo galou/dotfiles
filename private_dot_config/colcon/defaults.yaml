@@ -1,8 +1,12 @@
+# colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+# colcon mixin update default
+
 {
     "build": {
+        "mixin": ["ccache", "debug", "compile-commands", "lld"],
         "merge-install": true,
         "symlink-install": true,
-        "cmake-args": ["-DCMAKE_EXPORT_COMPILE_COMMANDS=ON", "-Wall", "-Wextra", "-DCMAKE_BUILD_TYPE=Debug"],
+        "cmake-args": ["-Wall", "-Wextra"],
         "event-handlers": ["compile_commands+", "desktop_notification+", "status+", "terminal_title+"]
     },
     "test": {
