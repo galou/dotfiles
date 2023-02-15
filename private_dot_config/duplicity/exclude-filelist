@@ -1,3 +1,6 @@
+**/build/
+**/log/
+**/logs/
 /home/gael/.adobe
 /home/gael/.autojump.vim
 /home/gael/.bash_history
@@ -11,19 +14,10 @@
 /home/gael/.wine/dosdevices/z:
 /home/gael/02-transfer
 /home/gael/03-tmp
+/home/gael/11-projects/2021-01-rur/5-work/code/robocon_ros2_monows/install
 /home/gael/80-build
 /home/gael/Downloads
-/home/gael/Steam/logs
-/home/gael/build/
-/home/gael/creobot_eloquent_ws/build
 /home/gael/creobot_eloquent_ws/install
-/home/gael/creobot_eloquent_ws/log
-/home/gael/ros_melodic_ws/build
 /home/gael/ros_melodic_ws/devel
-/home/gael/ros_melodic_ws/logs
-/home/gael/ros_rur_ws/build
 /home/gael/ros_rur_ws/devel
-/home/gael/ros_rur_ws/logs
-/home/gael/ros_turtlebot2_ws/build
 /home/gael/ros_turtlebot2_ws/devel
-/home/gael/ros_turtlebot2_ws/logs

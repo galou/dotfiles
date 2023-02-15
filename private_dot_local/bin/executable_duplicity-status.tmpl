@@ -7,6 +7,9 @@ BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael3"
 {{- else if eq .chezmoi.hostname "pcgael4"}}
 
 BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael4"
+{{- else if eq .chezmoi.hostname "pcgael5"}}
+
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael5"
 {{- else}}
 echo "Unsupported host" >&2
 exit 1

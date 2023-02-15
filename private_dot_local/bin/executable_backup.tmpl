@@ -3,7 +3,7 @@
 # Run for example as a cron job /etc/cron.weekly/backup
 # '''
 #   #!/bin/sh
-#   
+#
 #   su -c /home/gael/.local/bin/backup gael
 # '''
 
@@ -14,6 +14,9 @@ BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael3"
 {{- else if eq .chezmoi.hostname "pcgael4"}}
 
 BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael4"
+{{- else if eq .chezmoi.hostname "pcgael5"}}
+
+BACKUP_DIR="$MOUNT_POINT/home/ecorcgae/VO_storage-tape_tape/backup-pcgael5"
 {{- else}}
 
 echo "Unsupported host" >&2
