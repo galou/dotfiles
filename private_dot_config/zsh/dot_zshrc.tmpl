@@ -268,6 +268,9 @@ ros2_activate()
   source /opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh does not exist" >&2
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
   source /opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
+  eval "$(register-python-argcomplete3 ros2)"
+  eval "$(register-python-argcomplete3 colcon)"
+
 
   # Initialize colcon_cd.
   if [ -e ${ROS_WORKSPACE} ]; then
@@ -284,7 +287,10 @@ ros2_activate()
   export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/$ROS_DISTRO/share/turtlebot3_gazebo/models
 
   # ROS2 has no roscd command, alias it.
-  alias roscd=colcon_cd
+  function roscd()
+  {
+    colcon_cd $@
+  }
 }
 
 # Activate ROS2 if /tmp/ros2_workspace.conf exists.
@@ -292,6 +298,12 @@ if [ -e /tmp/ros2_workspace.conf ]; then
   echo "Activating ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
   ros2_activate || echo "Failed to activate ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
 fi
+
+# Shortcut for the RUR project.
+function rur_workspace()
+{
+  export ROS_WORKSPACE=$HOME/rur_ros2_ws && ros2_activate && roscd && source setup.sh
+}
 
 # Activate timestamping before running a command.
 show_timestamp()

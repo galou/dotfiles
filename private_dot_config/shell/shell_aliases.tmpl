@@ -69,8 +69,3 @@ alias stripcolor='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 alias xclip='xclip -selection clipboard'
-
-# For the RUR project.
-{{- if and (index "laptop") .laptop}}
-alias rhw='ros2 launch robocon_hw robocon_hw.launch.py robot_ip:=192.168.105.90 iolink_ip:=192.168.105.131 visual_camera_ip:=192.168.105.134 lidar_ip:=192.168.105.50'
-{{- end}}
