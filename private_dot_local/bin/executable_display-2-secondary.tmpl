@@ -3,9 +3,17 @@
 # Usage: display-2-secondary {left|right|above|below}.
 # Managed by chezmoi from ~/.local/share/chezmoi/private_dot_local/bin/executable_display-2-secondary.tmpl.
 
+set -o errexit
+set -o nounset
+
 # Directory of current script.
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+{{- if index . "external_monitors"}}
+# For `best_connected`, `all_connected_outputs_except`.
+{{- else}}
+# For `all_connected_outputs_except`.
+{{- end}}
 if [ -e "$DIR/display-utilities" ]; then
     source "$DIR/display-utilities"
 elif [ -e $HOME/.local/bin/display-utilities ]; then
@@ -20,15 +28,22 @@ display_secondary_on()
     POSITION="$1"
 
     PRIMARY={{.main_monitor}}
+    {{- if index . "external_monitors"}}
     SECONDARY=$(best_connected {{.external_monitors}})
+    {{- else}}
+    SECONDARY=$(all_connected_outputs_except "$PRIMARY")
+    SECONDARY=${SECONDARY[1]}  # The first element.
+    {{- end}}
 
     # Turn off all outputs not being cited as primary or secondary.
+    {{- if index . "external_monitors"}}
     # Also save the first one to use in the case the none of
     # {{.external_monitors}} is connected.
-    for OUTPUT in $(all_connected_outputs_except $PRIMARY); do
-        if [[ -z "$FALLBACK" ]]; then
+    {{- end}}
+    for OUTPUT in $(all_connected_outputs_except "$PRIMARY"); do
+        if [[ ! -v FALLBACK ]]; then
             # If $FALLBACK is not yet defined.
-            FALLBACK=$OUTPUT
+            FALLBACK="$OUTPUT"
         fi
         if [[ "$OUTPUT " != "$SECONDARY" ]]; then
             xrandr --output "$OUTPUT" --off
@@ -36,12 +51,12 @@ display_secondary_on()
     done
 
     if [[ -n "$SECONDARY" ]]; then
-        # $SECONDARY is defined.
+        # $SECONDARY is not empty.
         xrandr \
             --output "$PRIMARY" --auto --primary \
             --output "$SECONDARY" --auto $POSITION "$PRIMARY"
     else
-        if [[ -n "$FALLBACK" ]]; then
+        if [[ -v FALLBACK ]]; then
             # $FALLBACK is defined.
             xrandr \
                 --output "$PRIMARY" --auto --primary \

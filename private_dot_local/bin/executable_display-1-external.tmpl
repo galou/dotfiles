@@ -3,9 +3,17 @@
 # Usage: display-1-laptop
 # Managed by chezmoi from ~/.local/share/chezmoi/private_dot_local/bin/executable_display-1-external.tmpl.
 
+set -o errexit
+set +o nounset  # Allow unset variables.
+
 # Directory of current script.
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
 
+{{- if index . "external_monitors"}}
+# For `best_connected`, `all_connected_outputs_except`.
+{{- else}}
+# For `all_connected_outputs_except`.
+{{- end}}
 if [ -e "$DIR/display-utilities" ]; then
     source "$DIR/display-utilities"
 elif [ -e $HOME/.local/bin/display-utilities ]; then
@@ -14,19 +22,24 @@ else
     return 1
 fi
 
-PREFERED_OUTPUTS=$(best_connected {{.external_monitors}})
-for OUTPUT in $(all_connected_outputs_except {{.main_monitor}}); do
+INTERNAL_OUTPUT={{.main_monitor}}
+{{- if index . "external_monitors"}}
+PREFERED_OUTPUT=$(best_connected {{.external_monitors}})
+{{- else}}
+PREFERED_OUTPUT=$(all_connected_outputs_except "$INTERNAL_OUTPUT")
+PREFERED_OUTPUT=${PREFERED_OUTPUT[1]}  # The first element.
+{{- end}}
+for OUTPUT in $(all_connected_outputs_except "$INTERNAL_OUTPUT"); do
 	if [[ -z "$PREFERED" ]]; then
-		PREFERED="$OUTPUT"
+		PREFERED="$PREFERED_OUTPUT"
 	fi
-	if [[ -z "$FALLBACK" ]]; then
+	if [[ -v FALLBACK ]]; then
 		FALLBACK="$OUTPUT"
 	fi
 done
 
 if [[ -n "$PREFERED" ]]; then
 	display-1 "$PREFERED"
-elif [[ -n "$FALLBACK" ]]; then
+elif [[ -v FALLBACK ]]; then
 	display-1 "$FALLBACK"
 fi
-
