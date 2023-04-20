@@ -3,7 +3,7 @@
 
 {
     "build": {
-        "mixin": ["ccache", "debug", "compile-commands", "lld"],
+        "mixin": ["ccache", "rel-with-deb-info", "compile-commands", "lld"],
         "merge-install": true,
         "symlink-install": true,
         "cmake-args": ["-Wall", "-Wextra"],
