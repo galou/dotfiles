@@ -31,8 +31,9 @@ display_secondary_on()
     {{- if index . "external_monitors"}}
     SECONDARY=$(best_connected {{.external_monitors}})
     {{- else}}
-    SECONDARY=$(all_connected_outputs_except "$PRIMARY")
-    SECONDARY=${SECONDARY[1]}  # The first element.
+    # The parentheses make an array.
+    SECONDARY=($(all_connected_outputs_except "$PRIMARY"))
+    SECONDARY=${SECONDARY[@]:0:1}  # The first element (array[@]:offset:length).
     {{- end}}
 
     # Turn off all outputs not being cited as primary or secondary.
