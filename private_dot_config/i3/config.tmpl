@@ -89,12 +89,12 @@ exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 
 {{- end}}
 {{- if (index . "second_monitor")}}
     {{- if eq .second_monitor_position "left"}}
-exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --left-of $main_monitor --rotate {{.second_monitor_rotation}}
+exec --no-startup-id xrandr --output $main_monitor --auto --primary --output $second_monitor --auto --left-of $main_monitor --rotate {{.second_monitor_rotation}}
     {{- else}}
-exec --no-startup-id xrandr --output $main_monitor --primary --output $second_monitor --right-of $main_monitor --rotate {{.second_monitor_rotation}}
+exec --no-startup-id xrandr --output $main_monitor --auto --primary --output $second_monitor --auto --right-of $main_monitor --rotate {{.second_monitor_rotation}}
     {{- end}}
 {{- else}}
-exec --no-startup-id xrandr --output $main_monitor --primary
+exec --no-startup-id xrandr --output $main_monitor --auto --primary
 {{- end}}
 exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
