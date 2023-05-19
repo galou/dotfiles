@@ -28,8 +28,8 @@ autoload -Uz _zinit
 ### End of Zinit's installer chunk
 
 # Profile
-if [ -f ~/.config/shell/profile ]; then
-  zinit wait"0" lucid for is-snippet  ~/.config/shell/profile
+if [ -f $HOME/.config/shell/profile ]; then
+  zinit wait"0" lucid for is-snippet  $HOME/.config/shell/profile
 fi
 
 # Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.

@@ -433,6 +433,10 @@ function showtermcolors() {
 
 export HOST
 
+if [ "$0" = "/usr/sbin/lightdm-session" -a "$DESKTOP_SESSION" = "i3" ]; then
+    export $(gnome-keyring-daemon -s)
+fi
+
 {{- if (index . "github.pat")}}
 # Personnal Access Token for Github.
 export PAT={{.github.pat}}
@@ -440,3 +444,8 @@ export PAT={{.github.pat}}
 
 # Launch byobu for text logins.
 # _byobu_sourced=1 . /usr/bin/byobu-launch 2>/dev/null || true
+
+# NNN configuration
+export NNN_FIFO=/tmp/nnn.fifo
+# Plugins. Activate with `;` followed by the key or <Alt>+key.
+export NNN_PLUG='p:preview-tui'
