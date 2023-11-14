@@ -1,0 +1,5 @@
+# Descending priority.
+sort=-priority
+
+# Milliseconds.
+default-timeout=2000
