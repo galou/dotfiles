@@ -3,18 +3,36 @@
 
 # Return the list of possible outputs (connected or not).
 # Usage: all_outputs_except OUTPUT
-all_outputs_except()
-{
-    EXCLUDE="$1"
-    xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -e "\<$EXCLUDE\>"
-}
+if [[ "$XDG_SESSION_DESKTOP" =~ sway ]]; then
+    all_outputs_except()
+    {
+        # TODO: Implement for sway
+        # Use /sys/class/drm/*?
+        EXCLUDE="$1"
+        xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -e "\<$EXCLUDE\>"
+    }
+else
+    all_outputs_except()
+    {
+        EXCLUDE="$1"
+        xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -e "\<$EXCLUDE\>"
+    }
+fi
 
 # Return the list of connected outputs.
 # Usage: connected_display
-connected_displays()
-{
-    xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
-}
+if [[ "$XDG_SESSION_DESKTOP" =~ sway ]]; then
+    connected_displays()
+    {
+        # swaymsg --pretty -t get_outputs | grep 'Output' | cut --delimiter=' ' --field=2
+        swaymsg --raw -t get_outputs | jq '. [] | (.name)' | sed -e 's/"//g'
+    }
+else
+    connected_displays()
+    {
+        xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
+    }
+fi
 
 # Return the list of connected outputs.
 # Usage: all_connected_outputs_except OUTPUT

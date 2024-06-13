@@ -2,13 +2,8 @@
 # One monitor.
 # Usage: display-1 MONITOR
 
-# Directory of current script.
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
-
-if [ -e "$DIR/display-utilities" ]; then
-    source "$DIR/display-utilities"
-elif [ -e $HOME/.local/bin/display-utilities ]; then
-    source $HOME/.local/bin/display-utilities
+if [ -e $HOME/.local/share/shell/display-utilities ]; then
+    source $HOME/.local/share/shell/display-utilities
 else
     return 1
 fi

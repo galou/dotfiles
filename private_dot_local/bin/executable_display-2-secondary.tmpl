@@ -6,18 +6,13 @@
 set -o errexit
 set -o nounset
 
-# Directory of current script.
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 {{- if index . "external_monitors"}}
 # For `best_connected`, `all_connected_outputs_except`.
 {{- else}}
 # For `all_connected_outputs_except`.
 {{- end}}
-if [ -e "$DIR/display-utilities" ]; then
-    source "$DIR/display-utilities"
-elif [ -e $HOME/.local/bin/display-utilities ]; then
-    source $HOME/.local/bin/display-utilities
+if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
+    source "$HOME/.local/share/shell/display-utilities"
 else
     return 1
 fi
