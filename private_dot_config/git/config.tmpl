@@ -1,6 +1,6 @@
 [user]
     email = {{.git.user.email}}
-    name = {{.git.user.name}}
+    name = {{.git.user.name | quote }}
 
 [credential]
     helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
