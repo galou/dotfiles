@@ -1,0 +1,14 @@
+#!/usr/bin/zsh
+
+# Put all pids into an array.
+# bash equivalent to `mapfile -t pids <<< "$(pgrep -x bato)"`
+pids=($(pgrep -x bato))
+if [ ${#pids[@]} -gt 0 ]; then
+  # If non-empty array `pids`.
+  for pid in $pids; do
+    # Avoid zsh to kill itself.
+    # TODO: find out why pgrep lists the zsh process that runs this own script.
+    {ps --no-headers $pid | grep zsh 2>&1 >/dev/null} || kill $pid
+  done
+fi
+"$HOME/04-sources/bato-battery_manager/bato/target/release/bato"

@@ -18,7 +18,7 @@ tick_rate: 5
 #
 # The battery name under /sys/class/power_supply/
 #
-bat_name: BAT1
+bat_name: BAT0
 
 # critical_level: String, required
 #
@@ -30,7 +30,7 @@ critical_level: 5
 #
 # The low level of the battery, as a percentage.
 #
-low_level: 30
+low_level: 25
 
 
 # # # # # # # # #
@@ -73,7 +73,7 @@ low_level: 30
 
 critical:
   summary: Critical battery level!
-  body: Plug the power cable asap!
+  body: Plug the power cable ASAP!
   icon: battery-caution
 low:
   summary: Battery low
