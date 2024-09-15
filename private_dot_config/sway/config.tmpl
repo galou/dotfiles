@@ -1,0 +1,409 @@
+# Should you change your keyboard layout some time, delete
+# this file and re-run i3-config-wizard(1).
+#
+# sway config file (v1.7)
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+#
+# Public dependencies:
+#   brightnessctl (apt install brightnessctl)
+#   caja (apt install caja)
+#   dbus-update-activation-environment (apt install xdg-desktop-portal-wlr)
+#   dmenu_extended_run (https://github.com/MarkHedleyJones/dmenu-extended)
+#   dunst (apt install dunst)
+#   easystroke (sudo apt install easystroke)
+#   freecad-daily (https://freecad.org)
+#   gnome-pomodoro (apt install gnome-shell-pomodoro)
+#   gnome-terminal
+#   grimshot
+#   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager, symlinked to ~/.local/bin/i3-layout-manager)
+#   i3blocks (apt install i3blocks)
+#   kdeconnect-indicator (apt install kdeconnect)
+#   kitty (https://sw.kovidgoyal.net/kitty/index.html)
+#   libinput-gestures-setup
+#   mako (apt install mako-notifier)
+#   mate-calc (apt install mate-calc)
+#   notify-send (sudo apt install libnotify-bin)
+#   numlockx (apt install numlockx)
+#   owncloud
+#   pactl (apt install pulseaudio-utils)
+#   picom (https://github.com/yshui/picom)
+#   pkill
+#   playerctl (apt install playerctl)
+#   qalc (apt install qalc)
+#   ranger (pip3 install ranger-fm)
+#   rofi (apt install rofi)
+#   setxkbmap
+#   slack
+#   sway-scratchpad (cargo quickinstall sway-scratchpad)
+#   teams
+#   terminator (apt install terminator)
+#   udiskie (apt install udiskie)
+#   vim (https://neovim.io/)
+#   vlc (apt install vlc)
+#   x-www-browser
+#   xset
+#   ytop (cargo quickinstall ytop)
+#   zathura (apt install zathura)
+#   ~/.local/bin/bato (https://github.com/doums/bato).
+# Custom dependencies:
+#   ~/.config/i3/i3-startup-layout.sh (this repo)
+#   ~/.local/bin/i3-rename-workspace (this repo)
+#   ~/.local/bin/notify-airplane-mode-status (this repo)
+#   ~/.local/bin/notify-mic-status (this repo)
+#   ~/.local/bin/screencast (this repo)
+#   ~/.local/share/rofi/rofi-commands (this repo)
+
+# System-wide config.
+include /etc/sway/config.d/*
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+{{- if (index . "main_monitor")}}
+output {{.main_monitor}} {
+  scale 1.6
+}
+{{- end}}
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+input type:keyboard {
+  xkb_layout gael
+  xkb_numlock enabled
+}
+input type:touchpad {
+    events disabled_on_external_mouse
+    dwt enabled{{- /* disable-while-typing */}}
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+
+# Monitors: Blanking after 120s, Suspend and Off after 600s.
+exec xset dpms 120 600 600
+
+# Make sure WAYLAND_DISPLAY and XDG_CURRENT_DESKTOP are imported into D-Bus.
+# https://github.com/emersion/xdg-desktop-portal-wlr.
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+# Main key for interacting with sway.
+# Alt = Mod1.
+# Super = Mod4
+set $mod Mod4
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:monospace 8
+
+# This font is widely installed, provides lots of unicode glyphs, right-to-left
+# text rendering and scalability on retina/hidpi displays (thanks to pango).
+#font pango:DejaVu Sans Mono 8
+
+{{- if 0}}
+{{- /* gnome-settings-daemon not installed on Pop!OS. */}}
+# Use GTK theme and keyring.
+# exec /usr/lib/gnome-settings-daemon/gnome-settings-daemon
+{{- end}}
+
+# Startup layout.
+exec $HOME/.config/i3/i3-startup-layout.sh
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# For instance: Assume you are on workspace "1: www" and switch to "2: IM" using
+# mod+2 because somebody sent you a message. You don't need to remember where
+# you came from now, you can just press $mod+2 again to switch back to "1: www".
+workspace_auto_back_and_forth no
+
+# Kill focused window, nicely.
+bindsym $mod+Shift+q kill
+
+# Start a program launcher.
+# The most basic one is dmenu.
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+#bindsym $mod+space exec i3-dmenu-desktop
+bindsym $mod+space exec $HOME/.local/bin/mounch --prompt "Choose your mounchie"
+bindsym $mod+Shift+space exec $HOME/.local/bin/dmenu_extended_run
+bindsym $mod+d exec wofi --plugin-path $HOME/.local/lib/rofi --show run
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+Mod1+h split h
+
+# split in vertical orientation
+bindsym $mod+Mod1+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+f floating toggle
+
+# Swap focus between the tiling area and the floating area
+bindsym $mod+Shift+t focus mode_toggle
+# Mod1 is Alt
+bindsym Mod1+Shift+Tab focus mode_toggle
+
+# change focus between workspaces.
+bindsym Mod1+Tab workspace back_and_forth
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+Shift+a focus child
+
+# Sway has a "scratchpad", which is a bag of holding for windows.
+# You can send windows there and get them back later.
+
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
+
+# switch to workspace
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Move focused container to workspace and switch to this workspace.
+bindsym $mod+Control+Shift+1 move container to workspace number 1; workspace number 1
+bindsym $mod+Control+Shift+2 move container to workspace number 2; workspace number 2
+bindsym $mod+Control+Shift+3 move container to workspace number 3; workspace number 3
+bindsym $mod+Control+Shift+4 move container to workspace number 4; workspace number 4
+bindsym $mod+Control+Shift+5 move container to workspace number 5; workspace number 5
+bindsym $mod+Control+Shift+6 move container to workspace number 6; workspace number 6
+bindsym $mod+Control+Shift+7 move container to workspace number 7; workspace number 7
+bindsym $mod+Control+Shift+8 move container to workspace number 8; workspace number 8
+bindsym $mod+Control+Shift+9 move container to workspace number 9; workspace number 9
+bindsym $mod+Control+Shift+0 move container to workspace number 10; workspace number 10
+
+# Switch to next/previous workspace.
+bindsym $mod+Mod1+Up workspace next_on_output
+bindsym $mod+Mod1+Down workspace prev_on_output
+bindsym $mod+Mod1+Left workspace prev_on_output
+bindsym $mod+Mod1+Right workspace next_on_output
+
+# Move workspace to neighbour output.
+bindsym $mod+Mod1+Control+Up move workspace to up
+bindsym $mod+Mod1+Control+Down move workspace to down
+bindsym $mod+Mod1+Control+Left move workspace to left
+bindsym $mod+Mod1+Control+Right move workspace to right
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart sway inplace (preserves your layout/session)
+# bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+# Resize window (you can also use the mouse, $mod+RMB, for that).
+mode "resize" {
+    # These bindings trigger as soon as you enter the resize mode
+
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
+
+    # Same bindings, but for the arrow keys, finer moves.
+    bindsym Left resize shrink width 5 px or 5 ppt
+    bindsym Down resize grow height 5 px or 5 ppt
+    bindsym Up resize shrink height 5 px or 5 ppt
+    bindsym Right resize grow width 5 px or 5 ppt
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Shift+r mode "resize"
+
+# Interactively rename workspace
+bindsym $mod+r exec $HOME/.local/bin/i3-rename-workspace
+
+# Activate the window under the mouse, without click.
+focus_follows_mouse yes
+
+# Start i3blocks to display a workspace bar
+# bar {
+#     status_command i3blocks
+#     tray_output primary
+#     font pango:FontAwesome 8
+# }
+bar {
+    #status_command waybar
+    status_command i3blocks
+}
+
+# Multimedia shortcuts
+# Pulse Audio controls
+{{- if (index . "pulseaudio_sink")}}
+bindsym XF86AudioLowerVolume exec pactl set-sink-mute {{.pulseaudio_sink}} off; exec pactl set-sink-volume {{.pulseaudio_sink}} -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-mute {{.pulseaudio_sink}} off; exec pactl set-sink-volume {{.pulseaudio_sink}} +5%
+bindsym XF86AudioMute exec pactl set-sink-mute {{.pulseaudio_sink}} toggle
+{{- else}}
+bindsym XF86AudioLowerVolume exec pactl set-sink-mute @DEFAULT_SINK@ off; exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-mute @DEFAULT_SINK@ off; exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+{{- end}}
+{{- if (index . "pulseaudio_source")}}
+bindsym XF86AudioMicMute exec pactl set-source-mute {{.pulseaudio_source}} toggle
+{{- else}}
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+{{- end}}
+# Signals for i3blocks (use signal=10 in the volume section).
+bindsym --release XF86AudioLowerVolume exec pkill -SIGRTMIN+10 i3blocks
+bindsym --release XF86AudioRaiseVolume exec pkill -SIGRTMIN+10 i3blocks
+bindsym --release XF86AudioMute exec pkill -SIGRTMIN+10 i3blocks
+{{- if (index . "pulseaudio_source")}}
+bindsym --release XF86AudioMicMute exec $HOME/.local/bin/notify-mic-status {{.pulseaudio_source}}
+{{- else}}
+bindsym --release XF86AudioMicMute exec $HOME/.local/bin/notify-mic-status @DEFAULT_SOURCE@
+{{- end}}
+
+# Airplane-mode notification and redraw i3blocks (use signal=10 in the iface-wifi section).
+bindsym --release XF86RFKill exec sleep 0.5; exec $HOME/.local/bin/notify-airplane-mode-status; exec pkill -SIGRTMIN+10 i3blocks
+
+# Brightness control
+# Install
+# https://github.com/Hummer12007/brightnessctl/blob/master/90-brightnessctl.rules
+# for correct permissions.
+{{- if and (index . "brightness_device")}}
+bindsym XF86MonBrightnessUp exec brightnessctl --device="{{.brightness_device}}" set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl --device="{{.brightness_device}}" set 5%-
+{{- else}}
+bindsym XF86MonBrightnessUp exec brightnessctl set 10%+
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+{{- end}}
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym Shift+XF86AudioMute exec playerctl play-pause
+bindsym Shift+XF86AudioLowerVolume exec playerctl previous
+bindsym Shift+XF86AudioRaiseVolume exec playerctl next
+
+# Shortcuts to start applications
+bindsym $mod+Return exec $HOME/.local/bin/kitty
+bindsym $mod+c exec $HOME/.local/share/rofi/rofi-commands
+bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command $HOME/.local/bin/kitty
+bindsym $mod+Shift+i exec inkscape
+bindsym $mod+m exec $HOME/.cargo/bin/sway-scratchpad --mark music --command "vlc /home/gael/Music/fip-autour_du_monde.m3u"
+bindsym $mod+Shift+m exec $HOME/.cargo/bin/sway-scratchpad --mark divercities --command "brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities"
+bindsym $mod+n exec caja
+bindsym $mod+o exec kitty -- $HOME/.cargo/bin/ytop
+bindsym $mod+p exec pavucontrol
+bindsym $mod+v exec vim
+bindsym $mod+w exec $HOME/.local/share/rofi/rofi-wifi
+bindsym $mod+Shift+w exec firefox -p robocon
+bindsym $mod+y exec i3-layout-manager
+bindsym $mod+Shift+y exec freecad-daily
+bindsym $mod+z exec zathura
+bindsym XF86HomePage exec x-www-browser
+bindsym XF86Search exec caja
+bindsym XF86Calculator exec $HOME/.cargo/bin/sway-scratchpad --mark calc --command mate-calculator
+bindsym Shift+XF86Calculator exec $HOME/.cargo/bin/sway-scratchpad --mark qalc --command qalculate
+bindsym XF86Launch5 exec gnome-terminal -- $HOME/.local/bin/ranger
+bindsym XF86Launch6 exec caja
+bindsym XF86Launch7 exec gnome-terminal -- vim
+bindsym Print exec "grimshot save output"
+bindsym Shift+Print exec "grimshot save active"
+bindsym $mod+Shift+Print exec $HOME/.local/bin/screencast
+# TODO: find a binding for `grimshot save screen - | $HOME/.local/bin/satty --filename - --fullscreen --output-filename $HOME/Pictures/$(date '+%Y-%m-%d--%H-%M-%S')-screenshot.png`
+# Fn+m (also Fn+r, Fn+n on integrated keyboard).
+bindcode 248 exec $HOME/.local/bin/toggle-touchpad
+# bindcode 94 exec xdotool type ¥
+bindcode 94 exec xdotool key yen
+
+# User config.
+include $HOME/.config/sway/config.d/*
+
+# Autostart
+#exec dunst  # Notification daemon.
+#exec mako  # Notification daemon, started with systemd.
+exec $HOME/.local/bin/bato  # Battery monitor.
+exec udiskie  # Mounting/Unmounting.
+# exec gnome-pomodoro --no-default-window
+exec kdeconnect-indicator
+# exec slack
+# Set transparency for unfocused windows.
+exec $HOME/.local/share/sway/inactive_windows_transparent
+#exec libinput-gestures-setup start
+#exec easystroke
+{{- /* vim: filetype=config */}}
