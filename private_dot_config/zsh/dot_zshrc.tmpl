@@ -244,6 +244,7 @@ rosdistro_from_workspace()
 }
 
 # ROS2 setup, sources /opt/ros/$ROS_DISTRO/setup.zsh, then $WORKSPACE/install/setup.zsh.
+# Sources setup.sh with Jazzy onwards.
 ros2_activate()
 {
   if [ ! ${ROS_WORKSPACE} ]; then
@@ -276,7 +277,7 @@ ros2_activate()
   source /usr/share/colcon_cd/function/colcon_cd.sh || echo "/usr/share/colcon_cd/function/colcon_cd.sh does not exist" >&2
 
   source /opt/ros/$ROS_DISTRO/setup.zsh || return 1
-  source $ROS_WORKSPACE/install/setup.zsh || return 1
+  source $ROS_WORKSPACE/install/setup.zsh || source $ROS_WORKSPACE/install/setup.sh || return 1
 
   {{/* source ${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh || echo "${ROS_WORKSPACE}/install/share/ament_tools/environment/ament-completion.zsh does not exist" >&2 */ -}}
 
@@ -289,13 +290,12 @@ ros2_activate()
   eval "$(register-python-argcomplete3 ros2)"
   eval "$(register-python-argcomplete3 colcon)"
 
-
   # Initialize colcon_cd.
   if [ -e ${ROS_WORKSPACE} ]; then
-    _cwd=$(pwd)
+    _cwd="$(pwd)"
     cd $ROS_WORKSPACE
     colcon_cd --set > /dev/null
-    cd $_cwd
+    cd "$_cwd"
     unset _cwd
   fi
 
@@ -308,6 +308,17 @@ ros2_activate()
   function roscd()
   {
     colcon_cd $@
+  }
+
+  function editor()
+  {
+    bat --plain $@
+  }
+
+  {{/* ansi2txt from colorized_logs package (https://github.com/kilobyte/colorized-logs). */ -}}
+  function vimros()
+  {
+    cat $@ | ansi2txt | vim --clean -R
   }
 
   alias rosed='colcon edit'
