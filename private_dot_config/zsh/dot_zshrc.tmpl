@@ -38,6 +38,9 @@ fi
 [[ -f ~/.config/zsh/.p10k.zsh ]] || zinit ice depth=1; zinit light romkatv/powerlevel10k
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
+# Alias configuration for forgit.
+export FORGIT_NO_ALIASES=1
+
 zinit wait"!0" lucid for \
   OMZL::directories.zsh \{{/* Aliases '-', '2', '...' and others. */}}
   OMZP::command-not-found \{{/* Proposes a package for a missing command. */}}
@@ -48,7 +51,8 @@ zinit wait"!0" lucid for \
   agkozak/zsh-z \{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
   OMZP::common-aliases \{{/* A few useful aliases: gst, gp, gl, etc. */}}{{/*TODO: use atload"unalias gr" */}}
   zdharma-continuum/zsh-navigation-tools \{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
-  zsh-users/zsh-completions
+  zsh-users/zsh-completions \
+  wfxr/forgit
 {{- if 0 }}
   OMZP::per-directory-history \{{/* Toggle per-directory history. */}} Does not share history between open shells
   OMZP::zsh-interactive-cd \{{/* Interactive cd command. */}} Requires ENTER even on single entry.
