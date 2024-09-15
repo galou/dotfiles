@@ -129,8 +129,16 @@ autoload up-line-or-beginning-search # load hook
 autoload down-line-or-beginning-search
 zle -N up-line-or-beginning-search # activate hook
 zle -N down-line-or-beginning-search
-bindkey "${key[Up]}" up-line-or-beginning-search # add keybinding to hook
-bindkey "${key[Down]}" down-line-or-beginning-search
+{{- /* Zsh in Warp complains about empty keybinding with ${key[Up]} and ${key[Down]} but the functionality doesn't work with `^[[A` in Kitty */}}
+if [ x"$TERM_PROGRAM" = x"WarpTerminal" ]; then
+  bindkey '^[[A' up-line-or-beginning-search
+  bindkey '^[[B' down-line-or-beginning-search
+else
+  bindkey "${key[Up]}" up-line-or-beginning-search # add keybinding to hook
+  bindkey "${key[Down]}" down-line-or-beginning-search
+fi
+# bindkey '^[[A' up-line-or-beginning-search
+# bindkey '^[[B' down-line-or-beginning-search
 bindkey '[1;5D' backward-word # Ctrl-Left
 bindkey '[1;5C' forward-word # Ctrl-Right
 
