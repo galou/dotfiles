@@ -377,6 +377,18 @@ unset __conda_setup
 # Schedule pixi completion initialization with a 1-second delay
 # Doesn't work (`pixi completion --shell zsh > ~/.local/share/zsh/site-functions/_pixi` was used instead).
 zinit ice wait'1' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
+
+# Setup for zoxide (https://github.com/ajeetdsouza/zoxide).
+eval "$($HOME/.cargo/bin/zoxide init zsh)"
+
+# Setup for fzf.zsh (https://github.com/junegunn/fzf).
+# Auto-completion
+# ---------------
+source "$HOME/04-sources/fzf/fzf/shell/completion.zsh"
+# Key bindings
+# ------------
+# source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
+
 # Completion for magic (https://docs.modular.com/magic)
 zinit ice wait'1' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
 
