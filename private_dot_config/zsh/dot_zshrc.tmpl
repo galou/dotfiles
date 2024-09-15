@@ -29,7 +29,7 @@ autoload -Uz _zinit
 
 # Profile
 if [ -f $HOME/.config/shell/profile ]; then
-  zinit wait"0" lucid for is-snippet  $HOME/.config/shell/profile
+  zinit wait"0" lucid for is-snippet $HOME/.config/shell/profile
 fi
 
 # Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.
@@ -46,11 +46,11 @@ zinit wait"!0" lucid for \
   OMZP::safe-paste \{{/* Treat new lines from paste differently than typed ones. Cf. https://cirw.in/blog/bracketed-paste. */}}
   zdharma-continuum/zsh-navigation-tools \{{/* Approximate Ctrl-R matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
   agkozak/zsh-z \{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
-  OMZP::common-aliases \{{/* A few useful aliases: gst, gp, gl, etc. */}}
+  OMZP::common-aliases \{{/* A few useful aliases: gst, gp, gl, etc. */}}{{/*TODO: use atload"unalias gr" */}}
   zdharma-continuum/zsh-navigation-tools \{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
   zsh-users/zsh-completions
 {{- if 0 }}
-  OMZP::per-directory-history \{{/* Toggle per-directory history. */}} Do not share history between open shells
+  OMZP::per-directory-history \{{/* Toggle per-directory history. */}} Does not share history between open shells
   OMZP::zsh-interactive-cd \{{/* Interactive cd command. */}} Requires ENTER even on single entry.
 {{- end }}
 
@@ -58,7 +58,8 @@ zinit load zsh-users/zsh-autosuggestions{{/* Show the last matching history in g
 zinit load zsh-users/zsh-syntax-highlighting{{/* Must be loaded without Turbo because of fasd */}}
 
 # Completion for GNU compatible executables.
-compdef _gnu_generic csv2freecad
+# Deactivated until issue ".zshrc:57: command not found: compdef"
+# compdef _gnu_generic csv2freecad
 
 # Terminal title on directory change
 # cf. http://www.tldp.org/HOWTO/text/Xterm-Title
@@ -108,9 +109,13 @@ zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle :compinstall filename "$HOME/.config/zsh/.zshrc"
 
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit
+
 # End of lines added by compinstall
+autoload -Uz bashcompinit && bashcompinit
+if [ -e $HOME/.local/share/bash-completion/completions/gis ]; then
+  zinit wait"0" lucid for is-snippet $HOME/.local/share/bash-completion/completions/gis
+fi
 
 bindkey '^P' up-history
 bindkey '^N' down-history
@@ -176,7 +181,7 @@ fi
 # Completion for kitty
 which kitty &>/dev/null && kitty + complete setup zsh | source /dev/stdin
 # Completion for kg, kitty hyperlinked grep based on ripgrep (~/.local/bin/kg)
-compdef _rg kg
+zinit ice wait'2' lucid atinit'kg_completion() { compdef _rg kg ; }; kg_completion' nocd for /dev/null
 
 # Completion for pip3 (Generated with `pip3 completion --zsh > ...`).
 if [ -e $HOME/.local/share/zsh/site-functions/pip3.zsh ]; then
@@ -342,4 +347,12 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+# Pixi completion
+# https://pixi.sh/latest/.
+# Schedule pixi completion initialization with a 1-second delay
+# Doesn't work (`pixi completion --shell zsh > ~/.local/share/zsh/site-functions/_pixi` was used instead).
+zinit ice wait'1' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
+# Completion for magic (https://docs.modular.com/magic)
+zinit ice wait'1' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
 
