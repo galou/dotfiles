@@ -3,7 +3,8 @@
     name = {{.git.user.name | quote }}
 
 [credential]
-    helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+    helper = manager
+    credentialStore = secretservice
 
 [pager]
     diff = delta
