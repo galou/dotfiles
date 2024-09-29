@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
+  source "$HOME/.local/share/shell/display-utilities"
+else
+  return 1
+fi
+
+displays=($(connected_displays))
+edp1_scale=1.6
+
+if [[ "${displays[@]}" =~ eDP-1 ]]; then
+  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 1440
+fi
+
+if [[ "${displays[@]}" =~ DP-3 ]]; then
+  swaymsg output DP-3 mode 2560x1440@60Hz scale 1.0 position 0 0
+  # TODO: find out the number of active workspaces.
+  # TODO: jump back to the workspace active when the script was called.
+  swaymsg 'workspace number 2; move workspace to DP-3'
+  swaymsg 'workspace number 3; move workspace to DP-3'
+  swaymsg 'workspace number 4; move workspace to DP-3'
+  swaymsg 'workspace number 5; move workspace to DP-3'
+fi

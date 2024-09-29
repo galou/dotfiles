@@ -29,7 +29,7 @@ $acpi = <ACPI>;
 close(ACPI);
 
 # fail on unexpected output
-if ($acpi !~ /: (\w+), (\d+)%/) {
+if ($acpi !~ /: (\w+ ?\w+), (\d+)%/) {
 	die "$acpi\n";
 }
 
@@ -37,22 +37,31 @@ $status = $1;
 $percent = $2;
 
 if ($percent < 20) {
-	$full_text = "";
+	$full_text = "";  # U+f244.
 } elsif ($percent < 33) {
-	$full_text = "";
+	$full_text = "";  # U+f243.
 } elsif ($percent < 66) {
-	$full_text = "";
+	$full_text = "";  # U+f242.
 } elsif ($percent < 85) {
-	$full_text = "";
+	$full_text = "";  # U+f241.
 } else {
-	$full_text = "";
+	$full_text = "";  # U+f240.
 }
 
 $full_text .= " $percent%";
 
 if ($status eq 'Charging') {
-	$full_text .= ' ';
+	$full_text .= '  ';  # U+f1e6, `plug` with FontAwesome 6.
 }
+
+if ($status eq 'Not charging') {
+	# $full_text .= '  ';  # U+e55b, `plug-circle-colt` with FontAwesome 6.
+	$full_text .= '  ';  # U+e560.
+}
+
+# if ($status eq 'Charging' || $status eq 'Not charging') {
+# 	$full_text .= ' ';  # U+f1e6, `plug` with FontAwesome 6.
+# }
 
 $short_text = $full_text;
 

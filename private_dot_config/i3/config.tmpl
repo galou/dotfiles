@@ -12,7 +12,7 @@
 #   freecad-daily (https://freecad.org)
 #   gnome-pomodoro (apt install gnome-shell-pomodoro)
 #   gnome-terminal
-#   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager)
+#   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager, symlinked to ~/.local/bin/i3-layout-manager)
 #   i3-nagbar (apt install i3)
 #   i3blocks (apt install i3blocks)
 #   kdeconnect-indicator (apt install kdeconnect)
@@ -38,20 +38,27 @@
 #   xinput
 #   xrandr
 #   xset
-#   zathura
+#   ytop (cargo quickinstall ytop)
+#   zathura (apt install zathura)
+{{- if eq .chezmoi.hostname "pcgael1"}}
+#   easystroke (sudo apt install easystroke)
+#   libinput-gestures-setup
+#   notify-send (sudo apt install libnotify-bin)
+#   picom (https://github.com/yshui/picom)
+{{- end}}
 {{- if eq .chezmoi.hostname "pcgael3"}}
 #   i3lock
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael4"}}
-#   easystroke
+#   easystroke (sudo apt install easystroke)
 #   libinput-gestures-setup
-#   notify-send
+#   notify-send (sudo apt install libnotify-bin)
 #   onboard
 #   picom (https://github.com/yshui/picom)
 #   xsetwacom
 {{- end}}
 {{- if and (index . "laptop") .laptop}}
-#   ~/.cargo/bin/bato (https://github.com/doums/bato).
+#   ~/.local/bin/bato (https://github.com/doums/bato).
 {{- end}}
 # Custom dependencies:
 #   ~/.config/i3/i3-startup-layout.sh (this repo)
@@ -68,9 +75,11 @@
 {{- end}}
 {{- /* Interesting: https://cedaei.com/posts/vim-like-layer-for-xorg-wayland. */}}
 
+{{- if index . "main_monitor"}}
 set $main_monitor {{.main_monitor}}
-{{- if (index . "second_monitor")}}
+{{- if index . "second_monitor"}}
 set $second_monitor {{.second_monitor}}
+{{- end}}
 {{- end}}
 
 # General configuration
@@ -87,7 +96,7 @@ exec --no-startup-id ~/.local/bin/catch-orientation
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" Gesture on
 exec --no-startup-id xsetwacom set "Wacom HID 50F0 Finger touch" ScrollDistance 300
 {{- end}}
-{{- if (index . "second_monitor")}}
+{{- if and (index . "main_monitor") (index . "second_monitor")}}
     {{- if eq .second_monitor_position "left"}}
 exec --no-startup-id xrandr --output $main_monitor --auto --primary --output $second_monitor --auto --left-of $main_monitor --rotate {{.second_monitor_rotation}}
     {{- else}}
@@ -100,7 +109,7 @@ exec --no-startup-id numlockx on
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec --no-startup-id xset dpms 120 600 600
 {{- if and (index . "laptop") .laptop}}
-exec --no-startup-id ~/.cargo/bin/bato
+exec --no-startup-id $HOME/.local/bin/bato
 {{- end}}
 
 # Main key for interacting with i3.
@@ -212,7 +221,8 @@ bindsym $mod+e layout toggle split
 # toggle tiling / floating
 bindsym $mod+Shift+f floating toggle
 
-# change focus between tiling / floating windows
+# Swap focus between the tiling area and the floating area
+bindsym $mod+Shift+t focus mode_toggle
 # Mod1 is Alt
 bindsym Mod1+Shift+Tab focus mode_toggle
 
@@ -223,7 +233,7 @@ bindsym Mod1+Tab workspace back_and_forth
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+Shift+a focus child
 
 # switch to workspace
 bindsym $mod+1 workspace number 1
@@ -265,7 +275,7 @@ bindsym $mod+Shift+c reload
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# resize window (you can also use the mouse for that)
+# Resize window (you can also use the mouse, $mod+RMB, for that).
 mode "resize" {
     # These bindings trigger as soon as you enter the resize mode
 
@@ -273,12 +283,12 @@ mode "resize" {
     # Pressing right will grow the window’s width.
     # Pressing up will shrink the window’s height.
     # Pressing down will grow the window’s height.
-    bindsym h resize shrink width 5 px or 5 ppt
-    bindsym j resize grow height 5 px or 5 ppt
-    bindsym k resize shrink height 5 px or 5 ppt
-    bindsym l resize grow width 5 px or 5 ppt
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-    # same bindings, but for the arrow keys
+    # Same bindings, but for the arrow keys, finer moves.
     bindsym Left resize shrink width 5 px or 5 ppt
     bindsym Down resize grow height 5 px or 5 ppt
     bindsym Up resize shrink height 5 px or 5 ppt
@@ -288,19 +298,19 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-
 bindsym $mod+Shift+r mode "resize"
 
 # Interactively rename workspace
 bindsym $mod+r exec --no-startup-id $HOME/.local/bin/i3-rename-workspace
 
+# Activate the window under the mouse, without click.
 focus_follows_mouse yes
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
+# Start i3blocks to display a workspace bar
 bar {
     status_command i3blocks
     tray_output primary
+    font pango:FontAwesome 8
 }
 
 # Multimedia shortcuts
@@ -336,8 +346,13 @@ bindsym --release XF86RFKill exec --no-startup-id sleep 0.5; exec --no-startup-i
 # Install
 # https://github.com/Hummer12007/brightnessctl/blob/master/90-brightnessctl.rules
 # for correct permissions.
+{{- if and (index . "brightness_device")}}
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl --device="{{.brightness_device}}" set 5%+
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl --device="{{.brightness_device}}" set 5%-
+{{- else}}
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 10%+
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+{{- end}}
 
 # Media player controls
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
@@ -374,29 +389,21 @@ bindsym XF86Launch7 exec gnome-terminal -- vim
 bindsym Print exec --no-startup-id "scrot $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym Shift+Print exec --no-startup-id "scrot -u $HOME/Pictures/%Y-%m-%d--%H-%M-%S-screenshot.png"
 bindsym $mod+Shift+Print exec --no-startup-id $HOME/.local/bin/screencast
+{{- if eq .chezmoi.hostname "pcgael1"}}
+# Fn+m (also Fn+r, Fn+n on integrated keyboard).
+bindcode 248 exec --no-startup-id $HOME/.local/bin/toggle-touchpad
+{{- end}}
 {{- if eq .chezmoi.hostname "pcgael3"}}
 bindsym XF86Favorites exec i3lock
 bindsym Shift+XF86Favorites exec "i3lock && systemctl suspend"
 {{- end}}
-{{- if eq .chezmoi.hostname "pcgael4"}}
-bindsym XF86TouchpadOn exec --no-startup-id notify-send --icon=$HOME/.local/share/icons/input-touchpad-symbolic.svg --urgency=low --category=device --expire-time 2000 --app-name i3 "Touchpad enabled"
-bindsym XF86TouchpadOff exec --no-startup-id notify-send --icon=$HOME/.local/share/icons/touchpad-disabled-symbolic.svg --urgency=low --category=device --expire-time 2000 --app-name i3 "Touchpad disabled"
-{{- end}}
 
 # Autostart
-exec owncloud
 exec --no-startup-id udiskie
 exec --no-startup-id gnome-pomodoro --no-default-window
 exec --no-startup-id kdeconnect-indicator
 exec slack
-exec teams
-{{- if ne .chezmoi.hostname "pcgael3"}}
 {{- /* Compositor. */}}
-{{- /* Must be started manually after startup on pcgael3. */}}
 exec --no-startup-id picom
-{{- end}}
-{{- if eq .chezmoi.hostname "pcgael4"}}
-exec onboard
-exec --no-startup-id libinput-gestures-setup start
-exec --no-startup-id easystroke
-{{- end}}
+#exec --no-startup-id libinput-gestures-setup start
+#exec --no-startup-id easystroke

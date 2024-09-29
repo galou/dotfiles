@@ -5,29 +5,33 @@ exit 0
 {{- else}}
 NOTIFY_TIMEOUT_MS=2000
 
-DEVICE="{{.touchpad_device}}"
+if [[ "$XDG_SESSION_DESKTOP" =~ "sway" ]]; then
+  swaymsg input type:touchpad events toggle enabled disabled
+else
+  DEVICE="{{.touchpad_device}}"
 
-enabled=$(xinput list-props "$DEVICE" | gawk '/^\tDevice Enabled \([0-9]+\):\t[01]/ {print $NF}')
-case $enabled in
-  0)
-    xinput enable "$DEVICE"
-    notify-send \
-        --expire-time=$NOTIFY_TIMEOUT_MS \
-        --icon=$HOME/.local/share/icons/input-touchpad-symbolic.svg \
-        --app-name=toggle-touchpad \
-        --urgency=low \
-        --category=device \
-        "Touchpad enabled"
-    ;;
-  1)
-    xinput disable "$DEVICE"
-    notify-send \
-        --expire-time=$NOTIFY_TIMEOUT_MS \
-        --icon=$HOME/.local/share/icons/touchpad-disabled-symbolic.svg \
-        --app-name=toggle-touchpad \
-        --urgency=low \
-        --category=device \
-        "Touchpad disabled"
-    ;;
-esac
+  enabled=$(xinput list-props "$DEVICE" | gawk '/^\tDevice Enabled \([0-9]+\):\t[01]/ {print $NF}')
+  case $enabled in
+    0)
+      xinput enable "$DEVICE"
+      notify-send \
+          --expire-time=$NOTIFY_TIMEOUT_MS \
+          --icon=$HOME/.local/share/icons/input-touchpad-symbolic.svg \
+          --app-name=toggle-touchpad \
+          --urgency=low \
+          --category=device \
+          "Touchpad enabled"
+      ;;
+    1)
+      xinput disable "$DEVICE"
+      notify-send \
+          --expire-time=$NOTIFY_TIMEOUT_MS \
+          --icon=$HOME/.local/share/icons/touchpad-disabled-symbolic.svg \
+          --app-name=toggle-touchpad \
+          --urgency=low \
+          --category=device \
+          "Touchpad disabled"
+      ;;
+  esac
+fi
 {{- end}}

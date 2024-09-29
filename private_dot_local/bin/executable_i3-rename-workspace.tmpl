@@ -1,0 +1,51 @@
+#!/bin/bash
+# interactively rename workspace with dmenu
+# Original version at https://github.com/tlegutko/dotfiles/blob/master/.config/scripts/rename-workspace.sh
+# Dependencies:
+# - i3-msg
+# - jq (https://github.com/stedolan/jq)
+# - wmenu on Sway (https://sr.ht/~adnano/wmenu/)
+
+# 󰜎 U+f070e Run
+declare -A replacements=( \
+  ["mail"]="" \
+  ["web"]="" \
+  ["term"]="" \
+  ["ssh"]="" \
+  ["src"]="" \
+  ["run"]="󰜎" \
+  ["teams"]="" \
+  )
+
+replace()
+{
+    for key in "${!replacements[@]}"; do
+        # TODO: match "term" and not "terminal" for example
+        if [[ "$1" =~ [0-9]?:?$key ]]; then
+	    echo ${1//$key/${replacements[$key]}}
+	    return
+	fi
+    done
+    echo $1
+}
+
+current_workspace_full_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
+current_workspace_name=$(echo $current_workspace_full_name | grep -Po '(?<=:).*(?=")')
+workspace_number=$(i3-msg -t get_workspaces | jq '.[] | select(.focused).num')
+# current_workspace_full_name already contains double-quotes.
+current_output_name=$(i3-msg -t get_outputs | jq -r ".[] | select((.active) and (.current_workspace==${current_workspace_full_name})).name")
+
+if [ $XDG_SESSION_TYPE = wayland ]; then
+    new_name=$(printf "\n${current_workspace_name}" | wmenu -b -o "${current_output_name}" -p "rename-workspace-${workspace_number}")
+else
+    # TODO: dmenu -m {0,1,...} to show on the correct output but we need the output number.
+    new_name=$(printf "\n${current_workspace_name}" | dmenu -b -p "rename-workspace-${workspace_number}")
+fi
+if [[ $new_name =~ [0-9].* ]]; then
+    new_workspace_name=$(replace "${new_name}")
+elif [[ -n "${new_name}" ]]; then
+    new_workspace_name=$(replace "${workspace_number}:${new_name}")
+else
+    new_workspace_name=$(replace "${workspace_number}")
+fi
+i3-msg "rename workspace to \"${new_workspace_name}\""

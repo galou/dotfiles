@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+  swaymsg exit
+else
+  i3-msg exit
+fi
+

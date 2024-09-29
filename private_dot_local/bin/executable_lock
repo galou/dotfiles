@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+  swaylock
+else
+  i3lock
+fi
+

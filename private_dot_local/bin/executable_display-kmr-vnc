@@ -1,0 +1,46 @@
+#!/usr/bin/zsh
+
+# Use an integral representation for $x and $y.
+typeset -i x
+typeset -i y
+
+if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
+  source "$HOME/.local/share/shell/display-utilities"
+else
+  return 1
+fi
+
+displays=($(connected_displays))
+edp1_scale=1.6
+
+if [[ "${displays[@]}" -regex-match DP-5 ]]; then
+  external_display="DP-5"
+elif [[ "${displays[@]}" -regex-match DP-6 ]]; then
+  external_display="DP-6"
+else
+  external_display="not_found"
+fi
+
+if [[ "${displays[@]}" -regex-match eDP-1 ]]; then
+  # Align the centers of eDP-1 and DP-5 in y direction.
+  y=$(( 1440 / 2.0 - 1920 / $edp1_scale / 2.0))
+  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 $y
+fi
+
+if [[ "${displays[@]}" -regex-match "$external_display" ]]; then
+  x=$(( 3072 / $edp1_scale ))
+  swaymsg output "$external_display" mode 2560x1440@60Hz scale 1.0 position $x 0
+  # TODO: find out the number of active workspaces.
+  # TODO: jump back to the workspace active when the script was called.
+  swaymsg 'workspace number 2; move workspace to '"$external_display"
+  swaymsg 'workspace number 3; move workspace to '"$external_display"
+  swaymsg 'workspace number 4; move workspace to '"$external_display"
+  swaymsg 'workspace number 5; move workspace to '"$external_display"
+fi
+
+if [[ "${displays[@]}" =~ HEADLESS-1 ]]; then
+  # Align the centers of DP-6 and HEADLESS-1 in x direction.
+  # Resolution 1280x800 or 1280x749.
+  x=$(( 3072 / $edp1_scale + 2560 / 2.0 - 1280 / 2.0 ))
+  swaymsg output HEADLESS-1 position $x 1440
+fi

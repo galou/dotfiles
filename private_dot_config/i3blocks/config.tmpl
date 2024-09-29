@@ -29,9 +29,13 @@ separator_block_width=15
 markup=none
 
 [marked]
-command=$HOME/.local/share/i3blocks/marked terminals calc qalc divercities
+command=$HOME/.local/share/i3blocks/marked calc qalc divercities
 label=
 interval=5
+
+[pomodoro]
+command=$HOME/.local/bin/pomodoro
+interval=1
 
 #[bandwidth]
 #instance=eth0
@@ -54,9 +58,13 @@ interval=2
 # Memory usage
 #
 # The type defaults to "mem" if the instance is not specified.
+# Possible labels:
+# -  U+f538, `memory` with FontAwesome 6.
+# -  U+f85a Memory
+# - 󰍛 U+f35b Memory
 [memory]
 #label=MEM
-label=
+label=
 separator=false
 interval=5
 
@@ -89,7 +97,7 @@ interval=30
 #label=
 #interval=10
 
-{{- if and (index "laptop") .laptop}}
+{{- if and (index . "laptop") .laptop}}
 
 # Network interface monitoring
 #
@@ -102,8 +110,9 @@ instance={{.wifi_device}}
 color=#00FF00
 interval=10
 signal=10
-separator=false
+#separator=false
 
+{{- if index . "eth_device"}}
 [iface-eth]
 command=$HOME/.local/share/i3blocks/iface
 label=
@@ -111,6 +120,7 @@ instance={{.eth_device}}
 color=#00FF00
 interval=10
 #separator=false
+{{- end}}
 
 # OpenVPN support
 #
@@ -125,17 +135,6 @@ interval=30
 [bluetooth]
 command=$HOME/.local/share/i3blocks/bluetooth
 interval=10
-{{- end}}
-
-{{- if eq .chezmoi.hostname "pcgael3"}}
-
-[iface-eth]
-command=$HOME/.local/share/i3blocks/iface-only-down
-label=
-instance={{.eth_device}}
-color=#00FF00
-interval=10
-
 {{- end}}
 
 # Volume indicator
@@ -153,8 +152,10 @@ signal=10
 command=$HOME/.local/share/i3blocks/$BLOCK_NAME 5% pulse
 
 # Guess the weather hourly
+# Cf. https://github.com/chubin/wttr.in#usage.
+# ?m for metric units, ?T no color, ?Q quiet.
 [weather]
-command=curl -Ss 'https://wttr.in?0&T&Q' | cut -c 16- | head -2 | xargs echo | sed -e 's/unning out of queries to the weather service at the moment./no weather/' || echo "no weather"
+command=curl -Ss 'https://wttr.in?mTQ' | cut -c 16- | head -2 | xargs echo | sed -e 's/unning out of queries to the weather service at the moment./no weather/' || echo "no weather"
 interval=3600
 #color=#A4C2F4
 
