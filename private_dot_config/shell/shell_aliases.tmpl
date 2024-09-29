@@ -11,12 +11,12 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-
 alias apt='noglob apt'
 alias beep='aplay -q /usr/share/sounds/sound-icons/prompt.wav'
 alias cbt='catkin build --this'
 alias cbtn='catkin build --this --no-deps'
 alias cp='/bin/cp -i'
+alias difft='difftastic'
 alias dragon='dragon --and-exit'
 # extract-image is defined in ~/.config/shell/profile.
 alias fc=freecad-daily
@@ -25,6 +25,9 @@ alias ffmpeg-extract='extract-images'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias gg='git grep -I'
 alias i='ipython3'
+# Workaround GLXBadFBConfig errors when launching Isaac Sim.
+alias isaac='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/.local/share/ov/pkg/isaac_sim-2023.1.0/isaac-sim.sh'
+alias jabref='_JAVA_AWT_WM_NONREPARENTING=1 jabref'
 alias j='jupyter console'
 alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device dc5b2368f3997134'
 alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
@@ -33,26 +36,36 @@ alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
 alias l1='ls -a1lF'
 alias l='ls -CF'
 alias la='ls -A'
+alias lg='lazygit'
 alias ll='ls -alF'
-alias mv='/bin/mv -i'
+alias meshlab='QT_QPA_PLATFORM=xcb meshlab'
 alias mosh-pcgael3-public='mosh -p 60000 pcgael3-public'
+alias mv='/bin/mv -i'
 alias nload100='nload -i 100000 -o 100000'
 alias nload1000='nload -i 1000000 -o 1000000'
+alias nvidia-htop='nvidia-htop.py --color'
+# Workaround GLXBadFBConfig errors when launching omniverse.
+alias omniverse='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/08-apps/omniverse-launcher-linux.AppImage'
 alias o='mimeopen'
 alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
 alias q='noglob /usr/bin/qalc'
 alias qalc='noglob qalc'
 alias r='ranger'
+alias rostop='rotop'
 alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
 alias rubber-clean='/usr/bin/rubber --clean'
 alias rm='/bin/rm -i'
 alias rofi='rofi -plugin-path ~/.local/lib/rofi -show drun'
-{{- /* https://github.com/RazrFalcon/resvg */}}
-alias svg2usvg='usvg'
+alias ros='export ROS_WORKSPACE=~/robocon_humble_ws && ros2_activate && roscd && . ./setup.sh && ros2_activate'
+alias sp='system76-power'
+alias svg2usvg='usvg'{{- /* https://github.com/RazrFalcon/resvg */}}
 alias svgcleaner='scour'
+alias tga='tig --all'
 alias tree='/usr/bin/tree --dirsfirst'
+alias uu=udiskie-umount
 alias v='f -e vim' # quick opening files with vim. f='fasd -f'
 alias youtube-dl='noglob youtube-dl'
+alias y='ytop'
 alias yt-dlp='noglob yt-dlp'
 {{- if and (index . "laptop") .laptop}}
 # `bluetooth` from the tlp package.
@@ -72,3 +85,7 @@ alias stripcolor='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 alias xclip='xclip -selection clipboard'
+
+alias wine32='env WINEPREFIX={{.chezmoi.homeDir}}/.wine32 WINEARCH=win32 wine'
+alias winetricks32='env WINEPREFIX={{.chezmoi.homeDir}}/.wine32 WINEARCH=win32 winetricks'
+alias winecfg32='env WINEPREFIX={{.chezmoi.homeDir}}/.wine32 WINEARCH=win32 winecfg'

@@ -17,7 +17,7 @@ fi
 #function jvim
 #{
 #       	file="$(AUTOJUMP_DATA_DIR=~/.autojump.vim/global autojump $@)"
-#	if [ -n "$file" ]; then 
+#	if [ -n "$file" ]; then
 #		vim "$file";
 #       	fi
 #}
@@ -140,7 +140,9 @@ mkcd()
 
 weather()
 {
-    curl -Ss 'https://wttr.in?0'
+    # Cf. https://github.com/chubin/wttr.in#usage.
+    # ?m for metric units.
+    curl -Ss 'https://wttr.in?m' || echo "No weather"
 }
 
 psaux()

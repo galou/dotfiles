@@ -1,0 +1,22 @@
+#!/bin/zsh
+# Turn on bluetooth and connect to the device given as input parameter.
+#
+# Depends on the `bluetoothctl` executable from the bluez package on Ubuntu.
+
+# Determine whether `bluetoothctl` is available
+command -v bluetoothctl > /dev/null && BLUETOOTH_COMMAND=bluetoothctl
+
+if [[ -z "$BLUETOOTH_COMMAND" ]]; then
+  # Exit if no bluetooth executable found.
+  echo "bluetoothctl command not found." >&2
+  exit 1
+fi
+
+sleep 1
+
+echo "power on
+agent on
+connect $1
+quit" | bluetoothctl > /dev/null
+
+exit 0

@@ -4,31 +4,48 @@
 # Prefix PATH with the given directory if not alreay present.
 add_to_path()
 {
-  if [ -z ${1} ]; then
+  if [ -z "${1}" ]; then
     return
   fi
   if [ -n "${PATH##*${1}}" -a -n "${PATH##*${1}:*}" ]; then
-    if [ -d ${1} ] ; then
-      export PATH=${1}:$PATH
+    if [ -d "${1}" ] ; then
+      export PATH="${1}":$PATH
     fi
   fi
 }
 
 # NPM global packages.
-export NPM_PACKAGES=$HOME/.cache/npm-global
+export NPM_PACKAGES="$HOME/.cache/npm-global"
 
 # Make sure `node` find the npm packages.
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 # set PATH so it includes npm bin.
-add_to_path $NPM_PACKAGES/bin
+add_to_path "$NPM_PACKAGES/bin"
+
+# https://github.com/nvm-sh/nvm/blob/master/README.md
+export NVM_DIR=$HOME/.local/share/nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Prefix /usr/lib/ccache to use ccache by default
 add_to_path /usr/lib/ccache
 
-add_to_path $HOME/snap/rustup/common/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
-add_to_path $HOME/.cargo/bin
-add_to_path $HOME/.local/bin
+add_to_path "$HOME/snap/rustup/common/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin"
+add_to_path "$HOME/go/bin"
+add_to_path "$HOME/.cargo/bin"
+
+# Mojo (modular).
+export MODULAR_HOME="$HOME/.local/share/modular"
+add_to_path "$MODULAR_HOME/pkg/packages.modular.com_mojo/bin"
+
+# Drake (https://drake.mit.edu/).
+add_to_path /opt/drake/bin
+# export PYTHONPATH="/opt/drake/lib/python$(python3 -c 'import sys; print("{0}.{1}".format(*sys.version_info))')/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
+
+# Add ~/.local/bin with the highest priority.
+add_to_path "$HOME/.local/bin"
 
 # Deactive ctrl-s sending xoff
 # so that it can be used for something else
@@ -43,6 +60,22 @@ if [ -n "$DISPLAY" -a "$TERM" = "xterm" ]; then
   export TERM=xterm-256color
 fi
 
+# Enable Wayland for Firefox.
+# Cf. https://wiki.archlinux.org/title/firefox#Wayland.
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+  export MOZ_ENABLE_WAYLAND=1
+  # Use Wayland on QT applications but default to X on error.
+  export QT_QPA_PLATFORM="wayland;xcb"
+  # Use Wayland on SDL2 applications but default to X on error.
+  export SDL_VIDEODRIVER="wayland,x11"
+
+  # Enable sudo with xwayland.
+  xhost si:localuser:root > /dev/null
+fi
+
+# Enable X11 for docker.
+xhost +local:docker > /dev/null
+
 {{- /*
 function jvim
 {
@@ -52,6 +85,11 @@ function jvim
     fi
 }
 */}}
+
+function vimc
+{
+  vim --clean $@
+}
 
 export EDITOR=vim
 
@@ -74,6 +112,8 @@ export ROS_LANG_DISABLE=genlisp
 
 export COLCON_HOME=$HOME/.config/colcon
 
+export O3DE_HOME=/opt/O3DE/23.10.0
+
 # $TERMINAL is used as first choice in x-terminal-emulator.
 export TERMINAL=$HOME/.local/bin/kitty
 
@@ -88,10 +128,6 @@ export WEBOTS_DISABLE_WORLD_LOADING_DIALOG=1            # If defined, the loadin
 export LD_LIBRARY_PATH=$WEBOTS_HOME/lib/webots:$LD_LIBRARY_PATH  # Add the Webots libraries to the library path (useful when launching Webots directly without using the launcher).
 {{- end}}
 
-{{- if eq .chezmoi.hostname "pcgael3"}}
-export CUDA_PATH=/usr/lib/x86_64-linux-gnu
-{{- end}}
-
 # Some programs use LC_NUMERIC to parse numbers and may expect a comma as
 # decimal separator.
 # There may be some inconsistency between formats of text such as dates and
@@ -103,7 +139,11 @@ export npm_config_userconfig=~/.config/npm/npmrc
 
 # Add completion for gr, http://mixu.net/gr/.
 if command -v gr >/dev/null 2>&1; then
-    source <(gr completion)
+  source <(gr completion)
+fi
+
+if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
+  source "$HOME/.local/share/shell/display-utilities"
 fi
 
 {{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
@@ -152,20 +192,20 @@ get_ip_wifi()
 
 ros_master_local()
 {
-    export ROS_MASTER_URI="http://localhost:11311"
-    export ROS_IP=$(get_ip_eth)
+  export ROS_MASTER_URI="http://localhost:11311"
+  export ROS_IP=$(get_ip_eth)
 }
 
 ros_master_host_wifi()
 {
-    export ROS_MASTER_URI="http://$1:11311"
-    export ROS_IP=$(get_ip_wifi)
+  export ROS_MASTER_URI="http://$1:11311"
+  export ROS_IP=$(get_ip_wifi)
 }
 
 # cf. http://wiki.ros.org/rosconsole
 ros_rosconsole_format_default()
 {
-    export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}'
+  export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}'
 }
 
 ros_rosconsole_format_node_message()
@@ -197,6 +237,16 @@ platformio_activate()
   add_to_path $HOME/.platformio/penv/bin
 }
 
+# openrobots (https://stack-of-tasks.github.io/pinocchio/download.html)
+openrobots_activate()
+{
+  export PATH=/opt/openrobots/bin:$PATH
+  export PKG_CONFIG_PATH=/opt/openrobots/lib/pkgconfig:$PKG_CONFIG_PATH
+  export LD_LIBRARY_PATH=/opt/openrobots/lib:$LD_LIBRARY_PATH
+  export PYTHONPATH=/opt/openrobots/lib/python3.10/site-packages:$PYTHONPATH # Adapt your desired python version here
+  export CMAKE_PREFIX_PATH=/opt/openrobots:$CMAKE_PREFIX_PATH
+}
+
 # MP3 manipulation
 mp3_list() {
   find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
@@ -218,7 +268,9 @@ mkcd()
 
 weather()
 {
-  curl -Ss 'https://wttr.in?0' || echo "No weather"
+  # Cf. https://github.com/chubin/wttr.in#usage.
+  # ?m for metric units.
+  curl -Ss 'https://wttr.in?m' || echo "No weather"
 }
 
 psaux()
@@ -246,13 +298,6 @@ psux()
 extract-images()
 {
   ffmpeg -i $1 $1-%05d.jpg -hide_banner
-}
-
-# connected_displays
-# Return a space separated list of connected displays
-connected_displays()
-{
-  xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
 }
 
 now()
@@ -304,7 +349,7 @@ colcon()
     init*)
 
       if [ ! -e "build/COLCON_IGNORE" ]; then # we are NOT at the workspace root
-        command colcon build # this creates a new workspace
+        nice command colcon build # this creates a new workspace
       fi
 
       ;;
@@ -312,7 +357,7 @@ colcon()
     build*|b*)
 
       if [ -e "build/COLCON_IGNORE" ]; then # we are at the workspace root
-        command colcon "$@" # this creates a new workspace
+        nice command colcon "$@" # this creates a new workspace
       else
         while [ ! -e "build/COLCON_IGNORE" ]; do
           cd ..
@@ -321,7 +366,7 @@ colcon()
             echo "Cannot build, not in a workspace!"
             break
           elif [ -e "build/COLCON_IGNORE" ]; then
-            command colcon "$@"
+            nice command colcon "$@"
             break
           fi
         done
@@ -361,7 +406,7 @@ colcon()
       ;;
 
     *)
-      command colcon $@
+      nice command colcon $@
       ;;
 
   esac
@@ -429,6 +474,7 @@ function showtermcolors() {
   done
   echo ""
   echo '\\e[{style};{fg};{bg}m For example \\e[8;37;47m'
+  echo '\\033[{style};{fg};{bg}m For example \\033[8;37;47m'
 }
 
 export HOST
@@ -449,3 +495,66 @@ export PAT={{.github.pat}}
 export NNN_FIFO=/tmp/nnn.fifo
 # Plugins. Activate with `;` followed by the key or <Alt>+key.
 export NNN_PLUG='p:preview-tui'
+
+#export WINEARCH=win32
+
+# Workaround the white-screen syndrome (https://wiki.archlinux.org/title/java#Gray_window,_applications_not_resizing_with_WM,_menus_immediately_closing).
+# # Jabref has this syndrome on Sway with Nvidia.
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+{{- if (and (index . "openai") (index .openai "api_key"))}}
+export OPENAI_API_KEY={{.openai.api_key}}
+{{- end}}
+
+{{- if (index . "onshape")}}
+# Obtained at https://dev-portal.onshape.com/keys
+export ONSHAPE_API=https://cad.onshape.com
+{{- if (index .onshape "api_key")}}
+export ONSHAPE_ACCESS_KEY={{.onshape.api_key}}
+{{- end}}
+{{- if (index .onshape "secret_key")}}
+export ONSHAPE_SECRET_KEY={{.onshape.secret_key}}
+{{- end}}
+{{- end}}
+
+{{- if (and (index . "roboflow") (index .roboflow "api_key"))}}
+export ROBOFLOW_API_KEY={{.roboflow.api_key}}
+{{- end}}
+
+# Session management with oatmeal (https://github.com/dustinblackman/oatmeal).
+function oatmeal-sessions() {
+    (
+        cd "$(oatmeal sessions dir)"
+        id=$(
+          ls | \
+          (while read f; do echo "$(cat $f)\n---\n"; done;) | \
+          yq -p=yaml -o=json - 2> /dev/null | \
+          jq -s . | \
+          jq -rc '. |= sort_by(.timestamp) | .[] |  "\(.id):\(.timestamp):\(.state.backend_model):\(.state.editor_language):\(.state.messages[] | .text | tojson)"' | \
+          fzf --ansi | \
+          awk -F ':' '{print $1}' | \
+          head -n1 | \
+          awk -F '.' '{print $1}'
+        )
+        oatmeal sessions open --id "$id"
+    )
+}
+
+# Solve an issue with TensorFlow
+# Cf. https://stackoverflow.com/a/72145676.
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+
+function yy() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+function nmcli-robot() {
+  nmcli con down S23+
+  nmcli con up Robocon_v2
+  nmcli con up vlan_robocon_v2
+}

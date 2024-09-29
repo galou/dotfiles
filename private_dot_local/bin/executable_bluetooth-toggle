@@ -1,10 +1,34 @@
-#!/bin/bash
+#!/bin/zsh
 # Toggle bluetooth status (on/off).
-# Depends on the bluetooth executable, provided by the tlp package on Ubuntu.
+#
+# Depends on either
+# - the `bluetoothctl` executable from the bluez package on Ubuntu.
+# - the `bluetooth` executable, provided by the tlp package on Ubuntu.
 
-bluetooth | grep on > /dev/null
-if [[ $? != 0 ]]; then
-	bluetooth on > /dev/null
-else
-	bluetooth off > /dev/null
+# Determine whether to use `bluetoothctl` or `bluetooth`.
+command -v bluetoothctl > /dev/null && BLUETOOTH_COMMAND=bluetoothctl || {command -v bluetooth && BLUETOOTH_COMMAND=bluetooth;}
+
+if [[ -z "$BLUETOOTH_COMMAND" ]]; then
+  # Exit if no bluetooth executable found.
+  echo "No bluetooth executable found." >&2
+  exit 1
 fi
+
+# Toggle bluetooth status.
+if [[ $BLUETOOTH_COMMAND = bluetoothctl ]]; then
+  POWERED=$(bluetoothctl show | grep Powered | cut --delimiter=: --fields=2 | tr --delete ' ')
+  if [[ $POWERED = "yes" ]]; then
+	  bluetoothctl power off > /dev/null && echo Bluetooth powered off
+  else
+	  bluetoothctl power on > /dev/null && echo Bluetooth powered on
+  fi
+else
+	bluetooth | grep on > /dev/null
+	if [[ $? != 0 ]]; then
+		bluetooth on > /dev/null
+	else
+		bluetooth off > /dev/null
+	fi
+fi
+
+exit 0
