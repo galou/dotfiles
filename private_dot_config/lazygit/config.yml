@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://json.schemastore.org/lazygit.json
+
+customCommands:
+  - key: 'C'
+    context: 'files'
+    command: "git commit --verbose"
+    subprocess: true
+  - key: 'b'
+    command: 'git pull --rebase --autostash'
+    context: 'localBranches'
+    stream: true
