@@ -1,3 +1,6 @@
+# Ignore until chezmoi_modify_manager is solved
+snap/prusa-slicer/60/private_dot_config/PrusaSlicer/PrusaSlicer.ini
+
 .config/PrusaSlicer/PrusaSlicer-to_be_symlinked.ini
 .config/duplicity/passphrase.sh
 .config/i3/README.rst
