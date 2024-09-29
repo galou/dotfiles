@@ -1,14 +1,19 @@
 # Applications
 
-arduino:
-  description: "Arduino IDE"
-  binary: ~/08-apps/arduino-ide_2.0.0_Linux_64bit.AppImage
-  icon: arduino
+ascii-draw:
+  description: "ASCII Draw"
+  binary: ascii-draw # Install with snap
+  icon: io.github.nokse22.asciidraw-symbolic
 
 atril:
   description: "Atril (PDF Viewer)"
   binary: atril
   icon: atril
+
+audacity:
+  description: "Audacity"
+  binary: ~/08-apps/audacity.AppImage
+  icon: audacity
 
 blender:
   description: "Blender"
@@ -29,12 +34,12 @@ calculator:
 characters:
   description: "Characters"
   binary: gnome-characters
-  icon: gnome-characters
+  icon: org.gnome.Characters
 
 cheese:
   description: "Cheese"
   binary: cheese
-  icon: cheese
+  icon: org.gnome.Cheese
 
 code:
   description: "Visual Studio Code"
@@ -45,6 +50,16 @@ cutecom:
   description: "CuteCom"
   binary: cutecom
   icon: cutecom
+
+digikam:
+  description: "Digikam"
+  binary: digikam
+  icon: digikam
+
+disk_usage_analyzer:
+  description: "Disk Usage Analyzer"
+  binary: baobab
+  icon: org.gnome.baobab
 
 file_manager:
   description: "File Manager"
@@ -61,10 +76,25 @@ freecad:
   binary: freecad-daily
   icon: freecad-daily
 
+freecad_appimage:
+  description: "FreeCAD AppImage"
+  binary: ~/08-apps/FreeCAD.AppImage
+  icon: freecad-daily
+
 freecad_asm3:
   description: "FreeCAD Assembly3"
   binary: freecad-realthunder # installed as snap
   icon: freecad-daily
+
+freecad_ondsel:
+  description: "FreeCAD Ondsel"
+  binary: ~/08-apps/FreeCAD-Ondsel.AppImage
+  icon: freecad-daily
+
+freetube:
+  description: "FreeTube"
+  binary: freetube
+  icon: freetube
 
 gazebo:
   description: "Gazebo"
@@ -80,6 +110,16 @@ gnome-control-center:
   description: "System settings"
   binary: gnome-control-center
   icon: org.gnome.Settings
+
+groot2:
+  description: "Groot2"
+  binary: ~/08-apps/Groot2.AppImage
+  icon: groot2
+
+heaptrack:
+  description: "Heaptrack"
+  binary: heaptrack_gui
+  icon: heaptrack
 
 impress:
   description: "LibreOffice Impress"
@@ -114,8 +154,8 @@ kdenlive:
 
 keepass:
   description: "Keepass"
-  binary: keepassx
-  icon: keepassx
+  binary: keepassxc
+  icon: keepassxc
 
 librecad:
   description: "LibreCAD"
@@ -125,26 +165,26 @@ librecad:
 meshlab:
   description: "MeshLab"
   binary: meshlab
-  icon: /usr/share/icons/pixmaps/meshlab.png
+  icon: meshlab
+
+nm-connection-editor:
+  description: "NetworkManager Connections"
+  binary: nm-connection-editor
+  icon: preferences-system-network
 
 obs:
   description: "OBS Studio (screencast)"
   binary: obs
   icon: com.obsproject.Studio
 
-owncloud:
-  description: "OwnCloud Desktop Client"
-  binary: owncloud
-  icon: owncloud
-
-picom:
-  description: "Picom, Standalone Compositor for Xorg"
-  binary: picom
-  icon: compton
+openscan:
+  description: "OpenSCAD"
+  binary: openscad
+  icon: openscad
 
 prusa:
   description: "Prusa Slicer"
-  binary: prusa-slicer  # From snap.
+  binary: ~/08-apps/PrusaSlicer.AppImage
   icon: PrusaSlicer
 
 qt5_assistant:
@@ -156,11 +196,6 @@ qt5_designer:
   description: "Qt5 Designer"
   binary: designer
   icon: designer-qt5
-
-remmina:
-  description: "Remmina"
-  binary: remmina
-  icon: org.remmina.Remmina
 
 retext:
   description: "ReText"
@@ -177,20 +212,10 @@ simplescan:
   binary: simple-scan
   icon: org.gnome.SimpleScan
 
-subtitleeditor:
-  description: "Subtitle Editor"
-  binary: subtitleeditor
-  icon: subtitleeditor
-
-teams:
-  description: "Teams"
-  binary: teams
-  icon: teams
-
 terminal:
   description: "Terminal"
   binary: x-terminal-emulator
-  icon: terminal
+  icon: org.gnome.Terminal
 
 text_editor:
   description: "Text Editor"
@@ -207,15 +232,20 @@ vlc:
   binary: vlc
   icon: vlc
 
+warp:
+  description: "Warp Terminal"
+  binary: /opt/warpdotdev/warp-terminal/warp
+  icon: dev.warp.Warp
+
+wdisplays:
+  description: "Displays"
+  binary: wdisplays
+  icon: wdisplays
+
 webots:
   description: "Webots"
   binary: /usr/local/bin/webots
   icon: webots
-
-wireshark:
-  description: "Wireshark"
-  binary: wireshark
-  icon: wireshark
 
 writer:
   description: "LibreOffice Writer"
@@ -235,9 +265,9 @@ zathura:
 
 zotero:
   description: "Zotero"
-  binary: zotero-snap  # From snap zotero-snap.
-  icon: zotero-icon
-{{- if and (index "laptop") .laptop}}
+  binary: zotero  # From tar.bz2 in /opt/zotero.
+  icon: zotero
+{{- if and (index . "laptop") .laptop}}
 
 calibre:
   description: "Calibre"
@@ -292,14 +322,202 @@ nvidia-settings:
 
 # Documents
 
-dictionary_ods:
-  description: "dictionary.ods"
-  binary: libreoffice
-  args: ["--calc", "/home/gael/06-common/dictionnary.ods"]
-  icon: libreoffice-calc
-
 iso_threads:
   description: "iso_threads.ods"
   binary: libreoffice
-  args: ["--calc", "/home/gael/06-common/iso_threads.ods"]
+  args: ["--calc", "06-common/iso_threads.ods"]
   icon: libreoffice-calc
+
+# Window and display management
+
+move_workspace_right:
+  description: "Move workspace to the right"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "right"]
+  icon: go-right
+
+move_workspace_left:
+  description: "Move workspace to the left"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "left"]
+  icon: go-left
+
+move_workspace_up:
+  description: "Move workspace up"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "up"]
+  icon: go-up
+
+move_workspace_down:
+  description: "Move workspace down"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "down"]
+  icon: go-down
+
+display_goulven:
+  description: "Display Setup Goulven"
+  binary: ~/.local/bin/display-goulven
+  icon: video-joined-displays-symbolic
+
+display_goulven_vnc:
+  description: "Display Setup Goulven VNC"
+  binary: ~/.local/bin/display-goulven-vnc
+  icon: video-joined-displays-symbolic
+
+display_kmr:
+  description: "Display Setup KMR"
+  binary: ~/.local/bin/display-kmr
+  icon: video-joined-displays-symbolic
+
+display_kmr_vnc:
+  description: "Display Setup KMR VNC"
+  binary: ~/.local/bin/display-kmr-vnc
+  icon: video-joined-displays-symbolic
+
+display-jirčany:
+  description: "Display Setup Jirčany"
+  binary: ~/.local/bin/display-jirčany
+  icon: video-joined-displays-symbolic
+
+{{- /* `primary` direction not supported in i3-msg v4.20
+move_workspace_primary:
+  description: "Move workspace to primary monitor"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "primary"]
+  icon: laptop-symbolic-dark
+*/}}
+{{ if index . "main_monitor"}}
+move_workspace_primary:
+  description: "Move workspace to primary monitor"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "{{.main_monitor}}"]
+  icon: laptop-symbolic-dark
+{{- end}}
+
+{{- /* `nonprimary` direction not supported in i3-msg v4.20, workaround is left or right.
+move_workspace_nonprimary:
+  description: "Move workspace to external monitor"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "nonprimary"]
+  icon: display-projector-symbolic-dark
+*/}}
+{{ if index . "second_monitor"}}
+move_workspace_nonprimary:
+  description: "Move workspace to external monitor"
+  binary: i3-msg
+  args: ["move", "workspace", "to", "{{.second_monitor}}"]
+  icon: display-projector-symbolic-dark
+{{- end}}
+
+# PC and session Management
+
+bluetooth-connect-headphones:
+  description: "Connect to headphones"
+  binary: ~/.local/bin/bluetooth-connect
+  args: 05:15:17:14:3C:92
+  icon: bluetooth-symbolic-dark
+
+bluetooth-connect-jbl:
+  description: "Connect to JBL"
+  binary: ~/.local/bin/bluetooth-connect
+  args: 00:12:6F:E2:66:3F
+  icon: bluetooth-symbolic-dark
+
+bluetooth-connect-k860:
+  description: "Connect to keyboard"
+  binary: ~/.local/bin/bluetooth-connect
+  args: CA:50:48:52:B5:10
+  icon: bluetooth-symbolic-dark
+
+bluetooth-connect-lamax:
+  description: "Connect to LAMAX"
+  binary: ~/.local/bin/bluetooth-connect
+  args: F4:4E:FD:D3:88:AB
+  icon: bluetooth-symbolic-dark
+
+bluetooth-connect-niceboy:
+  description: "Connect to Niceboy"
+  binary: ~/.local/bin/bluetooth-connect
+  args: F4:4E:FD:07:CD:1A
+  icon: bluetooth-symbolic-dark
+
+bluetooth-toggle:
+  description: "Bluetooth toggle"
+  binary: ~/.local/bluetooth-toggle
+  icon: bluetooth-symbolic-dark
+
+hibernate:
+  description: "Hibernate"
+  binary: ~/.local/bin/lock-hibernate
+  icon: system-hibernate-dark
+
+lock:
+  description: "Lock session"
+  binary: ~/.local/bin/lock
+  icon: system-lock-screen-symbolic-dark
+
+logout:
+  description: "Log out"
+  binary: ~/.local/bin/exit-session
+  icon: system-log-out-symbolic-dark
+
+reboot:
+  description: "Reboot"
+  binary: systemctl
+  args: reboot
+  icon: system-restart-symbolic-dark
+
+shutdown:
+  description: "shutdown"
+  binary: systemctl
+  args: poweroff
+  icon: system-shutdown-symbolic-dark
+
+suspend:
+  description: "Suspend"
+  binary: ~/.local/bin/lock-suspend
+  icon: system-suspend-symbolic-dark
+
+toggle-presentation-mode:
+  description: "toggle-presentation-mode"
+  binary: toggle-presentation-mode
+  icon: x-office-presentation-symbolic-dark
+
+performance-battery:
+  description: "Set to battery mode"
+  binary: "system76-power"
+  args: ["profile", "battery"]
+  icon: performance-010
+
+performance-balanced:
+  description: "Set to balanced mode"
+  binary: "system76-power"
+  args: ["profile", "balanced"]
+  icon: performance-050
+
+performance-performance:
+  description: "Set to performance mode"
+  binary: "system76-power"
+  args: ["profile", "performance"]
+  icon: performance-100
+
+{{ if and (index . "laptop") .laptop}}
+activate_touchpad:
+  description: "Activate touchpad"
+  binary: swaymsg
+  args: ["input", "type:touchpad", "events", "enabled"]
+  icon: input-touchpad-symbolic
+
+deactivate_touchpad:
+  description: "Deactivate touchpad"
+  binary: swaymsg
+  args: ["input", "type:touchpad", "events", "disabled"]
+  icon: touchpad-disabled-symbolic
+
+deactivate_touchpad_on_external_mouse:
+  description: "Deactivate touchpad on external mouse"
+  binary: swaymsg
+  args: ["input", "type:touchpad", "events", "disabled_on_external_mouse"]
+  icon: touchpad-disabled-symbolic
+{{- end}}
+
