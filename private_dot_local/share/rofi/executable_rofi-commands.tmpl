@@ -1,9 +1,9 @@
-#!//bin/sh
+#!/bin/bash
 
 options=" lock
  logout
-  sleep
-  hibernate
+ sleep
+ hibernate
  reboot
  shutdown
  toggle presentation mode
@@ -17,17 +17,37 @@ options=" lock
  connect to JBL
  Update QuickFix on TomTom Watch{{- end}}"
 
-selection=$(echo "${options}" | rofi -dmenu -p action)
+if [[ $XDG_SESSION_TYPE = wayland ]]; then
+    selection=$(echo "${options}" | wofi --dmenu --prompt=Action)
+else
+    selection=$(echo "${options}" | rofi -dmenu -p action)
+fi
 
 case "${selection}" in
     " lock")
-        i3lock;;
+        if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+            swaylock
+        else
+            i3lock
+        fi;;
     " logout")
-        i3-msg exit;;
-    "  sleep")
-        lock && systemctl suspend;;
-    "  hibernate")
-        i3lock && systemctl hibernate;;
+        if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+            swaymsg exit
+        else
+            i3-msg exit
+        fi;;
+    " sleep")
+        if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+            swaylock & systemctl suspend
+        else
+            i3lock & systemctl suspend
+        fi;;
+    " hibernate")
+        if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+            swaylock & systemctl hibernate
+        else
+            i3lock & systemctl hibernate
+        fi;;
     " reboot")
         systemctl reboot;;
     " shutdown")
@@ -38,9 +58,10 @@ case "${selection}" in
     " toggle touchpad")
         toggle-touchpad;;
 {{- end}}
-{{- if eq .chezmoi.hostname "pcgael4"}}
+{{- if (index . "pulseaudio_sink")}}
     " Set default Pulseaudio sink")
         pactl set-default-sink {{.pulseaudio_sink}};;
+{{- end}}
     " toggle bluetooth")
         bluetooth-toggle;;
     " connect to headphones")
@@ -49,5 +70,4 @@ case "${selection}" in
         $HOME/.local/bin/bluetooth-connect 00:12:6F:E2:66:3F;;
     " Update QuickFix on TomTom Watch")
         $HOME/.local/bin/tomtom-updategps;;
-{{- end}}
 esac
