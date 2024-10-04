@@ -568,3 +568,8 @@ function nmcli-robot() {
   nmcli con up Robocon_v2
   nmcli con up vlan_robocon_v2
 }
+
+{{- if (and (index . "kmr") (index .kmr "robocon_remote_user"))}}
+
+export ROBOCON_REMOTE_USER={{.kmr.robocon_remote_user}}
+{{- end}}
