@@ -521,6 +521,10 @@ export ONSHAPE_SECRET_KEY={{.onshape.secret_key}}
 export ROBOFLOW_API_KEY={{.roboflow.api_key}}
 {{- end}}
 
+{{- if (and (index . "kmr") (index .kmr "robocon_remote_user"))}}
+export ROBOCON_REMOTE_USER={{.kmr.robocon_remote_user}}
+{{- end}}
+
 # Session management with oatmeal (https://github.com/dustinblackman/oatmeal).
 function oatmeal-sessions() {
     (
