@@ -553,6 +553,16 @@ function yy() {
   rm -f -- "$tmp"
 }
 
+{{- if (index . "kdeconnect_device")}}
+
+function send-kdeconnect() {
+  kdeconnect-cli --list-available --id-only 2>/dev/null | grep -q {{.kdeconnect_device}} || (echo "Device {{.kdeconnect_device}} not found" && return 1)
+  for file in "$@"; do
+    kdeconnect-cli --device {{.kdeconnect_device}} --share "$file"
+  done
+}
+{{- end}}
+
 function nmcli-robot() {
   nmcli con down S23+
   nmcli con up Robocon_v2
