@@ -349,7 +349,8 @@ colcon()
     init*)
 
       if [ ! -e "build/COLCON_IGNORE" ]; then # we are NOT at the workspace root
-        nice command colcon build # this creates a new workspace
+        {{/* `nice command colcon build` doesn't work. */}}
+        command colcon build # this creates a new workspace
       fi
 
       ;;
@@ -357,7 +358,8 @@ colcon()
     build*|b*)
 
       if [ -e "build/COLCON_IGNORE" ]; then # we are at the workspace root
-        nice command colcon "$@" # this creates a new workspace
+        {{/* `nice command colcon "$@"` doesn't work. */}}
+        nice colcon "$@" # this creates a new workspace
       else
         while [ ! -e "build/COLCON_IGNORE" ]; do
           cd ..
@@ -366,7 +368,8 @@ colcon()
             echo "Cannot build, not in a workspace!"
             break
           elif [ -e "build/COLCON_IGNORE" ]; then
-            nice command colcon "$@"
+            {{/* `nice command colcon "$@"` doesn't work. */}}
+            nice colcon "$@"
             break
           fi
         done
@@ -406,7 +409,8 @@ colcon()
       ;;
 
     *)
-      nice command colcon $@
+      {{/* `nice command colcon $@` doesn't work. */}}
+      nice colcon $@
       ;;
 
   esac
