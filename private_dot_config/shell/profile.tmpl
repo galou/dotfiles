@@ -506,6 +506,10 @@ export NNN_PLUG='p:preview-tui'
 # # Jabref has this syndrome on Sway with Nvidia.
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+{{- if (and (index . "cometml") (index .cometml "api_key"))}}
+export COMET_API_KEY={{.cometml.api_key}}
+{{- end}}
+
 {{- if (and (index . "openai") (index .openai "api_key"))}}
 export OPENAI_API_KEY={{.openai.api_key}}
 {{- end}}
