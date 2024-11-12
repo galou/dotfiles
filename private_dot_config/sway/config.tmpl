@@ -24,7 +24,7 @@
 #   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager, symlinked to ~/.local/bin/i3-layout-manager)
 #   i3blocks (apt install i3blocks)
 #   kdeconnect-indicator (apt install kdeconnect)
-#   kitty (https://sw.kovidgoyal.net/kitty/index.html)
+#   kitty (apt install kitty, https://sw.kovidgoyal.net/kitty/index.html)
 #   libinput-gestures-setup
 #   mako (apt install mako-notifier)
 #   mate-calc (apt install mate-calc)
@@ -371,14 +371,26 @@ bindsym Shift+XF86AudioLowerVolume exec playerctl previous
 bindsym Shift+XF86AudioRaiseVolume exec playerctl next
 
 # Shortcuts to start applications
+{{- if eq .chezmoi.hostname "pcgael1"}}
+bindsym $mod+Return exec $HOME/.local/bin/kitty
+{{- else}}
 bindsym $mod+Return exec kitty
+{{- end}}
 bindsym $mod+c exec $HOME/.local/share/rofi/rofi-commands
+{{- if eq .chezmoi.hostname "pcgael1"}}
+bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command $HOME/.local/bin/kitty
+{{- else}}
 bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command kitty
+{{- end}}
 bindsym $mod+Shift+i exec inkscape
 bindsym $mod+m exec $HOME/.cargo/bin/sway-scratchpad --mark music --command "vlc /home/gael/Music/fip-autour_du_monde.m3u"
 bindsym $mod+Shift+m exec $HOME/.cargo/bin/sway-scratchpad --mark divercities --command "brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities"
 bindsym $mod+n exec $file_manager
+{{- if eq .chezmoi.hostname "pcgael1"}}
+bindsym $mod+o exec $HOME/.local/bin/kitty -- $HOME/.cargo/bin/ytop
+{{- else}}
 bindsym $mod+o exec kitty -- $HOME/.cargo/bin/ytop
+{{- end}}
 bindsym $mod+p exec pavucontrol
 bindsym $mod+v exec vim
 bindsym $mod+w exec $HOME/.local/share/rofi/rofi-wifi
