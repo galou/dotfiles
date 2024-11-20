@@ -67,7 +67,7 @@ alias v='f -e vim' # quick opening files with vim. f='fasd -f'
 alias youtube-dl='noglob youtube-dl'
 alias y='ytop'
 alias yt-dlp='noglob yt-dlp'
-{{- if and (index . "laptop") .laptop}}
+{{- if eq .chassis_type "laptop"}}
 # `bluetooth` from the tlp package.
 alias bon='bluetooth on'
 alias boff='bluetooth off'

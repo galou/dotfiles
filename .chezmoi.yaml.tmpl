@@ -1,15 +1,27 @@
+{{- $chassisType := "laptop" }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   if contains "MacBook" (output "sysctl" "-n" "hw.model") }}
+{{-     $chassisType = "laptop" }}
+{{-   else }}
+{{-     $chassisType = "desktop" }}
+{{-   end }}
+{{- else if eq .chezmoi.os "linux" }}
+{{-   $chassisType = (output "hostnamectl" "--json=short" | mustFromJson).Chassis }}
+{{- else if eq .chezmoi.os "windows" }}
+{{-   $chassisType = (output "powershell.exe" "-NoProfile" "-NonInteractive" "-Command" "if ((Get-CimInstance -Class Win32_Battery | Measure-Object).Count -gt 0) { Write-Output 'laptop' } else { Write-Output 'desktop' }") | trim }}
+{{- end -}}
 data:
   main_monitor:
   second_monitor:
   second_monitor_position:
   second_monitor_rotation:
   external_monitors:
+  chassis_type: {{$chassisType | quote}}
   brightness_device:
   eth_device:
   wifi_device:
   touchpad_device:
   i3_use_fontawesome:
-  laptop:
   pulseaudio_sink:
   pulseaudio_source:
   kdeconnect_device:

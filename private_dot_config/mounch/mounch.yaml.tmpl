@@ -267,7 +267,7 @@ zotero:
   description: "Zotero"
   binary: zotero  # From tar.bz2 in /opt/zotero.
   icon: zotero
-{{- if and (index . "laptop") .laptop}}
+{{- if eq .chassis_type "laptop"}}
 
 calibre:
   description: "Calibre"
@@ -501,7 +501,7 @@ performance-performance:
   args: ["profile", "performance"]
   icon: performance-100
 
-{{ if and (index . "laptop") .laptop}}
+{{- if eq .chassis_type "laptop"}}
 activate_touchpad:
   description: "Activate touchpad"
   binary: swaymsg
