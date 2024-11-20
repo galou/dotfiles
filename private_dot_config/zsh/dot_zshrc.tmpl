@@ -285,10 +285,15 @@ ros2_activate()
   {{/* Sourcing `ament_index-argcomplete.zsh` must be before sourcing `ros2-argcomplete.zsh`. */ -}}
   {{/* It seems that argcomplete files are mutually exclusive, thus `ros2-argcomplete.zsh` as last. */ -}}
   source /opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh does not exist" >&2
-  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
   source /opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
+  {{- if eq .chezmoi.osRelease.versionID "22.04" -}}
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
   eval "$(register-python-argcomplete3 ros2)"
   eval "$(register-python-argcomplete3 colcon)"
+  {{- else}}
+  eval "$(register-python-argcomplete ros2)"
+  {{- /* _colcon is part of the apt package on 24.04 and later.  */}}
+  {{- end}}
 
   # Initialize colcon_cd.
   if [ -e ${ROS_WORKSPACE} ]; then
