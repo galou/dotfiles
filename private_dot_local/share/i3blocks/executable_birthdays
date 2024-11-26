@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+# Birthday reminder for i3blocks.
+#
+# This script reads a CSV file with birthdays and displays a notification if
+# there is a birthday today or in the next 5 days.
+#
+# The CSV file should have the following format:
+# YYYY-MM-DD, Name, Nickname
+# If the birth year is unknown, use 0000 or 0001.
+#
+# Requires zenity for the notification.
 
 import datetime
 import os
@@ -7,7 +17,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, List
 
-BIRTHDAY_FILE = Path(os.path.expanduser('~/.config/i3blocks/birthdays.csv'))
+BIRTHDAY_FILE = Path('~/.config/i3blocks/birthdays.csv').expanduser()
 CACHE_FILE = Path(os.path.expanduser(
     os.path.join(os.environ.get('XDG_RUNTIME_DIR', tempfile.mktemp()),
                  'i3blocks_birthdays')))
@@ -16,6 +26,7 @@ DEBUG = False
 
 class Birthday:
     """Represent a birthday."""
+
     def __init__(self, datestr: str, name: str):
         """Create from a YYYY-MM-DD string and name.
 
@@ -64,8 +75,8 @@ def get_birthdays(birthday_file: Path) -> List[Birthday]:
     with open(birthday_file, 'r') as f:
         birthdays = []
         try:
-            for l in f.readlines():
-                datestr, name, nick = [s.strip() for s in l.split(',')]
+            for line in f.readlines():
+                datestr, name, nick = [s.strip() for s in line.split(',')]
                 if nick:
                     birthday = Birthday(datestr, nick)
                 else:
@@ -164,7 +175,13 @@ def main():
             d_str_5 = birthdays_str(within_5)
             text += eol + zenity_str(d_str_5)
 
-        subprocess.call(['zenity', '--info', '--no-wrap', f'--text={text}'])
+        subprocess.call([
+            'zenity',
+            '--info',
+            '--no-wrap',
+            '--title=Birthdays',
+            f'--text={text}',
+        ])
 
 
 if __name__ == '__main__':
