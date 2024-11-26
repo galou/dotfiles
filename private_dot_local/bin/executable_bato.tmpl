@@ -11,4 +11,8 @@ if [ ${#pids[@]} -gt 0 ]; then
     {ps --no-headers $pid | grep zsh 2>&1 >/dev/null} || kill $pid
   done
 fi
+{{- if eq .chezmoi.hostname "pcgael1"}}
 "$HOME/04-sources/bato-battery_manager/bato/target/release/bato"
+{{- else}}
+"$HOME/.cargo/bin/bato"
+{{- end}}
