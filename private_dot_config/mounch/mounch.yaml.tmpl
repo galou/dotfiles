@@ -20,6 +20,11 @@ blender:
   binary: blender
   icon: blender
 
+brave:
+  description: "Brave"
+  binary: brave-browser-stable
+  icon: brave-browser
+
 calc:
   description: "LibreOffice Calc"
   binary: libreoffice
@@ -33,8 +38,8 @@ calculator:
 
 characters:
   description: "Characters"
-  binary: gnome-characters
-  icon: org.gnome.Characters
+  binary: gucharmap
+  icon: accessories-character-map
 
 cheese:
   description: "Cheese"
@@ -106,11 +111,6 @@ gimp:
   binary: gimp
   icon: gimp
 
-gnome-control-center:
-  description: "System settings"
-  binary: gnome-control-center
-  icon: org.gnome.Settings
-
 groot2:
   description: "Groot2"
   binary: ~/08-apps/Groot2.AppImage
@@ -136,11 +136,6 @@ jabref:
   description: "JabRef"
   binary: jabref
   icon: JabRef-icon-48
-
-kazam:
-  description: "Kazam screencast"
-  binary: kazam
-  icon: kazam
 
 kde_connect_indicator:
   description: "KDE Connect Indicator"
@@ -202,15 +197,25 @@ retext:
   binary: retext
   icon: retext
 
-slack:
-  description: "Slack"  # From snap.
-  binary: slack
-  icon: slack
+settings:
+  description: "System settings"
+{{- if eq .chezmoi.osRelease.versionID "22.04"}}
+  binary: gnome-control-center
+  icon: org.gnome.Settings
+{{- else}}
+  binary: cosmic-settings
+  icon: com.system76.CosmicSettings
+{{- end}}
 
 simplescan:
   description: "Simple Scan"
   binary: simple-scan
   icon: org.gnome.SimpleScan
+
+slack:
+  description: "Slack"  # From snap.
+  binary: slack
+  icon: slack
 
 terminal:
   description: "Terminal"
@@ -240,7 +245,11 @@ warp:
 wdisplays:
   description: "Displays"
   binary: wdisplays
+{{- if eq .chezmoi.osRelease.versionID "22.04"}}
   icon: wdisplays
+{{- else}}
+  icon: network.cycles.wdisplays
+{{- end}}
 
 webots:
   description: "Webots"
@@ -267,7 +276,6 @@ zotero:
   description: "Zotero"
   binary: zotero  # From tar.bz2 in /opt/zotero.
   icon: zotero
-{{- if eq .chassis_type "laptop"}}
 
 calibre:
   description: "Calibre"
@@ -288,11 +296,13 @@ playonlinux:
   description: "PlayOnLinux"
   binary: playonlinux
   icon: playonlinux
+{{- if eq .chassis_type "laptop"}}
 
 power_statistics:
   description: "Power Statistics"
   binary: gnome-power-statistics
   icon: org.gnome.PowerStats
+{{- end}}
 
 telegram:
   description: "Telegram"
@@ -305,11 +315,6 @@ viking:
   icon: viking
 {{- end}}
 {{- if eq .chezmoi.hostname "pcgael3"}}
-
-lumi:
-  description: "Lumi, H5P Editor"
-  binary: lumi  # From snap.
-  icon: lumi
 
 {{- end}}
 {{- if or (eq .chezmoi.hostname "pcgael3") (eq .chezmoi.hostname "pcgael5")}}
@@ -357,27 +362,27 @@ move_workspace_down:
 display_goulven:
   description: "Display Setup Goulven"
   binary: ~/.local/bin/display-goulven
-  icon: video-joined-displays-symbolic
+  icon: video-joined-displays-symbolic-dark
 
 display_goulven_vnc:
   description: "Display Setup Goulven VNC"
   binary: ~/.local/bin/display-goulven-vnc
-  icon: video-joined-displays-symbolic
+  icon: video-joined-displays-symbolic-dark
 
 display_kmr:
   description: "Display Setup KMR"
   binary: ~/.local/bin/display-kmr
-  icon: video-joined-displays-symbolic
+  icon: video-joined-displays-symbolic-dark
 
 display_kmr_vnc:
   description: "Display Setup KMR VNC"
   binary: ~/.local/bin/display-kmr-vnc
-  icon: video-joined-displays-symbolic
+  icon: video-joined-displays-symbolic-dark
 
 display-jirčany:
   description: "Display Setup Jirčany"
   binary: ~/.local/bin/display-jirčany
-  icon: video-joined-displays-symbolic
+  icon: video-joined-displays-symbolic-dark
 
 {{- /* `primary` direction not supported in i3-msg v4.20
 move_workspace_primary:
