@@ -1,5 +1,6 @@
 format = """
 [ ](bg:color_bg0)\
+${env_var.yazi_level}\
 $username\
 $hostname\
 $shlvl\
@@ -38,6 +39,15 @@ color_purple = '#b16286'
 color_red = '#cc241d'
 color_yellow = '#d79921'
 color_darkergrey = '#1d2230'
+
+[env_var.yazi_level]
+description = "Indicate that the shell was launched from within yazi"
+variable = "YAZI_LEVEL"
+# 🦆: U+1f986 Duck
+#  : U+E795 <Private Use>
+symbol = "🦆"
+style = "bg:color_bg0"
+format = '[ $symbol ]($style)'
 
 [directory]
 style = "fg:color_blue bg:color_bg0"
