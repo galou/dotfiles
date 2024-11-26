@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROFILE=default-release
+
+/usr/bin/firefox -P "$PROFILE" "$@" > /dev/null

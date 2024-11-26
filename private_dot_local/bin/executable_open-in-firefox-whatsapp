@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROFILE=whatsapp
+
+/usr/bin/firefox -P "$whatsapp" "$@" > /dev/null

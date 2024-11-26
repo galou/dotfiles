@@ -74,6 +74,7 @@ file_manager:
 firefox:
   description: "Firefox Web Browser"
   binary: firefox
+  args: ["-P", "default-release"]
   icon: firefox
 
 freecad:
@@ -313,11 +314,13 @@ viking:
   description: "Viking"
   binary: viking
   icon: viking
-{{- end}}
-{{- if eq .chezmoi.hostname "pcgael3"}}
 
-{{- end}}
-{{- if or (eq .chezmoi.hostname "pcgael3") (eq .chezmoi.hostname "pcgael5")}}
+whatsapp:
+  description: "WhatsApp"
+  binary: firefox
+  args: ["-P", "whatsapp"]
+  icon: WhatsApp
+{{- if or (eq .chezmoi.hostname "pcgael1") (eq .chezmoi.hostname "pcgael3")}}
 
 nvidia-settings:
   description: "NVIDIA X Server Settings"
