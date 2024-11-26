@@ -179,6 +179,15 @@ on   = "!"
 run  = 'shell "$SHELL" --block --confirm'
 desc = "Open shell here"
 
+# max-preview plugin
+# ya pack -a yazi-rs/plugins:max-preview
+[[manager.prepend_keymap]]
+on   = "T"
+run  = "plugin --sync max-preview"
+# For upcoming Yazi 0.4 (nightly version):
+# run  = "plugin max-preview"
+desc = "Maximize or restore preview"
+
 [tasks]
 
 keymap = [
