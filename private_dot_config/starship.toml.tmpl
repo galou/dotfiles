@@ -1,0 +1,147 @@
+format = """
+[ ](bg:color_bg0)\
+$username\
+$hostname\
+$shlvl\
+$sudo\
+$directory\
+[](fg:color_bg0 bg:color_darkgreen)\
+$container\
+$direnv\
+$git_branch\
+$git_state\
+$git_status\
+[](fg:color_darkgreen bg:color_darkergreen)\
+$nodejs\
+$rust\
+$golang\
+$php\
+[](fg:color_darkergreen)\
+$fill\
+$custom\
+\n$character"""
+
+palette = 'gael'
+
+[palettes.gael]
+color_bg0 = '#303030'
+color_blue = '#0b9de4'
+color_darkblue = '#769ff0'
+color_darkgrey = '#555555'
+color_green = '#57c012'
+color_darkgreen = '#394260'
+color_darkergreen = '#212736'
+color_turquoise = '#458588'
+color_aqua = '#689d6a'
+color_orange = '#d65d0e'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_yellow = '#d79921'
+color_darkergrey = '#1d2230'
+
+[directory]
+style = "fg:color_blue bg:color_bg0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+# : U+ebe7 Lock small
+# 🔒: U+1f512 Lock
+read_only = ""
+# TODO: highlight the last directory (not supported yet as of 2024-11-25).
+
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+#  : U+f418 <Private Use> (use with FontAwesome).
+# 🌱: U+1f331 Seedling
+#  U+e0a0 Branch
+symbol = ""
+style = "bg:color_darkgreen"
+format = '[[ $symbol$branch](fg:color_darkblue bg:color_darkgreen)]($style)'
+
+[git_state]
+format = '[\($state($progress_current of $progress_total)\)]($style) '
+# Could use 🍒 for cherry-picking.
+
+[git_status]
+style = "bg:color_darkgreen"
+format = '[[($ahead_behind $conflicted$deleted$renamed$modified$typechanged$staged$untracked$stashed)](fg:color_darkblue bg:color_darkgreen)]($style)'
+ahead = ' ⇡${count}'
+diverged = ' ⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+# ⁉: U+2049 Exclamation question mark
+conflicted = '⁉${count}'
+up_to_date = ' ✓'
+untracked = '?${count}'
+# 󰠘: U+f0818 Content save outline
+stashed = ' 󰠘${count}'
+# ≠: U+2260 Not equal to
+modified = '≠${count}'
+staged = '+${count}'
+# : U+eae0 Diff renamed
+# →: U+2192 Rightwards arrow
+renamed = '→${count}'
+# ✗: U+2717 Ballot X
+deleted = '✗${count}'
+
+[nodejs]
+symbol = ""
+style = "bg:color_darkergreen"
+format = '[[ $symbol ($version) ](fg:color_darkblue bg:color_darkergreen)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color_darkergreen"
+format = '[[ $symbol ($version) ](fg:color_darkblue bg:color_darkergreen)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color_darkergreen"
+format = '[[ $symbol ($version) ](fg:color_darkblue bg:color_darkergreen)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_darkergreen"
+format = '[[ $symbol ($version) ](fg:color_darkblue bg:color_darkergreen)]($style)'
+
+[time]
+disabled = true
+time_format = "%R" # Hour:Minute Format
+style = "bg:color_darkergrey"
+format = '[[  $time ](fg:color_blue bg:color_darkergrey)]($style)'
+
+[battery]
+# 󰂂: U+f0082 Battery full
+# 🔋: U+1f50b Battery
+full_symbol = '󰂂'
+# 󰢟 : U+f089f Charging
+charging_symbol = '󰢟 '
+# : U+e560 Battery 20%
+# 󱟞: U+f1df Battery 20%
+discharging_symbol = '  '
+
+[[battery.display]]
+threshold = 20
+style = 'bold red'
+
+[fill]
+# ─: U+2500 Box drawing light horizontal
+symbol = "─"
+style = "fg:color_darkgrey"
+
+[custom.ros_workspace]
+description = "Show either $ROS_WORKSPACE (truncated) or $ROS_DISTRO."
+# 🐢: U+1f422 Turtle
+# 🤖: U+1f916 Robot face
+command = """if [ ${ROS_WORKSPACE} ]; then
+      echo -n "🐢 ${ROS_WORKSPACE//$HOME\\//}"
+    elif [ ${ROS_DISTRO} ]; then
+      echo -n "🐢 ${ROS_DISTRO}"
+    fi"""
+when = "$command"
+symbol = " "

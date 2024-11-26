@@ -31,12 +31,17 @@ autoload -Uz _zinit
 if [ -f $HOME/.config/shell/profile ]; then
   zinit wait"0" lucid for is-snippet $HOME/.config/shell/profile
 fi
+{{- /* Powerlevel10k configuration, replaced with starship
 
 # Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 # Install if not present.
 [[ -f ~/.config/zsh/.p10k.zsh ]] || zinit ice depth=1; zinit light romkatv/powerlevel10k
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+ */}}
+{{- /* Starship configuration, https://starship.rs/. */}}
+
+eval "$($HOME/.cargo/bin/starship init zsh)"
 
 # Alias configuration for forgit.
 export FORGIT_NO_ALIASES=1
