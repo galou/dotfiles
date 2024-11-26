@@ -1,12 +1,17 @@
+# External dependencies:
+# delta (https://github.com/dandavison/delta, sudo apt install git-delta)
+# difft (https://github.com/Wilfred/difftastic, cargo install difftastic)
+# git-lfs (https://git-lfs.com/, sudo apt install git-lfs)
+
 [user]
     email = {{.git.user.email}}
     name = {{.git.user.name | quote }}
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [core]
-	compression = 0
+    compression = 0
 
 [credential]
     helper = manager{{/* From the gcm package, manually installed, https://github.com/git-ecosystem/git-credential-manager */}}
@@ -49,10 +54,10 @@
     hunk-header-style = file line-number syntax
 
 [http]
-	postBuffer = 52428800
+    postBuffer = 52428800
 
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
