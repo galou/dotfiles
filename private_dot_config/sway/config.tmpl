@@ -8,9 +8,10 @@
 # Public dependencies:
 #   brightnessctl (apt install brightnessctl)
 {{- if eq .chezmoi.hostname "pcgael1"}}
+{{/* Pop!_OS 22.04 */}}
 #   caja (apt install caja)
-{{- end}}
-{{- if eq .chezmoi.hostname "pcgael2"}}
+{{- else}}
+{{/* Pop!_OS 24.04 */}}
 #   cosmic-files (delivered with the Cosmic Desktop)
 {{- end}}
 #   dbus-update-activation-environment (apt install xdg-desktop-portal-wlr)
@@ -18,8 +19,6 @@
 #   dunst (apt install dunst)
 #   easystroke (sudo apt install easystroke)
 #   freecad-daily (https://freecad.org)
-#   gnome-pomodoro (apt install gnome-shell-pomodoro)
-#   gnome-terminal
 #   grimshot
 #   i3-layout-manager (https://github.com/klaxalk/i3-layout-manager, symlinked to ~/.local/bin/i3-layout-manager)
 #   i3blocks (apt install i3blocks)
@@ -29,23 +28,18 @@
 #   mako (apt install mako-notifier)
 #   mate-calc (apt install mate-calc)
 #   notify-send (sudo apt install libnotify-bin)
-#   numlockx (apt install numlockx)
-#   owncloud
 #   pactl (apt install pulseaudio-utils)
-#   picom (https://github.com/yshui/picom)
 #   pkill
 #   playerctl (apt install playerctl)
 #   qalc (apt install qalc)
 #   ranger (pip3 install ranger-fm)
 #   rofi (apt install rofi)
-#   setxkbmap
 #   slack
 #   sway-scratchpad (cargo quickinstall sway-scratchpad)
-#   teams
-#   terminator (apt install terminator)
 #   udiskie (apt install udiskie)
 #   vim (https://neovim.io/)
 #   vlc (apt install vlc)
+#   x-terminal-emulator
 #   x-www-browser
 #   xset
 #   ytop (cargo quickinstall ytop)
@@ -62,10 +56,10 @@
 # System-wide config.
 include /etc/sway/config.d/*
 
-{{- if eq .chezmoi.hostname "pcgael2"}}
-set $file_manager cosmic-files
-{{- else}}
+{{- if eq .chezmoi.hostname "pcgael1"}}
 set $file_manager caja
+{{- else}}
+set $file_manager cosmic-files
 {{- end}}
 
 ### Output configuration
@@ -406,11 +400,11 @@ bindsym $mod+Shift+y exec freecad-daily
 bindsym $mod+z exec zathura
 bindsym XF86HomePage exec x-www-browser
 bindsym XF86Search exec $file_manager
-bindsym XF86Calculator exec $HOME/.cargo/bin/sway-scratchpad --mark calc --command mate-calculator
+bindsym XF86Calculator exec $HOME/.cargo/bin/sway-scratchpad --width-px 706 --height-px 445 --mark calc --command mate-calculator
 bindsym Shift+XF86Calculator exec $HOME/.cargo/bin/sway-scratchpad --mark qalc --command qalculate
-bindsym XF86Launch5 exec gnome-terminal -- $HOME/.local/bin/ranger
+bindsym XF86Launch5 exec x-terminal-emulator -- $HOME/.local/bin/ranger
 bindsym XF86Launch6 exec $file_manager
-bindsym XF86Launch7 exec gnome-terminal -- vim
+bindsym XF86Launch7 exec x-terminal-emulator -- vim
 bindsym Print exec "grimshot save output"
 bindsym Shift+Print exec "grimshot save active"
 bindsym $mod+Shift+Print exec $HOME/.local/bin/screencast
