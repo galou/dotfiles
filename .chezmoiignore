@@ -19,7 +19,7 @@ README.rst
 # Files for generation with plugin `chezmoi_modify_manager`.
 **/*.src.ini
 
-{{- if not (and (index . "laptop") .laptop)}}
+{{- if eq .chassis_type "laptop"}}
 .local/bin/notify-airplane-mode-status
 {{- end}}
 
@@ -27,7 +27,7 @@ README.rst
 .Xresources
 {{- end}}
 
-{{- if eq .chezmoi.hostname "pcgael3"}}
+{{- if eq .chassis_type "laptop"}}
 .local/bin/display-1
 .local/bin/display-1-laptop
 .local/bin/display-1-external
