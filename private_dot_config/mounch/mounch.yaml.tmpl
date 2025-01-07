@@ -20,6 +20,11 @@ blender:
   binary: blender
   icon: blender
 
+bnc:
+  description: "BKG Ntrip Client"
+  binary: /opt/bnc-2.13.1/bnc-2.13.1
+  icon: ntrip-logo
+
 brave:
   description: "Brave"
   binary: brave-browser-stable
@@ -82,21 +87,6 @@ freecad:
   binary: freecad-daily
   icon: freecad-daily
 
-freecad_appimage:
-  description: "FreeCAD AppImage"
-  binary: ~/08-apps/FreeCAD.AppImage
-  icon: freecad-daily
-
-freecad_asm3:
-  description: "FreeCAD Assembly3"
-  binary: freecad-realthunder # installed as snap
-  icon: freecad-daily
-
-freecad_ondsel:
-  description: "FreeCAD Ondsel"
-  binary: ~/08-apps/FreeCAD-Ondsel.AppImage
-  icon: freecad-daily
-
 freetube:
   description: "FreeTube"
   binary: freetube
@@ -138,9 +128,9 @@ jabref:
   binary: jabref
   icon: JabRef-icon-48
 
-kde_connect_indicator:
-  description: "KDE Connect Indicator"
-  binary: kdeconnect-indicator
+kdeconnect_app:
+  description: "KDE Connect App"
+  binary: kdeconnect-app
   icon: kdeconnect
 
 kdenlive:
@@ -163,6 +153,12 @@ meshlab:
   binary: meshlab
   icon: meshlab
 
+music:
+  description: "Music"
+  binary: firefox
+  args: ["-P", "music"]
+  icon: music-player
+
 nm-connection-editor:
   description: "NetworkManager Connections"
   binary: nm-connection-editor
@@ -172,6 +168,11 @@ obs:
   description: "OBS Studio (screencast)"
   binary: obs
   icon: com.obsproject.Studio
+
+obsidian:
+  description: "Obsidian"
+  binary: obsidian
+  icon: obsidian
 
 openscan:
   description: "OpenSCAD"
@@ -198,6 +199,11 @@ retext:
   binary: retext
   icon: retext
 
+rxtools:
+  description: "RxTools (Septentrio)"
+  binary: /opt/Septentrio/RxTools/bin/runRxlauncher
+  icon: /opt/Septentrio/RxTools/pic/rxlauncher.svg
+
 settings:
   description: "System settings"
 {{- if eq .chezmoi.osRelease.versionID "22.04"}}
@@ -212,11 +218,21 @@ simplescan:
   description: "Simple Scan"
   binary: simple-scan
   icon: org.gnome.SimpleScan
+{{- if eq .chezmoi.osRelease.versionID "22.04"}}
+{{- /* slack doesn't launch on Pop!_OS 24 with sway and NVIDIA driver */}}
 
 slack:
   description: "Slack"  # From snap.
   binary: slack
   icon: slack
+{{- else}}
+
+slack:
+  description: "Slack"
+  binary: firefox
+  args: ["-P", "slack"]
+  icon: slack
+{{- end}}
 
 terminal:
   description: "Terminal"
@@ -290,8 +306,8 @@ digikam:
 
 musescore:
   description: "MuseScore"
-  binary: musescore.mscore  # From snap.
-  icon: application-x-musescore
+  binary: musescore3
+  icon: mscore3
 
 playonlinux:
   description: "PlayOnLinux"

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-PROFILE=whatsapp
+PROFILE=music
 
 /usr/bin/firefox -P "$PROFILE" "$@" > /dev/null

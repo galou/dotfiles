@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Exec=open-in-firefox-music %u
+Name=Firefox with music tabs
+Comment=Firefox with the `music` profile
