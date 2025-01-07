@@ -49,6 +49,16 @@ symbol = "🦆"
 style = "bg:color_bg0"
 format = '[ $symbol ]($style)'
 
+[shlvl]
+disabled = false
+format = '[$symbol ]($style)'
+threshold = 2
+#  : U+E795 <Private Use>
+symbol = " "
+repeat = true
+repeat_offset = 1
+style = "bg:color_bg0"
+
 [directory]
 style = "fg:color_blue bg:color_bg0"
 format = "[ $path ]($style)"
@@ -85,19 +95,19 @@ ahead = ' ⇡${count}'
 diverged = ' ⇡${ahead_count}⇣${behind_count}'
 behind = '⇣${count}'
 # ⁉: U+2049 Exclamation question mark
-conflicted = '⁉${count}'
+conflicted = '⁉${count} '
 up_to_date = ' ✓'
-untracked = '?${count}'
+untracked = '?${count} '
 # 󰠘: U+f0818 Content save outline
 stashed = ' 󰠘${count}'
 # ≠: U+2260 Not equal to
-modified = '≠${count}'
-staged = '+${count}'
+modified = '≠${count} '
+staged = '+${count} '
 # : U+eae0 Diff renamed
 # →: U+2192 Rightwards arrow
-renamed = '→${count}'
+renamed = '→${count} '
 # ✗: U+2717 Ballot X
-deleted = '✗${count}'
+deleted = '✗${count} '
 
 [nodejs]
 symbol = ""
