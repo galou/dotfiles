@@ -13,6 +13,21 @@ add_to_path()
     fi
   fi
 }
+{{- if eq .chezmoi.osRelease.versionID "24.04"}}
+
+# Prefix LD_LIBRARY_PATH with the given directory if not alreay present.
+add_to_ld_library_path()
+{
+  if [ -z "${1}" ]; then
+    return
+  fi
+  if [ -n "${LD_LIBRARY_PATH##*${1}}" -a -n "${LD_LIBRARY_PATH##*${1}:*}" ]; then
+    if [ -d "${1}" ] ; then
+      export LD_LIBRARY_PATH="${1}":$LD_LIBRARY_PATH
+    fi
+  fi
+}
+{{- end}}
 
 # NPM global packages.
 export NPM_PACKAGES="$HOME/.cache/npm-global"
@@ -46,6 +61,13 @@ export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHO
 
 # Add ~/.local/bin with the highest priority.
 add_to_path "$HOME/.local/bin"
+{{- if eq .chezmoi.osRelease.versionID "24.04"}}
+
+# Add /usr/local/lib/x86_64-linux-gnu.
+# As of 2024-11-22, this is needed for gtk4-layer-shell that is installed from
+# source on Ubuntu 24.04 (used by swtchr).
+add_to_ld_library_path /usr/local/lib/x86_64-linux-gnu
+{{- end}}
 
 # Deactive ctrl-s sending xoff
 # so that it can be used for something else
