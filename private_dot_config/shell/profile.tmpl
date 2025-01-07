@@ -92,6 +92,9 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
   # Use Wayland on SDL2 applications but default to X on error.
   export SDL_VIDEODRIVER="wayland,x11"
 
+  # Workaround FreeCAD not working.
+  export COIN_GL_NO_CURRENT_CONTEXT_CHECK=1
+
   # Enable sudo with xwayland.
   xhost si:localuser:root > /dev/null
 fi
