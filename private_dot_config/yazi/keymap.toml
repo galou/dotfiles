@@ -97,7 +97,7 @@ keymap = [
 	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "Copy the name of the file without the extension" },
 
 	# Filter
-	{ on = [ "f" ], run = "filter --smart", desc = "Filter the files" },
+	{ on = [ "F" ], run = "filter --smart", desc = "Filter the files" },
 
 	# Find
 	{ on = [ "/" ], run = "find --smart",            desc = "Find next file" },
@@ -187,6 +187,31 @@ run  = "plugin --sync max-preview"
 # For upcoming Yazi 0.4 (nightly version):
 # run  = "plugin max-preview"
 desc = "Maximize or restore preview"
+
+[[manager.prepend_keymap]]
+on   = [ "c", "p" ]
+run  = "plugin command"
+desc = "Yazi command prompt"
+
+[[manager.prepend_keymap]]
+on   = [ "c", "m" ]
+run  = "plugin chmod"
+desc = "chmod on selected files"
+
+[[manager.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
+
+[[manager.prepend_keymap]]
+on   = "<Enter>"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
+
+[[manager.prepend_keymap]]
+on   = "f"
+run  = "plugin jump-to-char"
+desc = "Jump to char ala vim"
 
 [tasks]
 

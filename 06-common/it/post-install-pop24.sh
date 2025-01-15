@@ -197,6 +197,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup component add rust-analyzer
 cargo install cargo-quickinstall
 cargo quickinstall \
+  allmytoes \
   bkt \
   cargo-generate \
   code-minimap \
@@ -464,6 +465,15 @@ mkdir --parents $HOME/.local/share/fonts/VictorMonoNerd \
   && popd >/dev/null \
   && rmdir /tmp/victormononerd \
   && fc-cache
+
+## Yazi.
+ya pack --add KKV9/command
+ya pack --add Sonico98/allmytoes
+ya pack --add dedukun/bookmarks
+ya pack --add pirafrank/what-size
+ya pack --add yazi-rs/plugins:chmod
+ya pack --add yazi-rs/plugins:jump-to-char
+ya pack --add yazi-rs/plugins:smart-enter
 
 ## Miscellaneous
 ln -s /usr/bin/batcat $HOME/.local/bin/bat
