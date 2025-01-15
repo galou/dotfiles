@@ -346,6 +346,9 @@ function rur_workspace()
   export ROS_WORKSPACE=$HOME/rur_ros2_ws && ros2_activate && roscd && source setup.sh
 }
 
+{{/* direnv hook (https://direnv.net/) */}}
+eval "$(direnv hook zsh)"
+
 # Activate timestamping before running a command.
 show_timestamp()
 {
