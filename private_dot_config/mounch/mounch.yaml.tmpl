@@ -1,5 +1,10 @@
 # Applications
 
+analysis-situs:
+  description: "Analysis Situs"
+  binary: asiExe # Pointer to the built executable
+  icon: analysis-situs
+
 ascii-draw:
   description: "ASCII Draw"
   binary: ascii-draw # Install with snap
@@ -28,7 +33,7 @@ bnc:
 brave:
   description: "Brave"
   binary: brave-browser-stable
-  icon: brave-browser
+  icon: /opt/brave.com/brave/product_logo_128.png
 
 calc:
   description: "LibreOffice Calc"
@@ -181,7 +186,8 @@ openscan:
 
 prusa:
   description: "Prusa Slicer"
-  binary: ~/08-apps/PrusaSlicer.AppImage
+  binary: flatpak
+  args: ["run", "com.prusa3d.PrusaSlicer"]
   icon: PrusaSlicer
 
 qt5_assistant:
@@ -194,10 +200,20 @@ qt5_designer:
   binary: designer
   icon: designer-qt5
 
+remmina:
+  description: "Remmina (Remote Desktop Client)"
+  binary: remmina
+  icon: org.remmina.Remmina
+
 retext:
   description: "ReText"
   binary: retext
   icon: retext
+
+rustdesk:
+  description: "RustDesk"
+  binary: rustdesk
+  icon: rustdesk
 
 rxtools:
   description: "RxTools (Septentrio)"
@@ -273,6 +289,11 @@ webots:
   binary: /usr/local/bin/webots
   icon: webots
 
+wireshark:
+  description: "Wireshark"
+  binary: wireshark
+  icon: org.wireshark.Wireshark
+
 writer:
   description: "LibreOffice Writer"
   binary: libreoffice
@@ -291,7 +312,7 @@ zathura:
 
 zotero:
   description: "Zotero"
-  binary: zotero  # From tar.bz2 in /opt/zotero.
+  binary: /opt/zotero/zotero  # From tar.bz2 in /opt/zotero.
   icon: zotero
 
 calibre:
@@ -447,6 +468,12 @@ bluetooth-connect-jbl:
   args: 00:12:6F:E2:66:3F
   icon: bluetooth-symbolic-dark
 
+bluetooth-connect-jbl-go:
+  description: "Connect to JBL Go 4"
+  binary: ~/.local/bin/bluetooth-connect
+  args: F8:5C:7E:DC:B3:17
+  icon: bluetooth-symbolic-dark
+
 bluetooth-connect-k860:
   description: "Connect to keyboard"
   binary: ~/.local/bin/bluetooth-connect
@@ -462,7 +489,7 @@ bluetooth-connect-lamax:
 bluetooth-connect-niceboy:
   description: "Connect to Niceboy"
   binary: ~/.local/bin/bluetooth-connect
-  args: F4:4E:FD:07:CD:1A
+  args: F4:4E:FD:E4:6A:1E
   icon: bluetooth-symbolic-dark
 
 bluetooth-toggle:
