@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Script to send files to a KDE Connect device using kdeconnect-cli.
+# Usage: kdesend <file_or_directory> [<file_or_directory> ...]
+
+{{- if not (index . "kdeconnect_device")}}
+echo "Error: No KDE Connect device ID configured. Please set 'kdeconnect_device' in your chezmoi configuration." >&2
+exit 1
+{{- else}}
+# Ensure kdeconnect-cli is installed
+if ! command -v kdeconnect-cli &> /dev/null; then
+  echo "Error: kdeconnect-cli is not installed." >&2
+exit 1
+
+DEVICE_ID="{{.kdeconnect_device}}"
+
+# Ensure that the device is available.
+command kdeconnect-cli --list-available --id-only 2>/dev/null | grep -q {{.kdeconnect_device}} || (echo "Device {{.kdeconnect_device}} not found" && exit 1)
+
+send_file() {
+  local file="$1"
+  if [[ ! -r "$file" ]]; then
+    echo "Error: Cannot read file '$file'" >&2
+    return
+  fi
+  if command kdeconnect-cli --device "$DEVICE_ID" --share "$file"; then
+    echo "Sent '$file' successfully."
+  else
+    echo "Error: Failed to send '$file'" >&2
+  fi
+}
+
+for path in "$@"; do
+  if [[ -f "$path" ]]; then
+    send_file "$path"
+  elif [[ -d "$path" ]]; then
+    find "$path" -type f -readable | while IFS= read -r file; do
+      send_file "$file"
+    done
+  else
+    echo "Error: '$path' is not a file or directory" >&2
+  fi
+done
+{{- end}}

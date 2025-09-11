@@ -31,7 +31,9 @@ alias i='ipython3'
 alias isaac='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/.local/share/ov/pkg/isaac_sim-2023.1.0/isaac-sim.sh'
 alias jabref='_JAVA_AWT_WM_NONREPARENTING=1 jabref'
 alias j='jupyter console'
-alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device dc5b2368f3997134'
+{{- if (index . "kdeconnect_device")}}
+alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device {{.kdeconnect_device}}'
+{{- end}}
 alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
 alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
 # some more ls aliases
