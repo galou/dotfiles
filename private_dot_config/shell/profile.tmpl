@@ -536,6 +536,15 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export COMET_API_KEY={{.cometml.api_key}}
 {{- end}}
 
+{{- if (and (index . "gemini") (index .gemini "api_key"))}}
+export GEMINI_API_KEY={{.gemini.api_key}}
+export GOOGLE_API_KEY={{.gemini.api_key}}
+{{- end}}
+
+{{- if (and (index . "nvidia") (index .nvidia "api_key"))}}
+export NVIDIA_API_KEY={{.nvidia.api_key}}
+{{- end}}
+
 {{- if (and (index . "openai") (index .openai "api_key"))}}
 export OPENAI_API_KEY={{.openai.api_key}}
 {{- end}}
