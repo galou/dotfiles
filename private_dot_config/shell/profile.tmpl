@@ -97,6 +97,11 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
 
   # Enable sudo with xwayland.
   xhost si:localuser:root > /dev/null
+
+  # Workaround an issue with Wayland and MoJuCo thus with Genesis).
+  # Cf. https://github.com/Genesis-Embodied-AI/Genesis/issues/609.
+  export MUJOCO_GL=glx
+  export PYOPENGL_PLATFORM=glx
 fi
 
 # Enable X11 for docker.

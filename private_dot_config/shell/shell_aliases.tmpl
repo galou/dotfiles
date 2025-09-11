@@ -18,17 +18,14 @@ alias cbt='catkin build --this'
 alias cbtn='catkin build --this --no-deps'
 alias ce='chezmoi edit'
 alias cp='/bin/cp -i'
-alias difft='difftastic'
 alias dragon='dragon --and-exit'
-# extract-image is defined in ~/.config/shell/profile.
 alias fc=freecad-daily
-alias ffmpeg-extract='extract-images'
-# Instead of git gui.
+alias ffmpeg-extract='extract-images'{{- /* extract-image is defined in ~/.config/shell/profile. */}}
+alias gcl1='git clone --recurse-submodules --depth 1'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
 alias gg='git grep -I'
 alias i='ipython3'
-# Workaround GLXBadFBConfig errors when launching Isaac Sim.
-alias isaac='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/.local/share/ov/pkg/isaac_sim-2023.1.0/isaac-sim.sh'
+alias isaac='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/.local/share/ov/pkg/isaac_sim-2023.1.0/isaac-sim.sh'{{- /* Workaround GLXBadFBConfig errors when launching Isaac Sim. */}}
 alias jabref='_JAVA_AWT_WM_NONREPARENTING=1 jabref'
 alias j='jupyter console'
 {{- if (index . "kdeconnect_device")}}
@@ -36,7 +33,6 @@ alias kdeconnect-cli='/usr/bin/kdeconnect-cli --device {{.kdeconnect_device}}'
 {{- end}}
 alias latexmk="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl"
 alias latexmk-clean="/usr/bin/latexmk -r $HOME/.config/latexmk/config.pl -c"
-# some more ls aliases
 alias l1='ls -a1lF'
 alias l='ls -CF'
 alias la='ls -A'
@@ -48,8 +44,7 @@ alias mv='/bin/mv -i'
 alias nload100='nload -i 100000 -o 100000'
 alias nload1000='nload -i 1000000 -o 1000000'
 alias nvidia-htop='nvidia-htop.py --color'
-# Workaround GLXBadFBConfig errors when launching omniverse.
-alias omniverse='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/08-apps/omniverse-launcher-linux.AppImage'
+alias omniverse='MESA_GL_VERSION_OVERRIDE=4.6 QT_QPA_PLATFORM=xcb {{.chezmoi.homeDir}}/08-apps/omniverse-launcher-linux.AppImage' {{- /* Workaround GLXBadFBConfig errors when launching omniverse. */}}
 alias o='mimeopen'
 alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
 alias q='noglob /usr/bin/qalc'
@@ -69,7 +64,7 @@ alias tree='/usr/bin/tree --dirsfirst'
 alias uu=udiskie-umount
 alias v='f -e vim' # quick opening files with vim. f='fasd -f'
 alias youtube-dl='noglob youtube-dl'
-alias y='ytop'
+alias y='yazi'
 alias yt-dlp='noglob yt-dlp'
 {{- if eq .chassis_type "laptop"}}
 # `bluetooth` from the tlp package.
