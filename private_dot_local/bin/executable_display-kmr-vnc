@@ -30,12 +30,16 @@ fi
 if [[ "${displays[@]}" -regex-match "$external_display" ]]; then
   x=$(( 3072 / $edp1_scale ))
   swaymsg output "$external_display" mode 2560x1440@60Hz scale 1.0 position $x 0
-  # TODO: find out the number of active workspaces.
-  # TODO: jump back to the workspace active when the script was called.
+  # Save the current workspace number.
+  current_workspace=$(swaymsg -t get_workspaces | jq '.[] | select(.focused==true) | .num')
   swaymsg 'workspace number 2; move workspace to '"$external_display"
   swaymsg 'workspace number 3; move workspace to '"$external_display"
   swaymsg 'workspace number 4; move workspace to '"$external_display"
   swaymsg 'workspace number 5; move workspace to '"$external_display"
+  swaymsg 'workspace number 6; move workspace to '"$external_display"
+  swaymsg 'workspace number 7; move workspace to '"$external_display"
+  # Jump back to the workspace active when the script was called.
+  swaymsg "workspace number $current_workspace"
 fi
 
 if [[ "${displays[@]}" =~ HEADLESS-1 ]]; then

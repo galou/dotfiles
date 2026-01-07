@@ -6,10 +6,8 @@
 if [[ "$XDG_SESSION_DESKTOP" =~ sway ]]; then
     all_outputs_except()
     {
-        # TODO: Implement for sway
-        # Use /sys/class/drm/*?
         EXCLUDE="$1"
-        xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -e "\<$EXCLUDE\>"
+        swaymsg --raw -t get_outputs | jq '. [] | (.name)' | grep -v -e  "\<$EXCLUDE\>" | tr '\n' ' '
     }
 else
     all_outputs_except()

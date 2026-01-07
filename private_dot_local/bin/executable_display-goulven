@@ -8,17 +8,32 @@ fi
 
 displays=($(connected_displays))
 edp1_scale=1.6
+external_display=$(best_connected $(all_outputs_except eDP-1))
+external_width=2560
+external_height=1440
+external_scale=1.0
+
+# Get the current workspace to switch back to it after moving workspaces around.
+current_workspace=$(swaymsg -t get_workspaces | jq '.[] | select(.focused == true) | .name')
+
+if [[ "${displays[@]}" =~ "$external_display" ]]; then
+  swaymsg output $external_display mode ${external_width}x${external_height}@60Hz scale $external_scale position 0 0
+  # Save the current workspace number.
+  current_workspace=$(swaymsg -t get_workspaces | jq '.[] | select(.focused==true) | .num')
+  swaymsg 'workspace number 2; move workspace to '"$external_display"
+  swaymsg 'workspace number 3; move workspace to '"$external_display"
+  swaymsg 'workspace number 4; move workspace to '"$external_display"
+  swaymsg 'workspace number 5; move workspace to '"$external_display"
+  swaymsg 'workspace number 6; move workspace to '"$external_display"
+  swaymsg 'workspace number 7; move workspace to '"$external_display"
+  # Jump back to the workspace active when the script was called.
+  swaymsg "workspace number $current_workspace"
+  edp1_pos_y=$(swaymsg -t get_outputs | jq ".[] | select(.name == \"$external_display\") | .rect | .height")
+else
+  edp1_pos_y=0
+fi
 
 if [[ "${displays[@]}" =~ eDP-1 ]]; then
-  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 1440
+  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 $edp1_pos_y
 fi
 
-if [[ "${displays[@]}" =~ DP-3 ]]; then
-  swaymsg output DP-3 mode 2560x1440@60Hz scale 1.0 position 0 0
-  # TODO: find out the number of active workspaces.
-  # TODO: jump back to the workspace active when the script was called.
-  swaymsg 'workspace number 2; move workspace to DP-3'
-  swaymsg 'workspace number 3; move workspace to DP-3'
-  swaymsg 'workspace number 4; move workspace to DP-3'
-  swaymsg 'workspace number 5; move workspace to DP-3'
-fi
