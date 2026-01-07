@@ -241,7 +241,7 @@ fi
 # Prints the ROS distro for a given workspace, relies on the existence of the
 # file $ROS_WORKSPACE/install/ROS_DISTRO with the distro name as content
 # (without whitespaces).
-rosdistro_from_workspace()
+function rosdistro_from_workspace()
 {
   WORKSPACE=${1:-$ROS_WORKSPACE}
   ROS_DISTRO=$(cat $ROS_WORKSPACE/install/ROS_DISTRO)
@@ -250,7 +250,7 @@ rosdistro_from_workspace()
 
 # ROS2 setup, sources /opt/ros/$ROS_DISTRO/setup.zsh, then $WORKSPACE/install/setup.zsh.
 # Sources setup.sh with Jazzy onwards.
-ros2_activate()
+function ros2_activate()
 {
   if [ ! ${ROS_WORKSPACE} ]; then
     # Read the workspace from /tmp/ros2_workspace, if $ROS_WORKSPACE is not
@@ -311,7 +311,18 @@ ros2_activate()
 
   # Colorized terminal output.
   export RCUTILS_COLORIZED_OUTPUT=1
+  {{/* \x1b[1k: Erase in line (EL)
+       \r: Move to first position
+       \x1b[38;5;248m: Set color to gray (ANSI 256 color)
+       \x1b[3m: Set italic font
 
+       Cf. https://discourse.openrobotics.org/t/better-console-logging/44012 for inspiration
+       Cf. https://docs.ros.org/en/rolling/Concepts/Intermediate/About-Logging.html for doc
+       Cf. https://en.wikipedia.org/wiki/ANSI_escape_code for doc about ANSI codes
+  */ -}}
+  {{/* Doesn't work
+  export RCUTILS_CONSOLE_OUTPUT_FORMAT="\x1b[1k\r- {message} [\x1b[38;5;248m{severity}, {time}, \x1b[3m{name}\x1b[0m]"
+  */}}
   export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/$ROS_DISTRO/share/turtlebot3_gazebo/models
 
   # ROS2 has no roscd command, alias it.
@@ -340,12 +351,6 @@ if [ -e /tmp/ros2_workspace.conf ]; then
   ros2_activate || echo "Failed to activate ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
 fi
 
-# Shortcut for the RUR project.
-function rur_workspace()
-{
-  export ROS_WORKSPACE=$HOME/rur_ros2_ws && ros2_activate && roscd && source setup.sh
-}
-
 {{/* direnv hook (https://direnv.net/) */}}
 eval "$(direnv hook zsh)"
 
@@ -369,21 +374,6 @@ if [ -f ~/.config/zsh/zsh_aliases ]; then
   {{/* Load after OMZP::common-aliases */}}
   zinit wait"1" lucid for is-snippet ~/.config/zsh/zsh_aliases
 fi
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup=$("$HOME/.local/share/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
-else
-  if [ -f "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh" ]; then
-    . "$HOME/.local/share/miniconda3/etc/profile.d/conda.sh"
-  else
-    export PATH="$HOME/.local/share/miniconda3/bin:$PATH"
-  fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 # Pixi completion
 # https://pixi.sh/latest/.
