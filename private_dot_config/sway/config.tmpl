@@ -108,6 +108,10 @@ input type:touchpad {
     natural_scroll enabled
     middle_emulation enabled
 }
+# Disable broken touchscreen.
+input "10182:291:GXTP7936:00_27C6:0123" {
+    events disabled
+}
 
 # Monitors: Blanking after 120s, Suspend and Off after 600s.
 exec xset dpms 120 600 600
