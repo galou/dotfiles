@@ -377,7 +377,7 @@ fi
 # https://pixi.sh/latest/.
 # Schedule pixi completion initialization with a 1-second delay
 # Doesn't work (`pixi completion --shell zsh > ~/.local/share/zsh/site-functions/_pixi` was used instead).
-zinit ice wait'1' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
+zinit ice wait'2' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
 
 # Setup for zoxide (https://github.com/ajeetdsouza/zoxide).
 eval "$($HOME/.cargo/bin/zoxide init zsh)"
@@ -391,7 +391,10 @@ source "$HOME/04-sources/fzf/fzf/shell/completion.zsh"
 # source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
 
 # Completion for magic (https://docs.modular.com/magic)
-zinit ice wait'1' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
+zinit ice wait'2' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
+
+# Setup for pipx (requires compinit above).
+zinit ice wait'2' lucid atinit'pipx_completion() { eval "$(register-python-argcomplete pipx)" }; pipx_completion' nocd for /dev/null
 
 # Completion for PlatformIO.
 zinit ice wait'2' lucid atinit'platformio_completion() { eval "$(_PIO_COMPLETE=zsh_source pio)" }; platformio_completion' nocd for /dev/null
