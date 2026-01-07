@@ -10,7 +10,8 @@ exit 1
 # Ensure kdeconnect-cli is installed
 if ! command -v kdeconnect-cli &> /dev/null; then
   echo "Error: kdeconnect-cli is not installed." >&2
-exit 1
+  exit 1
+fi
 
 DEVICE_ID="{{.kdeconnect_device}}"
 
