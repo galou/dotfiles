@@ -420,6 +420,16 @@ mkdir --parents $HOME/.local/share/meshroom/lib/nodes \
 ## Node.js 20 (otherwise 18 is installed).
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 
+## Platform IO.
+echo "Installing Platform IO" \
+  && curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules \
+  && sudo service udev restart \
+  && pushd /tmp >/dev/null \
+  && curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
+  && python3 get-platformio.py \
+  && popd >/dev/null \
+  && echo
+
 # Configuration.
 
 echo -n pcgael3 | sudo tee /etc/hostname >/dev/null

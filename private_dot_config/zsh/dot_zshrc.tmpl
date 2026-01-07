@@ -393,3 +393,5 @@ source "$HOME/04-sources/fzf/fzf/shell/completion.zsh"
 # Completion for magic (https://docs.modular.com/magic)
 zinit ice wait'1' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
 
+# Completion for PlatformIO.
+zinit ice wait'2' lucid atinit'platformio_completion() { eval "$(_PIO_COMPLETE=zsh_source pio)" }; platformio_completion' nocd for /dev/null
