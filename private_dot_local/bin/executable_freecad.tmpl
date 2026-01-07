@@ -1,0 +1,9 @@
+#!/bin/bash
+
+{{- if eq .chezmoi.hostname "pcgael1"}}
+{{/* Pop!_OS 22.04 */}}
+QT_QPA_PLATFORM=xcb $HOME/80-build/freecad/bin/FreeCAD "$@"
+{{- else}}
+{{/* Pop!_OS 24.04 */}}
+freecad-daily "$@"
+{{- end}}
