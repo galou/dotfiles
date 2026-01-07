@@ -29,6 +29,19 @@ add_to_ld_library_path()
 }
 {{- end}}
 
+# Prefix XDG_DATA_DIRS with the given directory if not alreay present.
+add_to_xdg_data_dirs()
+{
+  if [ -z "${1}" ]; then
+    return
+  fi
+  if [ -n "${XDG_DATA_DIRS##*${1}}" -a -n "${XDG_DATA_DIRS##*${1}:*}" ]; then
+    if [ -d "${1}" ] ; then
+      export XDG_DATA_DIRS="${1}":$XDG_DATA_DIRS
+    fi
+  fi
+}
+
 # NPM global packages.
 export NPM_PACKAGES="$HOME/.cache/npm-global"
 
