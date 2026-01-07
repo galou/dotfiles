@@ -140,6 +140,7 @@ sudo apt install \
   git \
   git-delta \
   git-lfs \
+  gitk \
   golang-go \
   grc \
   heaptrack-gui \
@@ -147,13 +148,17 @@ sudo apt install \
   jupyter-console \
   jupyter-core \
   jupyter-notebook \
+  luarocks \
   liblua5.4-dev \
   libpython3.12-dev \
   lld \
+  mold \
   python3-numpy \
+  python3-opengl \
   python3-pandas \
   python3-pickleshare \
   python3-rocker \
+  python3-wxgtk4.0 \
   tig \
   vcstool \
   wireshark
@@ -167,6 +172,7 @@ LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/re
   && rm -f /tmp/lazygit/lazygit.tar.gz /tmp/lazygit/lazygit \
   && popd >/dev/null \
   && rmdir /tmp/lazygit
+pip install --break-system-packages jupytext
 
 ## Docker and plugins. Plus nvidia-container-toolkit.
 sudo curl -fsSL 'https://download.docker.com/linux/ubuntu/gpg' -o /etc/apt/keyrings/docker.asc \
@@ -259,6 +265,8 @@ sudo apt update \
   && colcon mixin update default \
   && sudo rosdep init \
   && rosdep update
+mkdir --parents $HOME/04-sources/ros \
+  && git clone --recursive https://github.com/Martin-Oehler/ros2cd.git $HOME/04-sources/ros/ros2cd
 
 ## Mounch (https://github.com/chmouel/mounch).
 mkdir --parents $SOURCES \
@@ -379,6 +387,9 @@ curl -fsSL https://pixi.sh/install.sh | zsh \
   && mv $HOME/.pixi/bin/pixi $HOME/.local/bin \
   && rmdir $HOME/.pixi/bin
 
+## Cookiecutter, create projects from templates (https://cookiecutter.readthedocs.io/en/stable/index.html).
+pipx install cookiecutter
+
 ## O3DE from source (https://o3de.org/).
 mkdir --parents $HOME/04-sources/o3de \
   && pushd $HOME/04-sources/o3de >/dev/null \
@@ -397,6 +408,14 @@ curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact
 
 ## LabelStudio, data labeling (https://labelstud.io/).
 pip install --break-system-packages label-studio
+
+## Meshroom, photogrammetry (https://alicevision.org/).
+wget -O /tmp/meshroom.tar.gz 'https://download.fosshub.com/Protected/expiretime=1738614793;badurl=aHR0cHM6Ly93d3cuZm9zc2h1Yi5jb20vTWVzaHJvb20uaHRtbA==/2dd0387018c77e006d408434ec214ff022e9a3ac26dc495f319b852941ff08b7/5c6fe99776dd983e3dec2213/6568cbfc22a91d967c92b86e/Meshroom-2023.3.0-linux.tar.gz' \
+  && sudo tar xf /tmp/meshroom.tar.gz -C /opt \
+  && rm -f /tmp/meshroom.tar.gz
+mkdir --parents $HOME/.local/share/meshroom/lib/nodes \
+  && echo '#!/bin/bash\nMESHROOM_NODES_PATH=$HOME/.local/share/meshroom/lib/nodes\nexec /opt/Meshroom-2023.3.0-linux/Meshroom $@' > $HOME/.local/bin/meshroom \
+  && chmod ug+x $HOME/.local/bin/meshroom
 
 ## Node.js 20 (otherwise 18 is installed).
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -464,6 +483,13 @@ mkdir --parents $HOME/.local/share/fonts/VictorMonoNerd \
   && mv * $HOME/.local/share/fonts/VictorMonoNerd \
   && popd >/dev/null \
   && rmdir /tmp/victormononerd \
+  && fc-cache
+# https://fonts.google.com/specimen/Parisienne
+mkdir --parents $HOME/.local/share/fonts/GoogleFonts/Parisienne \
+  && pushd $HOME/.local/share/fonts/GoogleFonts/Parisienne >/dev/null \
+  && wget 'https://github.com/google/fonts/raw/refs/heads/main/ofl/parisienne/Parisienne-Regular.ttf' \
+  && wget 'https://github.com/google/fonts/raw/refs/heads/main/ofl/parisienne/OFL.txt' \
+  && popd >/dev/null \
   && fc-cache
 
 ## Yazi.
