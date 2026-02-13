@@ -454,6 +454,16 @@ echo "Installing Platform IO" \
   && popd >/dev/null \
   && echo
 
+## Winboat, Windows for penguins (https://www.winboat.app/)
+WINBOAT_VERSION=$(curl -s "https://api.github.com/repos/TibixDev/winboat/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
+  && mkdir --parents /tmp/winboat \
+  && pushd /tmp/winboat >/dev/null \
+  && curl -Lo winboat.deb "https://github.com/TibixDev/winboat/releases/download/v${WINBOAT_VERSION}/winboat-${WINBOAT_VERSION}-amd64.deb" \
+  && sudo apt install /tmp/winboat/winboat.deb \
+  && popd >/dev/null \
+  && rm -rf /tmp/winboat
+sudo apt install freerdp3-wayland
+
 # Configuration.
 
 echo -n pcgael3 | sudo tee /etc/hostname >/dev/null
