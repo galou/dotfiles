@@ -527,13 +527,13 @@ mkdir --parents $HOME/.local/share/fonts/GoogleFonts/Parisienne \
   && fc-cache
 
 ## Yazi.
-ya pack --add KKV9/command
-ya pack --add Sonico98/allmytoes
-ya pack --add dedukun/bookmarks
-ya pack --add pirafrank/what-size
-ya pack --add yazi-rs/plugins:chmod
-ya pack --add yazi-rs/plugins:jump-to-char
-ya pack --add yazi-rs/plugins:smart-enter
+ya pkg add KKV9/command
+ya pkg add Sonico98/allmytoes
+ya pkg add dedukun/bookmarks
+ya pkg add pirafrank/what-size
+ya pkg add yazi-rs/plugins:chmod
+ya pkg add yazi-rs/plugins:jump-to-char
+ya pkg add yazi-rs/plugins:smart-enter
 
 ## Miscellaneous
 ln -s /usr/bin/batcat $HOME/.local/bin/bat
