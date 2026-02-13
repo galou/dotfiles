@@ -387,12 +387,12 @@ fi
 zinit ice wait'2' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
 
 # Setup for zoxide (https://github.com/ajeetdsouza/zoxide).
-eval "$($HOME/.cargo/bin/zoxide init zsh)"
+eval "$(zoxide init zsh)"
 
 # Setup for fzf.zsh (https://github.com/junegunn/fzf).
 # Auto-completion
 # ---------------
-source "$HOME/04-sources/fzf/fzf/shell/completion.zsh"
+# source "$HOME/04-sources/fzf/fzf/shell/completion.zsh"
 # Key bindings
 # ------------
 # source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
@@ -405,3 +405,8 @@ zinit ice wait'2' lucid atinit'pipx_completion() { eval "$(register-python-argco
 
 # Completion for PlatformIO.
 zinit ice wait'2' lucid atinit'platformio_completion() { eval "$(_PIO_COMPLETE=zsh_source pio)" }; platformio_completion' nocd for /dev/null
+
+# Begin added by argcomplete
+fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d "${fpath[@]}" )
+# End added by argcomplete
+
