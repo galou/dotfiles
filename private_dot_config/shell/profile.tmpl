@@ -73,6 +73,9 @@ add_to_path /opt/drake/bin
 # export PYTHONPATH="/opt/drake/lib/python$(python3 -c 'import sys; print("{0}.{1}".format(*sys.version_info))')/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
 
+# Flatpak
+add_to_xdg_data_dirs $HOME/.local/share/flatpak/exports/share
+
 # Add ~/.local/bin with the highest priority.
 add_to_path "$HOME/.local/bin"
 {{- if eq .chezmoi.osRelease.versionID "24.04"}}
