@@ -12,5 +12,6 @@
     },
     "test": {
         "merge-install": true,
+        "event-handlers": ["desktop_notification+", "status+", "terminal_title+", "console_cohesion+"]
     }
 }
