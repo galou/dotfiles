@@ -163,7 +163,7 @@ sudo apt install \
   vcstool \
   wireshark
 curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": *"v\K[^"]*') \
   && mkdir --parents /tmp/lazygit \
   && pushd /tmp/lazygit >/dev/null \
   && curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" \
@@ -215,6 +215,7 @@ cargo quickinstall \
   yazi-cli \
   yazi-fm \
   ytop
+sudo apt install miller  # Terminal viewer for CSV.
 
 ## Modular, Mojo, Max
 curl -ssL https://magic.modular.com/323df2a4-4427-473a-a54a-088efcd6205c | bash
@@ -223,6 +224,22 @@ curl -ssL https://magic.modular.com/323df2a4-4427-473a-a54a-088efcd6205c | bash
 sudo add-apt-repository ppa:neovim-ppa/unstable
 sudo apt install neovim python3-neovim
 sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 10
+
+## Mosh
+# Install > 1.4.0 instead of 1.3.2 for the OSC52 support
+# e.g. https://github.com/mobile-shell/mosh/releases/download/mosh-1.4.0/mosh-1.4.0.tar.gz
+sudo apt install protobuf-compiler libprotobuf-dev \
+  && MOSH_VERSION=$(curl -s "https://api.github.com/repos/mobile-shell/mosh/releases/latest" | grep -Po '"tag_name": *"mosh-\K[^"]*') \
+  && mkdir --parents /tmp/mosh \
+  && pushd /tmp/mosh >/dev/null \
+  && curl -LO "https://github.com/mobile-shell/mosh/releases/download/mosh-${MOSH_VERSION}/mosh-${MOSH_VERSION}.tar.gz" \
+  && tar xf "mosh-${MOSH_VERSION}.tar.gz" \
+  && cd mosh-${MOSH_VERSION} \
+  && ./configure \
+  && make \
+  && sudo make install \
+  && popd >/dev/null \
+  && rm -rf /tmp/mosh
 
 ## Visual Studio Code.
 curl -Lo /tmp/code.deb 'https://vscode.download.prss.microsoft.com/dbazure/download/stable/f1a4fb101478ce6ec82fe9627c43efbf9e98c813/code_1.95.3-1731513102_amd64.deb' \
