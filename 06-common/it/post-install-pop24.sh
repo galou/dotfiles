@@ -31,11 +31,14 @@ sudo apt install \
   beep \
   blender \
   brightnessctl \
+  btop \
   calibre \
   cheese \
+  cpufrequtils \
   curl \
   cutecom \
   digikam \
+  direnv \
   dunst \
   fd-find \
   ffmpegthumbnailer \
@@ -80,8 +83,10 @@ sudo apt install \
   plocate \
   poppler-utils \
   pulseaudio-utils \
+  python-is-python3 \
   python3-argcomplete \
   python3-convertdate \
+  python3-gdal \
   python3-i3ipc \
   python3-lunardate \
   python3-pip \
@@ -137,6 +142,7 @@ sudo apt install \
   colorized-logs \
   exuberant-ctags \
   gdb \
+  gh \
   git \
   git-delta \
   git-lfs \
@@ -208,6 +214,7 @@ cargo quickinstall \
   cargo-generate \
   code-minimap \
   difftastic \
+  resvg \
   rew \
   starship \
   sway-scratchpad \
@@ -434,8 +441,8 @@ mkdir --parents $HOME/.local/share/meshroom/lib/nodes \
   && echo '#!/bin/bash\nMESHROOM_NODES_PATH=$HOME/.local/share/meshroom/lib/nodes\nexec /opt/Meshroom-2023.3.0-linux/Meshroom $@' > $HOME/.local/bin/meshroom \
   && chmod ug+x $HOME/.local/bin/meshroom
 
-## Node.js 20 (otherwise 18 is installed).
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+## Node.js 22 (otherwise 18 is installed).
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 
 ## Platform IO.
 echo "Installing Platform IO" \
