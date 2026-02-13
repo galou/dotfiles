@@ -270,7 +270,13 @@ function ros2_activate()
   export ROS_DISTRO=$(rosdistro_from_workspace)
 
   # Limit the communication to local host.
+{{- if eq .chezmoi.hostname "pcgael1"}}
+{{/* Humble on Pop!_OS 22.04 */}}
   export ROS_LOCALHOST_ONLY=1
+{{- else}}
+{{/* Jazzy and later */}}
+  export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+{{- end}}
 
   # Set a domain id.
   _default_domain_id="$(( $(( 0x$(whoami | md5sum | cut -f 1 -d " " | cut -c 1-4) )) % 101 ))"
@@ -295,7 +301,8 @@ function ros2_activate()
   eval "$(register-python-argcomplete3 colcon)"
   {{- else}}
   eval "$(register-python-argcomplete ros2)"
-  {{- /* _colcon is part of the apt package on 24.04 and later.  */}}
+  {{- /* _colcon is part of the apt python3-colcon-argcomplete package on 24.04 and later.  */}}
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist, install python3-colcon-argcomplete" >&2
   {{- end}}
 
   # Initialize colcon_cd.
