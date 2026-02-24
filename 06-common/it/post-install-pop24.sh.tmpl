@@ -2,6 +2,9 @@
 #
 # Launch without `sudo`: `bash ./post-install-pop24.sh`.
 
+wget -O - http://pub.freerdp.com/repositories/ADD6BF6D97CE5D8D.asc | gpg --dearmor | sudo tee /usr/share/keyrings/freerdp-nightly-ADD6BF6D97CE5D8D.gpg >/dev/null
+DIST=$(lsb_release -sc)
+
 ROS_DISTRO=jazzy
 ROS_WORKSPACE=$HOME/robocon_jazzy_ws
 SOURCES=$HOME/04-sources  # Place for software built from source.
@@ -32,6 +35,7 @@ sudo apt install \
   blender \
   brightnessctl \
   btop \
+  cairosvg \
   calibre \
   cheese \
   cpufrequtils \
@@ -93,6 +97,7 @@ sudo apt install \
   python3-pyluach  \
   python3-pymeeus \
   qalc \
+  rar \
   retext \
   ripgrep \
   rofi \
@@ -159,10 +164,13 @@ sudo apt install \
   libpython3.12-dev \
   lld \
   mold \
+  python3-cairosvg \
   python3-numpy \
   python3-opengl \
   python3-pandas \
   python3-pickleshare \
+  python3-plotly \
+  python3-pyperclip \
   python3-rocker \
   python3-wxgtk4.0 \
   tig \
@@ -219,6 +227,7 @@ cargo quickinstall \
   starship \
   sway-scratchpad \
   television \
+  typst \
   yazi-cli \
   yazi-fm \
   ytop
@@ -462,12 +471,25 @@ WINBOAT_VERSION=$(curl -s "https://api.github.com/repos/TibixDev/winboat/release
   && sudo apt install /tmp/winboat/winboat.deb \
   && popd >/dev/null \
   && rm -rf /tmp/winboat
-sudo apt install freerdp3-wayland
+{{- /* wlfreerdp3-wayland is deprecated, otherwise sudo apt install freerdp3-wayland */}}
+echo "deb [signed-by=/usr/share/keyrings/freerdp-nightly-ADD6BF6D97CE5D8D.gpg] http://pub.freerdp.com/repositories/deb/$DIST/ freerdp-nightly main" | sudo tee /etc/apt/sources.list.d/freerdp-nightly.list >/dev/null \
+  && sudo apt update \
+  && sudo apt install freerdp-nightly
+
+## Software from robotpkg.
+
+curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc | sudo tee /etc/apt/keyrings/robotpkg.asc \
+  && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/robotpkg.asc] http://robotpkg.openrobots.org/packages/debian/pub $DIST robotpkg" | sudo tee /etc/apt/sources.list.d/robotpkg.list >/dev/null \
+  && sudo apt-get update \
+  && sudo apt-get install -qqy 'robotpkg-py3*-pinocchio'
+
+EOF
 
 # Configuration.
 
 echo -n pcgael3 | sudo tee /etc/hostname >/dev/null
 sudo usermod --groups=dialout,syslog,docker,wireshark --append $USER
+sudo sysctl kernel.dmesg_restrict=0
 rfkill unblock all
 
 # Configure timezone
