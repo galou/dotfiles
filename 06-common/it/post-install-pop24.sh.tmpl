@@ -503,6 +503,10 @@ pushd /tmp >/dev/null \
   && sudo install -Dm644 sway-nvidia/wlroots-env-nvidia.sh "/usr/local/share/wlroots-nvidia/wlroots-env-nvidia.sh" \
   && popd >/dev/null \
   && rm -rf /tmp/sway-nvidia
+{{- if eq .chezmoi.osRelease.versionID "22.04"}}
+sudo cp /etc/gdm3/custom.conf /etc/gdm3/custom.conf.orig
+sudo sed -i -e 's/WaylandEnable=false/WaylandEnable=true/' /etc/gdm3/custom.conf
+{{- end}}
 
 ## Chezmoi (https://www.chezmoi.io/).
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply galou \
