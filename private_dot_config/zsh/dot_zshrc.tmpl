@@ -387,7 +387,7 @@ fi
 zinit ice wait'2' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
 
 # Setup for zoxide (https://github.com/ajeetdsouza/zoxide).
-eval "$(zoxide init zsh)"
+eval "$($HOME/.cargo/bin/zoxide init zsh)"
 
 # Setup for fzf.zsh (https://github.com/junegunn/fzf).
 # Auto-completion
