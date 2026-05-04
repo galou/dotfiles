@@ -397,9 +397,11 @@ eval "$($HOME/.cargo/bin/zoxide init zsh)"
 # ------------
 # source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
 
+{{- /* From Modular
 # Completion for magic (https://docs.modular.com/magic)
 zinit ice wait'2' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
 
+ */}}
 # Setup for pipx (requires compinit above).
 zinit ice wait'2' lucid atinit'pipx_completion() { eval "$(register-python-argcomplete pipx)" }; pipx_completion' nocd for /dev/null
 
