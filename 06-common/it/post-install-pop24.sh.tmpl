@@ -486,6 +486,10 @@ curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc | sudo tee /etc
 
 EOF
 
+## Google Gemini CLI.
+# https://github.com/google-gemini/gemini-cli
+npm install -g @google/gemini-cli
+
 # Configuration.
 
 echo -n pcgael3 | sudo tee /etc/hostname >/dev/null
