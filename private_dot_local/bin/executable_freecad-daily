@@ -1,7 +1,6 @@
 #!/bin/bash
 
-PIXI_MANIFEST="$HOME/04-sources/freecad/FreeCAD/pixi.toml"
-CMD=(pixi run --manifest-path "$PIXI_MANIFEST" freecad-debug)
+CMD=("/usr/bin/freecad-daily")
 
 if [[ -n "$PYTHONPATH" ]]; then
   IFS=':' read -ra PY_PATHS <<< "$PYTHONPATH"
@@ -10,5 +9,5 @@ if [[ -n "$PYTHONPATH" ]]; then
   done
 fi
 
-exec "${CMD[@]} $@"
+QT_QPA_PLATFORM=xcb exec ${CMD[@]} $@
 
