@@ -1,0 +1,78 @@
+#!/bin/sh
+# Backup with BorgBackup
+
+set -e  # exit immediately on error
+
+export EXCLUDE_FILE="$HOME/.config/borg/exclude"
+export KEEP_DAILY_COUNT=7
+export KEEP_WEEKLY_COUNT=4
+export KEEP_MONTHLY_COUNT=12
+
+# Setting this, so the repo does not need to be given on the commandline:
+export BORG_REPO=ssh://username@example.com:2022/~/backup/main
+
+# See the section "Passphrase notes" for more infos.
+export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
+
+# some helpers and error handling:
+info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
+
+info "Starting backup"
+
+# Backup the most important directories into an archive named after
+# the machine this script is currently running on:
+
+/usr/bin/nice -n 19 /bin/borg create \
+    --verbose                        \
+    --filter AME                     \
+    --stats                          \
+    --show-rc                        \
+    --compression lz4                \
+    --exclude-caches                 \
+    --exclude-from "$EXCLUDE_FILE"   \
+    --exclude-nodump                 \
+                                     \
+    ::'{hostname}-{now}'             \
+    "$HOME"
+
+backup_exit=$?
+
+info "Pruning repository"
+
+# Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
+# archives of THIS machine. The '{hostname}-*' matching is very important to
+# limit prune's operation to this machine's archives and not apply to
+# other machines' archives also:
+
+borg prune                               \
+    --glob-archives '{hostname}-*'       \
+    --show-rc                            \
+    --keep-daily    "$KEEP_DAILY_COUNT"  \
+    --keep-weekly   "$KEEP_WEEKLY_COUNT" \
+    --keep-monthly  "$KEEP_MONTHLY_COUNT"
+
+prune_exit=$?
+
+# actually free repo disk space by compacting segments
+
+info "Compacting repository"
+
+borg compact
+
+compact_exit=$?
+
+# use highest exit code as global exit code
+global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
+global_exit=$(( compact_exit > global_exit ? compact_exit : global_exit ))
+
+if [ ${global_exit} -eq 0 ]; then
+    info "Backup, Prune, and Compact finished successfully"
+elif [ ${global_exit} -eq 1 ]; then
+    info "Backup, Prune, and/or Compact finished with warnings"
+else
+    info "Backup, Prune, and/or Compact finished with errors"
+fi
+
+exit ${global_exit}
+
