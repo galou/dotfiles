@@ -4,7 +4,7 @@
 
 {
     "build": {
-        "mixin": ["ccache", "rel-with-deb-info", "compile-commands", "lld"],
+        "mixin": ["ccache", "rel-with-deb-info", "compile-commands", "mold"],
         "merge-install": true,
         "symlink-install": true,
         "cmake-args": ["-Wall", "-Wextra"],
