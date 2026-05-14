@@ -9,29 +9,6 @@ fi
 # Uncomment the following line and the first line to start profiling.
 # zprof
 
-declare -A ZINIT  # initial Zinit's hash definition, if configuring before loading Zinit.
-ZINIT[HOME_DIR]=$HOME/.cache/zinit
-
-### Added by Zinit's installer and tuned
-if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]]; then
-  print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
-  command mkdir -p "$ZINIT[HOME_DIR]" && command chmod g-rwX "$ZINIT[HOME_DIR]"
-  command git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT[HOME_DIR]/bin" && \
-    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-    print -P "%F{160}▓▒░ The clone has failed.%f%b"
-fi
-
-source "$ZINIT[HOME_DIR]/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-### End of Zinit's installer chunk
-{{- /* Alternatively: manage plugins with chezmoi: https://www.reddit.com/r/zsh/comments/vryjud/comment/if1p3im/ */}}
-
-# Profile
-if [ -f $HOME/.config/shell/profile ]; then
-  zinit wait"0" lucid for is-snippet $HOME/.config/shell/profile
-fi
 {{- /* Powerlevel10k configuration, replaced with starship
 
 # Prompt theme: Powerlevel10k, https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k.
@@ -42,31 +19,11 @@ fi
  */}}
 {{- /* Starship configuration, https://starship.rs/. */}}
 
+# Prompt management with starship.
 eval "$($HOME/.cargo/bin/starship init zsh)"
 
 # Alias configuration for forgit.
 export FORGIT_NO_ALIASES=1
-
-zinit wait"!0" lucid for \
-  OMZL::directories.zsh \{{/* Aliases '-', '2', '...' and others. */}}
-  OMZP::command-not-found \{{/* Proposes a package for a missing command. */}}
-  OMZP::git \
-  OMZP::pip \
-  OMZP::safe-paste \{{/* Treat new lines from paste differently than typed ones. Cf. https://cirw.in/blog/bracketed-paste. */}}
-  zdharma-continuum/zsh-navigation-tools \{{/* Approximate Ctrl-R matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation of psprint/zsh-navigation-tools below.  */}}
-  agkozak/zsh-z \{{/* Jump around with z. Cf. https://github.com/agkozak/zsh-z. */}}
-  OMZP::common-aliases \{{/* A few useful aliases: gst, gp, gl, etc. */}}{{/*TODO: use atload"unalias gr" */}}
-  zdharma-continuum/zsh-navigation-tools \{{/* Approximate matching – pressing Ctrl-F during search will allow 1 or 2 errors in what is typed in. http://psprint.github.io/Zsh-Navigation-Tools-approximate-matching/. Requires installation above to set the binkey. */}}
-  zsh-users/zsh-completions \
-  wfxr/forgit
-{{- if 0 }}
-  OMZP::per-directory-history \{{/* Toggle per-directory history. */}} Does not share history between open shells
-  OMZP::zsh-interactive-cd \{{/* Interactive cd command. */}} Requires ENTER even on single entry.
-{{- end }}
-
-zinit load zsh-users/zsh-autosuggestions{{/* Show the last matching history in grey. Right arrow to use. Seems not to work with Turbo. */}}
-zinit load zsh-users/zsh-syntax-highlighting{{/* Must be loaded without Turbo because of fasd */}}
-zinit load atuinsh/atuin{{/* https://github.com/atuinsh/atuin */}}
 
 # Completion for GNU compatible executables.
 # Deactivated until issue ".zshrc:57: command not found: compdef"
@@ -103,16 +60,6 @@ bindkey -v
 # Highlight the common part and the next character of completions.
 zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02=01}:${(s.:.)LS_COLORS}")'
 
-# Add custom directory for completion.
-# E.g.:
-# $ chezmoi completion zsh > ~/.local/share/zsh/site-functions/_chezmoi
-# $ rustup completions zsh rustup > ~/.local/share/zsh/site-functions/_rustup
-fpath+=$HOME/.local/share/zsh/site-functions
-
-if [ -e /usr/share/vcstool-completion/vcs.zsh ]; then
-  zinit wait"0" lucid for is-snippet /usr/share/vcstool-completion/vcs.zsh
-fi
-
 # The following lines were added by compinstall
 zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' ignore-parents parent pwd
@@ -124,9 +71,12 @@ autoload -Uz compinit && compinit
 
 # End of lines added by compinstall
 autoload -Uz bashcompinit && bashcompinit
-if [ -e $HOME/.local/share/bash-completion/completions/gis ]; then
-  zinit wait"0" lucid for is-snippet $HOME/.local/share/bash-completion/completions/gis
-fi
+
+# Sheldon plugin manager
+# Must be after compinit.
+eval "$($HOME/.cargo/bin/sheldon source)"
+{{- /* Alternatively: zinit, used previously, up to commit e43beff9fad5 */}}
+{{- /* Alternatively: manage plugins with chezmoi: https://www.reddit.com/r/zsh/comments/vryjud/comment/if1p3im/ */}}
 
 bindkey '^P' up-history
 bindkey '^N' down-history
@@ -169,9 +119,11 @@ bindkey '^ ' autosuggest-toggle
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+{{- /*
 # Key bindings for fasd completion
-bindkey '^X^F' fasd-complete-f  # C-x C-f to do fasd-complete-f (only files)
-bindkey '^X^D' fasd-complete-d  # C-x C-d to do fasd-complete-d (only dirs)
+# bindkey '^X^F' fasd-complete-f  # C-x C-f to do fasd-complete-f (only files)
+# bindkey '^X^D' fasd-complete-d  # C-x C-d to do fasd-complete-d (only dirs)
+*/}}
 
 # Show vim mode (http://dougblack.io/words/zsh-vi-mode.html)
 # TODO: solve incompatiblity with Ctrl-Up binding
@@ -191,21 +143,6 @@ setopt interactivecomments # pound sign in interactive prompt as a comment
 
 # Use extendedglob (for example ^CMakeLists.txt for all but this file)
 setopt extendedglob
-
-# Completion for gr (Generated with `gr completion > ...`).
-if [ -e $HOME/.local/share/zsh/site-functions/gr.zsh ]; then
-  zinit wait"1" lucid for is-snippet $HOME/.local/share/zsh/site-functions/gr.zsh
-fi
-
-# Completion for kitty
-which kitty &>/dev/null && kitty + complete setup zsh | source /dev/stdin
-# Completion for kg, kitty hyperlinked grep based on ripgrep (~/.local/bin/kg)
-zinit ice wait'2' lucid atinit'kg_completion() { compdef _rg kg ; }; kg_completion' nocd for /dev/null
-
-# Completion for pip3 (Generated with `pip3 completion --zsh > ...`).
-if [ -e $HOME/.local/share/zsh/site-functions/pip3.zsh ]; then
-  zinit wait"1" lucid for is-snippet $HOME/.local/share/zsh/site-functions/pip3.zsh
-fi
 
 # Configuration for z.
 ZSHZ_DATA=$HOME/.cache/z
@@ -296,7 +233,7 @@ function ros2_activate()
   {{/* It seems that argcomplete files are mutually exclusive, thus `ros2-argcomplete.zsh` as last. */ -}}
   source /opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ament_index_python/environment/ament_index-argcomplete.zsh does not exist" >&2
   source /opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh || echo "/opt/ros/${ROS_DISTRO}/share/ros2cli/environment/ros2-argcomplete.zsh does not exist" >&2
-  {{- if eq .chezmoi.osRelease.versionID "22.04" -}}
+  {{- if eq .chezmoi.osRelease.versionID "22.04"}}
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh || echo "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh does not exist" >&2
   eval "$(register-python-argcomplete3 ros2)"
   eval "$(register-python-argcomplete3 colcon)"
@@ -357,9 +294,6 @@ if [ -e /tmp/ros2_workspace.conf ]; then
   ros2_activate || echo "Failed to activate ROS2 workspace $(cat /tmp/ros2_workspace.conf)" >&2
 fi
 
-{{/* direnv hook (https://direnv.net/) */}}
-eval "$(direnv hook zsh)"
-
 # Activate timestamping before running a command.
 show_timestamp()
 {
@@ -372,24 +306,7 @@ activate_timestamp()
   preexec_functions+=show_timestamp
 }
 
-# Aliases
-if [ -f ~/.config/shell/shell_aliases ]; then
-  zinit wait"1" lucid for is-snippet ~/.config/shell/shell_aliases
-fi
-if [ -f ~/.config/zsh/zsh_aliases ]; then
-  {{/* Load after OMZP::common-aliases */}}
-  zinit wait"1" lucid for is-snippet ~/.config/zsh/zsh_aliases
-fi
-
-# Pixi completion
-# https://pixi.sh/latest/.
-# Schedule pixi completion initialization with a 1-second delay
-# Doesn't work (`pixi completion --shell zsh > ~/.local/share/zsh/site-functions/_pixi` was used instead).
-zinit ice wait'2' lucid atinit'pixi_completion() { eval "$(pixi completion --shell zsh)"; }; pixi_completion' nocd for /dev/null
-
-# Setup for zoxide (https://github.com/ajeetdsouza/zoxide).
-eval "$($HOME/.cargo/bin/zoxide init zsh)"
-
+{{- /*
 # Setup for fzf.zsh (https://github.com/junegunn/fzf).
 # Auto-completion
 # ---------------
@@ -397,19 +314,4 @@ eval "$($HOME/.cargo/bin/zoxide init zsh)"
 # Key bindings
 # ------------
 # source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
-
-{{- /* From Modular
-# Completion for magic (https://docs.modular.com/magic)
-zinit ice wait'2' lucid atinit'magic_completion() { eval "$(magic completion --shell zsh)" }; magic_completion' nocd for /dev/null
-
- */}}
-# Setup for pipx (requires compinit above).
-zinit ice wait'2' lucid atinit'pipx_completion() { eval "$(register-python-argcomplete pipx)" }; pipx_completion' nocd for /dev/null
-
-# Completion for PlatformIO.
-zinit ice wait'2' lucid atinit'platformio_completion() { eval "$(_PIO_COMPLETE=zsh_source pio)" }; platformio_completion' nocd for /dev/null
-
-# Begin added by argcomplete
-fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d "${fpath[@]}" )
-# End added by argcomplete
-
+*/}}
