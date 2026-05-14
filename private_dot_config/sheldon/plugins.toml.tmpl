@@ -108,8 +108,10 @@ inline = 'if command -v gr >/dev/null; then source <(gr completion); fi'
 local = "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d"
 apply = ["fpath"]
 
-# [plugins.magic-completion]
-# inline = 'if command -v magic >/dev/null; then eval "$(magic completion --shell zsh)"; fi'
+{{/* Not installed
+[plugins.magic-completion]
+inline = 'if command -v magic >/dev/null; then eval "$(magic completion --shell zsh)"; fi'
+*/ -}}
 
 [plugins.chezmoi-completion]
 inline = 'if command -v chezmoi >/dev/null; then eval "$(chezmoi completion zsh)"; fi'
