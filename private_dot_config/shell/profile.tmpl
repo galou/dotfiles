@@ -184,11 +184,6 @@ export LC_NUMERIC=en_US.UTF-8
 # Path to npm configuration.
 export npm_config_userconfig=~/.config/npm/npmrc
 
-# Add completion for gr, http://mixu.net/gr/.
-if command -v gr >/dev/null 2>&1; then
-  source <(gr completion)
-fi
-
 if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
   source "$HOME/.local/share/shell/display-utilities"
 fi

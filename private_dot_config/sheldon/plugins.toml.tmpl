@@ -98,9 +98,11 @@ inline = 'if command -v pio >/dev/null; then eval "$(_PIO_COMPLETE=zsh_source pi
 [plugins.kitty-completion]
 inline = 'if command -v kitty >/dev/null; then eval "$(kitty + complete setup zsh)"; fi'
 
+{{/* `source <(gr completion)` provokes the warning `fatal: not a git repository`
 [plugins.gr-completion]
 # https://github.com/mixu/gr
 inline = 'if command -v gr >/dev/null; then source <(gr completion); fi'
+*/ -}}
 
 [plugins.python-completion]
 local = "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d"
