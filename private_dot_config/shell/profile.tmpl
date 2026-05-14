@@ -51,10 +51,12 @@ export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 # set PATH so it includes npm bin.
 add_to_path "$NPM_PACKAGES/bin"
 
+{{- /* Remove this because it adds  almost 500 ms to the shell startup time
 # https://github.com/nvm-sh/nvm/blob/master/README.md
 export NVM_DIR=$HOME/.local/share/nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+*/}}
 
 # Prefix /usr/lib/ccache to use ccache by default
 add_to_path /usr/lib/ccache
