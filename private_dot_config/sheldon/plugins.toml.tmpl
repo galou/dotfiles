@@ -14,9 +14,6 @@ shell = "zsh"
 
 [plugins]
 
-[plugins.zsh-defer]{{/* Must be placed before all other plugins to work */}}
-github = "romkatv/zsh-defer"
-
 [plugins.profile]
 local = "~/.config/shell"
 use = ["profile"]
@@ -31,89 +28,75 @@ use = ["zsh_aliases"]
 
 [plugins.zsh-navigation-tools]
 github = "zdharma-continuum/zsh-navigation-tools"
-apply = ["defer_first"]
 
 [plugins.zsh-z]
 github = "agkozak/zsh-z"
-apply = ["defer"]
 
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
-apply = ["defer"]
 
 [plugins.forgit]
 github = "wfxr/forgit"
-apply = ["defer"]
 
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
-apply = ["defer"]
 
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
-apply = ["defer"]
 
 [plugins.atuin]
 github = "atuinsh/atuin"
-apply = ["defer"]
 
 [plugins.omz-lib-directories]
 github = "ohmyzsh/ohmyzsh"
 dir = "lib"
 use = ["directories.zsh"]
-apply = ["defer"]
 
 [plugins.omz-plugin-command-not-found]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/command-not-found"
-apply = ["defer"]
 
 [plugins.omz-plugin-git]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/git"
-apply = ["defer"]
 
 [plugins.omz-plugin-pip]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/pip"
-apply = ["defer"]
 
 [plugins.omz-plugin-safe-paste]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/safe-paste"
-apply = ["defer"]
 
 [plugins.omz-plugin-common-aliases]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/common-aliases"
-apply = ["defer"]
 
 [plugins.direnv]
 # https://direnv.net/
-inline = 'if command -v direnv >/dev/null; then zsh-defer -t 0.2 eval "$(direnv hook zsh)"; fi'
+inline = 'if command -v direnv >/dev/null; then eval "$(direnv hook zsh)"; fi'
 
 [plugins.gis-completion]
 # https://github.com/Deleh/gis.git
 # cp ~/04-sources/gis-multi_git_repo_management/gis_completion.bash ~/.local/share/bash-completion/completions/gis
 local = "~/.local/share/bash-completion/completions"
 use = ["gis"]
-apply = ["defer"]
 
 [plugins.pixi-completion]
 # https://pixi.sh/latest/
-inline = 'if command -v pixi >/dev/null; then zsh-defer -t 0.2 eval "$(pixi completion --shell zsh)"; fi'
+inline = 'if command -v pixi >/dev/null; then eval "$(pixi completion --shell zsh)"; fi'
 
 [plugins.pipx-completion]
-inline = 'if command -v register-python-argcomplete3 >/dev/null; then zsh-defer -t 0.2 eval "$(register-python-argcomplete3 pipx)"; fi'
+inline = 'if command -v register-python-argcomplete3 >/dev/null; then eval "$(register-python-argcomplete3 pipx)"; fi'
 
 [plugins.pip3-completion]
-inline = 'if command -v pip3 >/dev/null; then zsh-defer -t 0.2 eval "$(pip3 completion --zsh)"; fi'
+inline = 'if command -v pip3 >/dev/null; then eval "$(pip3 completion --zsh)"; fi'
 
 [plugins.platformio-completion]
-inline = 'if command -v pio >/dev/null; then zsh-defer -t 0.2 eval "$(_PIO_COMPLETE=zsh_source pio)"; fi'
+inline = 'if command -v pio >/dev/null; then eval "$(_PIO_COMPLETE=zsh_source pio)"; fi'
 
 [plugins.kitty-completion]
-inline = 'if command -v kitty >/dev/null; then zsh-defer -t 0.2 eval "$(kitty + complete setup zsh)"; fi'
+inline = 'if command -v kitty >/dev/null; then eval "$(kitty + complete setup zsh)"; fi'
 
 {{/* `source <(gr completion)` provokes the warning `fatal: not a git repository`
 [plugins.gr-completion]
@@ -127,14 +110,14 @@ apply = ["fpath"]
 
 {{/* Not installed
 [plugins.magic-completion]
-inline = 'if command -v magic >/dev/null; then zsh-defer -t 0.2 eval "$(magic completion --shell zsh)"; fi'
+inline = 'if command -v magic >/dev/null; then eval "$(magic completion --shell zsh)"; fi'
 */ -}}
 
 [plugins.chezmoi-completion]
-inline = 'if command -v chezmoi >/dev/null; then zsh-defer -t 0.2 eval "$(chezmoi completion zsh)"; fi'
+inline = 'if command -v chezmoi >/dev/null; then eval "$(chezmoi completion zsh)"; fi'
 
 [plugins.rustup-completion]
-inline = 'if command -v rustup >/dev/null; then zsh-defer -t 0.2 eval "$(rustup completions zsh rustup)"; fi'
+inline = 'if command -v rustup >/dev/null; then eval "$(rustup completions zsh rustup)"; fi'
 
 [plugins.custom-fpath]
 local = "~/.local/share/zsh/site-functions"
@@ -142,9 +125,4 @@ apply = ["fpath"]
 
 [plugins.zoxide]
 # https://github.com/ajeetdsouza/zoxide
-inline = 'if command -v zoxide >/dev/null; then zsh-defer -t 0.2 eval "$(zoxide init zsh)"; fi'
-
-[templates]
-defer_first = "{{"{{"}} hooks?.pre | nl }}{% for file in files %}zsh-defer -t 0.2 source \"{{"{{"}} file }}\"\n{% endfor %}{{"{{"}} hooks?.post | nl }}"
-defer = "{{"{{"}} hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{"{{"}} file }}\"\n{% endfor %}{{"{{"}} hooks?.post | nl }}"
-
+inline = 'if command -v zoxide >/dev/null; then eval "$(zoxide init zsh)"; fi'
