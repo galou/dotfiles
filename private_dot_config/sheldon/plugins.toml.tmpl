@@ -126,3 +126,10 @@ apply = ["fpath"]
 [plugins.zoxide]
 # https://github.com/ajeetdsouza/zoxide
 inline = 'if command -v zoxide >/dev/null; then eval "$(zoxide init zsh)"; fi'
+
+{{/* Disabled because overrides `python3`
+#[plugins.linuxbrew]
+# https://docs.brew.sh/Homebrew-on-Linux
+inline = 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"'
+*/ -}}
+
