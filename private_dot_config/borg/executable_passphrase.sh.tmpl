@@ -1,0 +1,6 @@
+{{- if (and (index . "borg") (index .borg "passphrase"))}}
+export BORG_PASSPHRASE='{{.borg.passphrase}}'
+{{- else}}
+export BORG_PASSPHRASE="Passphrase not set. Please set it in your ~/.config/chezmoi/chezmoi.yaml file under borg.passphrase"
+{{- end}}
+

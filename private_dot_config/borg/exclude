@@ -12,6 +12,7 @@
 .config/zsh/.zshrc
 .dbus
 .gvfs
+.local/mnt
 .local/share/Trash
 .local/state
 .ros

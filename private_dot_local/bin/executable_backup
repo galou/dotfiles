@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Backup with BorgBackup
 
 set -e  # exit immediately on error
@@ -9,48 +9,80 @@ export KEEP_WEEKLY_COUNT=4
 export KEEP_MONTHLY_COUNT=12
 
 # Setting this, so the repo does not need to be given on the commandline:
-export BORG_REPO=ssh://username@example.com:2022/~/backup/main
+export BORG_REPO=$HOME/.local/mnt/backups/borg
+
+# Rclone mount point.
+# Will be mounted if not already mounted, and unmounted after the backup is finished.
+RCLONE_REMOTE="koofr:backups"
+RCLONE_MOUNT_POINT="$HOME/.local/mnt/backups"
 
 # See the section "Passphrase notes" for more infos.
-export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
+# export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
+PASSPHRASE_FILE="$HOME/.config/borg/passphrase.sh"
+
+# Source the shell script defining PASSPHRASE
+if [ -e "$PASSPHRASE_FILE" ]; then
+  echo "Sourcing passphrase from \"$PASSPHRASE_FILE\""
+  source "$PASSPHRASE_FILE"
+fi
 
 # some helpers and error handling:
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
+# Mount if not already mounted
+if mount | grep -q "$RCLONE_MOUNT_POINT"; then
+  # Already mounted.
+  info "\"$RCLONE_REMOTE\" already mounted to \"$RCLONE_MOUNT_POINT\""
+  DO_UNMOUNT=false
+else
+  info "Mounting \"$RCLONE_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
+  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon
+  if (( $? )); then
+    # Previous command failed.
+    info "Cannot rclone mount \"$MOUNT_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
+    exit 1
+  fi
+  # Let the mount settle for a few seconds.
+  sleep 5
+  DO_UNMOUNT=true
+fi
+
 info "Starting backup"
+
+/usr/bin/borg --version
 
 # Backup the most important directories into an archive named after
 # the machine this script is currently running on:
 
-/usr/bin/nice -n 19 /bin/borg create \
-    --verbose                        \
-    --filter AME                     \
-    --stats                          \
-    --show-rc                        \
-    --compression lz4                \
-    --exclude-caches                 \
-    --exclude-from "$EXCLUDE_FILE"   \
-    --exclude-nodump                 \
-                                     \
-    ::'{hostname}-{now}'             \
-    "$HOME"
+/usr/bin/nice -n 19 /usr/bin/borg create \
+  --verbose                        \
+  --filter AME                     \
+  --stats                          \
+  --show-rc                        \
+  --compression lz4                \
+  --exclude-caches                 \
+  --exclude-from "$EXCLUDE_FILE"   \
+  --exclude-nodump                 \
+  \
+  ::'{hostname}-{now}'             \
+  "$HOME"
 
 backup_exit=$?
 
 info "Pruning repository"
 
-# Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
+# Use the "prune" subcommand to maintain 7 daily, 4 weekly and 6 monthly
 # archives of THIS machine. The '{hostname}-*' matching is very important to
 # limit prune's operation to this machine's archives and not apply to
 # other machines' archives also:
 
-borg prune                               \
-    --glob-archives '{hostname}-*'       \
-    --show-rc                            \
-    --keep-daily    "$KEEP_DAILY_COUNT"  \
-    --keep-weekly   "$KEEP_WEEKLY_COUNT" \
-    --keep-monthly  "$KEEP_MONTHLY_COUNT"
+/usr/bin/borg prune                          \
+  --glob-archives '{hostname}-*'       \
+  --show-rc                            \
+  --keep-daily    "$KEEP_DAILY_COUNT"  \
+  --keep-weekly   "$KEEP_WEEKLY_COUNT" \
+  --keep-monthly  "$KEEP_MONTHLY_COUNT"
 
 prune_exit=$?
 
@@ -58,7 +90,7 @@ prune_exit=$?
 
 info "Compacting repository"
 
-borg compact
+/usr/bin/borg compact
 
 compact_exit=$?
 
@@ -67,11 +99,15 @@ global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
 global_exit=$(( compact_exit > global_exit ? compact_exit : global_exit ))
 
 if [ ${global_exit} -eq 0 ]; then
-    info "Backup, Prune, and Compact finished successfully"
+  info "Backup, Prune, and Compact finished successfully"
 elif [ ${global_exit} -eq 1 ]; then
-    info "Backup, Prune, and/or Compact finished with warnings"
+  info "Backup, Prune, and/or Compact finished with warnings"
 else
-    info "Backup, Prune, and/or Compact finished with errors"
+  info "Backup, Prune, and/or Compact finished with errors"
+fi
+
+if $DO_UNMOUNT; then
+  umount "$RCLONE_MOUNT_POINT" || fusermount -u "$RCLONE_MOUNT_POINT" || info "Failed to unmount \"$RCLONE_MOUNT_POINT\""
 fi
 
 exit ${global_exit}
