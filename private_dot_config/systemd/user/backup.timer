@@ -1,9 +1,8 @@
 [Unit]
-Description=Run backup.service every week
+Description=Run backup.service every work day at 11:10 Prague time
 
 [Timer]
-OnBootSec=15min
-OnUnitActiveSec=1w
+OnCalendar=Mon..Fri *-*-* 11:10:00 Europe/Prague
 Persistent=true
 
 [Install]
