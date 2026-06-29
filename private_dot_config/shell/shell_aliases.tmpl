@@ -20,7 +20,7 @@ alias ce='chezmoi edit'
 alias cp='/bin/cp -i'
 alias dragon='dragon --and-exit'
 alias f='readlink -f'
-alias fc=freecad-daily
+alias fc=freecad
 alias ffmpeg-extract='extract-images'{{- /* extract-image is defined in ~/.config/shell/profile. */}}
 alias gcl1='git clone --recurse-submodules --depth 1'
 alias getdate='/bin/date '+%Y-%M-%d--%H-%M-%S''
@@ -51,6 +51,7 @@ alias oo='a -e xdg-open' # quick opening files with xdg-open. a='fasd -a'.
 alias q='noglob /usr/bin/qalc'
 alias qalc='noglob qalc'
 alias r='ranger'
+{{- /* alias rg='rg --hyperlink-format=kitty' should work with 13.0 according to https://sw.kovidgoyal.net/kitty/kittens/hyperlinked_grep/#hyperlinked-grep but it doesn't  */}}
 alias rostop='rotop'
 alias rubber='/usr/bin/rubber --pdf --cache --short --warn all'
 alias rubber-clean='/usr/bin/rubber --clean'
