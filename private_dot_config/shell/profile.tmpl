@@ -553,59 +553,59 @@ export NNN_PLUG='p:preview-tui'
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 {{- if (and (index . "github") (index .github "pat"))}}
-export GITHUB_PAT={{.github.pat}}
+export GITHUB_PAT='{{.github.pat}}'
 {{- end}}
 
 {{- if (and (index . "anthropic") (index .anthropic "api_key"))}}
-export ANTHROPIC_API_KEY={{.anthropic.api_key}}
+export ANTHROPIC_API_KEY='{{.anthropic.api_key}}'
 {{- end}}
 
 {{- if (and (index . "cometml") (index .cometml "api_key"))}}
-export COMET_API_KEY={{.cometml.api_key}}
+export COMET_API_KEY='{{.cometml.api_key}}'
 {{- end}}
 
 {{- if (and (index . "gemini") (index .gemini "api_key"))}}
-export GEMINI_API_KEY={{.gemini.api_key}}
-export GOOGLE_API_KEY={{.gemini.api_key}}
+export GEMINI_API_KEY='{{.gemini.api_key}}'
+export GOOGLE_API_KEY='{{.gemini.api_key}}'
 {{- end}}
 
 {{- if (and (index . "langsmith") (index .langsmith "api_key"))}}
-export LANGSMITH_API_KEY={{.langsmith.api_key}}
+export LANGSMITH_API_KEY='{{.langsmith.api_key}}'
 {{- end}}
 
 {{- if (and (index . "nvidia") (index .nvidia "api_key"))}}
-export NVIDIA_API_KEY={{.nvidia.api_key}}
+export NVIDIA_API_KEY='{{.nvidia.api_key}}'
 {{- end}}
 
 {{- if (and (index . "ollama") (index .ollama "api_key"))}}
-export OLLAMA_API_KEY={{.ollama.api_key}}
+export OLLAMA_API_KEY='{{.ollama.api_key}}'
 {{- end}}
 
 {{- if (and (index . "openai") (index .openai "api_key"))}}
-export OPENAI_API_KEY={{.openai.api_key}}
+export OPENAI_API_KEY='{{.openai.api_key}}'
 {{- end}}
 
 {{- if (index . "onshape")}}
 # Obtained at https://dev-portal.onshape.com/keys
 export ONSHAPE_API=https://cad.onshape.com
 {{- if (index .onshape "api_key")}}
-export ONSHAPE_ACCESS_KEY={{.onshape.api_key}}
+export ONSHAPE_ACCESS_KEY='{{.onshape.api_key}}'
 {{- end}}
 {{- if (index .onshape "secret_key")}}
-export ONSHAPE_SECRET_KEY={{.onshape.secret_key}}
+export ONSHAPE_SECRET_KEY='{{.onshape.secret_key}}'
 {{- end}}
 {{- end}}
 
 {{- if (and (index . "roboflow") (index .roboflow "api_key"))}}
-export ROBOFLOW_API_KEY={{.roboflow.api_key}}
+export ROBOFLOW_API_KEY='{{.roboflow.api_key}}'
 {{- end}}
 
 {{- if (and (index . "tavily") (index .tavily "api_key"))}}
-export TAVILY_API_KEY={{.tavily.api_key}}
+export TAVILY_API_KEY='{{.tavily.api_key}}'
 {{- end}}
 
 {{- if (and (index . "kmr") (index .kmr "robocon_remote_user"))}}
-export ROBOCON_REMOTE_USER={{.kmr.robocon_remote_user}}
+export ROBOCON_REMOTE_USER='{{.kmr.robocon_remote_user}}'
 {{- end}}
 
 # Session management with oatmeal (https://github.com/dustinblackman/oatmeal).
