@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PIXI_MANIFEST="$HOME/04-sources/freecad/FreeCAD/pixi.toml"
-CMD=(pixi run --manifest-path "$PIXI_MANIFEST" freecad-debug)
+CMD=($HOME/.local/bin/pixi run --manifest-path "$PIXI_MANIFEST" freecad-debug)
 
 if [[ -n "$PYTHONPATH" ]]; then
   IFS=':' read -ra PY_PATHS <<< "$PYTHONPATH"
@@ -10,5 +10,5 @@ if [[ -n "$PYTHONPATH" ]]; then
   done
 fi
 
-exec "${CMD[@]} $@"
+exec ${CMD[@]} $@
 
