@@ -16,6 +16,11 @@ export BORG_REPO=$HOME/.local/mnt/backups/borg
 RCLONE_REMOTE="koofr:backups"
 RCLONE_MOUNT_POINT="$HOME/.local/mnt/backups"
 
+# Use a non-default address/port for rclone's remote-control (RC) API so
+# this script never talks to (or collides with) some other "rclone mount"
+# process that might already be running with the default RC port (5572).
+RCLONE_RC_ADDR="127.0.0.1:5573"
+
 # See the section "Passphrase notes" for more infos.
 # export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
 PASSPHRASE_FILE="$HOME/.config/borg/passphrase.sh"
@@ -33,7 +38,7 @@ trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 # Block until rclone reports no ongoing transfers for the mounted remote.
 wait_for_rclone_sync() {
   info "Waiting for rclone transfers to finish"
-  while rclone rc core/stats fs="$RCLONE_REMOTE" 2>/dev/null | grep -q '"transferring"'; do
+  while rclone rc --url "http://$RCLONE_RC_ADDR/" core/stats fs="$RCLONE_REMOTE" 2>/dev/null | grep -q '"transferring"'; do
     sleep 2
   done
 }
@@ -45,7 +50,7 @@ if mount | grep -q "$RCLONE_MOUNT_POINT"; then
   DO_UNMOUNT=false
 else
   info "Mounting \"$RCLONE_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
-  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon --rc --vfs-cache-mode writes
+  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon --rc --rc-addr "$RCLONE_RC_ADDR" --vfs-cache-mode writes
   if (( $? )); then
     # Previous command failed.
     info "Cannot rclone mount \"$MOUNT_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
