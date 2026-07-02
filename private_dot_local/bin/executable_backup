@@ -30,6 +30,14 @@ fi
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
+# Block until rclone reports no ongoing transfers for the mounted remote.
+wait_for_rclone_sync() {
+  info "Waiting for rclone transfers to finish"
+  while rclone rc core/stats fs="$RCLONE_REMOTE" 2>/dev/null | grep -q '"transferring"'; do
+    sleep 2
+  done
+}
+
 # Mount if not already mounted
 if mount | grep -q "$RCLONE_MOUNT_POINT"; then
   # Already mounted.
@@ -37,7 +45,7 @@ if mount | grep -q "$RCLONE_MOUNT_POINT"; then
   DO_UNMOUNT=false
 else
   info "Mounting \"$RCLONE_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
-  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon
+  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon --rc --vfs-cache-mode writes
   if (( $? )); then
     # Previous command failed.
     info "Cannot rclone mount \"$MOUNT_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
@@ -107,7 +115,9 @@ else
 fi
 
 if $DO_UNMOUNT; then
-  umount "$RCLONE_MOUNT_POINT" || fusermount -u "$RCLONE_MOUNT_POINT" || info "Failed to unmount \"$RCLONE_MOUNT_POINT\""
+  wait_for_rclone_sync
+  sync
+  fusermount -u "$RCLONE_MOUNT_POINT" || info "Failed to unmount \"$RCLONE_MOUNT_POINT\""
 fi
 
 exit ${global_exit}
