@@ -1,5 +1,6 @@
 #!/bin/bash
-# Backup with BorgBackup
+# Compact the BorgBackup-backed backup.
+# Main backup script is in `~/.local/bin/backup`.
 
 export EXCLUDE_FILE="$HOME/.config/borg/exclude"
 export KEEP_DAILY_COUNT=7
@@ -59,57 +60,17 @@ else
   DO_UNMOUNT=true
 fi
 
-info "Starting backup"
-
-/usr/bin/borg --version
-
-# Backup the most important directories into an archive named after
-# the machine this script is currently running on:
-
-/usr/bin/nice -n 19 /usr/bin/borg create \
-  --verbose                        \
-  --filter AME                     \
-  --stats                          \
-  --show-rc                        \
-  --compression lz4                \
-  --exclude-caches                 \
-  --exclude-from "$EXCLUDE_FILE"   \
-  --exclude-nodump                 \
-  \
-  ::'{hostname}-{now}'             \
-  "$HOME"
-
-backup_exit=$?
-
-info "Pruning repository"
-
-# Use the "prune" subcommand to maintain 7 daily, 4 weekly and 6 monthly
-# archives of THIS machine. The '{hostname}-*' matching is very important to
-# limit prune's operation to this machine's archives and not apply to
-# other machines' archives also:
-
-/usr/bin/borg prune                          \
-  --glob-archives '{hostname}-*'       \
-  --show-rc                            \
-  --keep-daily    "$KEEP_DAILY_COUNT"  \
-  --keep-weekly   "$KEEP_WEEKLY_COUNT" \
-  --keep-monthly  "$KEEP_MONTHLY_COUNT"
-
-prune_exit=$?
-
-# actually free repo disk space by compacting segments
-
 info "Compacting repository"
 
-# use highest exit code as global exit code
-global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
+/usr/bin/borg compact
+compact_exit=$?
 
-if [ ${global_exit} -eq 0 ]; then
-  info "Backup and Prune finished successfully"
-elif [ ${global_exit} -eq 1 ]; then
-  info "Backup and Prune finished with warnings"
+if [ ${compact_exit} -eq 0 ]; then
+  info "Compact finished successfully"
+elif [ ${compact_exit} -eq 1 ]; then
+  info "Compact finished with warnings"
 else
-  info "Backup and Prune finished with errors"
+  info "Compact finished with errors"
 fi
 
 if $DO_UNMOUNT; then
@@ -118,5 +79,5 @@ if $DO_UNMOUNT; then
   fusermount -u "$RCLONE_MOUNT_POINT" || info "Failed to unmount \"$RCLONE_MOUNT_POINT\""
 fi
 
-exit ${global_exit}
+exit ${compact_exit}
 
