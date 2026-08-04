@@ -38,6 +38,7 @@ sudo apt install \
   btop \
   cairosvg \
   calibre \
+  can-utils \{{/* CAN bus utilities, e.g. candump */}}
   cheese \
   cpufrequtils \
   curl \
@@ -90,6 +91,7 @@ sudo apt install \
   pulseaudio-utils \
   python-is-python3 \
   python3-argcomplete \
+  python3-can \{{/* CAN bus viewer, can_viewer */}}
   python3-convertdate \
   python3-gdal \
   python3-i3ipc \
@@ -190,6 +192,7 @@ LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/re
   && popd >/dev/null \
   && rmdir /tmp/lazygit
 pip install --break-system-packages jupytext
+# Cf. also `gr` below.
 
 ## Docker and plugins. Plus nvidia-container-toolkit.
 sudo curl -fsSL 'https://download.docker.com/linux/ubuntu/gpg' -o /etc/apt/keyrings/docker.asc \
@@ -218,10 +221,11 @@ mkdir --parents $HOME/.local/share/git-credential-forwarder \
 ## Rust and rust-written software
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup component add rust-analyzer
-cargo install cargo-quickinstall
-cargo quickinstall \
+curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+cargo binstall \
   allmytoes \
   bkt \
+  can-viewer-rs \{{/* CAN bus viewer, port of python3-can, can-viewer-rs */}}
   cargo-generate \
   code-minimap \
   difftastic \
@@ -445,6 +449,10 @@ curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact
 ## LabelStudio, data labeling (https://labelstud.io/).
 pip install --break-system-packages label-studio
 
+## CVAT (Computer Vision Annotation Tool).
+# https://github.com/cvat-ai/cvat
+# git clone https://github.com/cvat-ai/cvat
+
 ## Meshroom, photogrammetry (https://alicevision.org/).
 wget -O /tmp/meshroom.tar.gz 'https://download.fosshub.com/Protected/expiretime=1738614793;badurl=aHR0cHM6Ly93d3cuZm9zc2h1Yi5jb20vTWVzaHJvb20uaHRtbA==/2dd0387018c77e006d408434ec214ff022e9a3ac26dc495f319b852941ff08b7/5c6fe99776dd983e3dec2213/6568cbfc22a91d967c92b86e/Meshroom-2023.3.0-linux.tar.gz' \
   && sudo tar xf /tmp/meshroom.tar.gz -C /opt \
@@ -455,6 +463,10 @@ mkdir --parents $HOME/.local/share/meshroom/lib/nodes \
 
 ## Node.js 22 (otherwise 18 is installed).
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+
+## `gr` multi-repo management.
+# https://github.com/mixu/gr
+npm install -g git-run
 
 ## Platform IO.
 echo "Installing Platform IO" \
@@ -492,15 +504,31 @@ EOF
 # https://github.com/google-gemini/gemini-cli
 npm install -g @google/gemini-cli
 
+## Beekeeper Studio.
+# Database management tool.
+# (https://www.beekeeperstudio.io/)
+mkdir --parents /tmp/beekeeper \
+  && pushd /tmp/beekeeper >/dev/null \
+  && curl -L 'https://www.beekeeperstudio.io/download/?ext=deb&arch=x86_64&type=installer&edition=community' -o beekeeper.deb \
+  && sudo apt install /tmp/beekeeper/beekeeper.deb \
+  && popd >/dev/null \
+  && rm -rf /tmp/beekeeper
+
 # Configuration.
 
 echo -n pcgael3 | sudo tee /etc/hostname >/dev/null
-sudo usermod --groups=dialout,syslog,docker,wireshark --append $USER
+sudo usermod --groups=dialout,syslog,docker,wireshark,video,i2c,ollama,brightness --append $USER
 sudo sysctl kernel.dmesg_restrict=0
 rfkill unblock all
 
 # Configure timezone
 sudo ln -fs /usr/share/zoneinfo/Europe/Prague /etc/localtime
+
+# Configure default applications
+xdg-mime default org.gnome.eog.desktop image/jpeg
+xdg-mime default org.gnome.eog.desktop image/jpg
+xdg-mime default org.gnome.eog.desktop image/png
+xdg-mime default org.pwmt.zathura.desktop application/pdf
 
 # Sway with NVIDIA.
 pushd /tmp >/dev/null \
