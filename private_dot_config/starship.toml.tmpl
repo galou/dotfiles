@@ -13,6 +13,7 @@ $git_branch\
 $git_state\
 $git_status\
 [](fg:color_darkgreen bg:color_darkergreen)\
+$python\
 $nodejs\
 $rust\
 $golang\
@@ -108,6 +109,11 @@ staged = '+${count} '
 renamed = '→${count} '
 # ✗: U+2717 Ballot X
 deleted = '✗${count} '
+
+[python]
+symbol = "🐍" # U+1f40d Snake
+style = "bg:color_darkergreen"
+format = '[[ ${symbol} (${version} )(\($virtualenv\) )](fg:color_darkblue bg:color_darkergreen)]($style)'
 
 [nodejs]
 symbol = ""
