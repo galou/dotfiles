@@ -14,6 +14,8 @@ sh:home/*/.dbus
 sh:home/*/.gvfs
 sh:home/*/.local/mnt
 sh:home/*/.local/share/Trash
+sh:home/*/.local/share/gvfs-metadata
+sh:home/*/.local/share/keyrings
 sh:home/*/.local/state
 sh:home/*/.ros
 sh:home/*/.ssh
