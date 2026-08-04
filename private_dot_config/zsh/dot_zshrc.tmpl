@@ -7,7 +7,13 @@ if [[ ! -o interactive ]]; then
 fi
 
 # Uncomment the following line and the first line to start profiling.
-# zprof
+# The line `zprof` at the end of the file will print the profiling results.
+# zmodload zsh/zprof
+
+# Module zsh/net/tcp
+# Once loaded, it provides the ztcp builtin for opening/closing TCP connections (e.g. ztcp 192.168.110.131 6638).
+# Similar in functionality to the magic path /dev/tcp/HOST/PORT in bash.
+# zmodload zsh/net/tcp.
 
 {{- /* Powerlevel10k configuration, replaced with starship
 
@@ -315,3 +321,6 @@ activate_timestamp()
 # ------------
 # source "$HOME/04-sources/fzf/fzf/shell/key-bindings.zsh"
 */}}
+
+# Cf. comment above.
+# zprof
