@@ -332,8 +332,10 @@ mkdir --parents $HOME/04-sources/i3 \
   && ln -s $HOME/04-sources/i3/i3blocks-pomodoro/pomodoro $HOME/.local/bin
 
 ## bato, battery-state notifier (https://github.com/doums/bato).
-curl -Lo $HOME/.local/bin/bato https://github.com/doums/bato/releases/download/v0.1.7/bato \
-  && chmod ug+x $HOME/.local/bin/bato
+BATO_VERSION=$(curl -s "https://api.github.com/repos/doums/bato/releases/latest" | grep -Po '"tag_name": *"v\K[^"]*') \
+  && mkdir --parents $HOME/.cargo/bin \
+  && curl -Lo $HOME/.cargo/bin/bato https://github.com/doums/bato/releases/download/v0.3.1/bato-linux-x86_64 \
+  && chmod ug+x $HOME/.cargo/bin/bato
 
 ## Brave browser.
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg \
