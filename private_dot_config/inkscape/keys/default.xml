@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<keys name="Inkscape default">
+
+<!--
+This file contains the Inkscape keyboard shortcuts to invert Ctrl and Shift keys compared to the default keymap.
+Ctrl = select/deselect objects
+Shift = select objects inside groups
+
+========== Actions ==========
+
+- The "keys" attribute contains a comma separated list of shortcuts which can include the
+  modifiers <primary>, <shift>, and/or <alt>. As this is an XML file, '<' and '>' must be
+  replaced by &lt; and &gt;, respectively. The first entry will be listed in menus.
+
+- The "gaction" atribute contains the full action name, including the map name (typically
+  'app' or 'win').
+
+=========== Notes ===========
+
+This file is inkscape.xml, and in the original installation it is also copied as
+default.xml. The latter is the file that Inkscape reads on startup. If you overwrite
+default.xml with some other keymap file (e.g. xara.xml), you can always restore the
+default keybindings by copying inkscape.xml to default.xml again.
+
+In case of conflict, those bindings that come later override those before them. This
+file resides in the share/keys directory of your Inkscape installation, but you may also
+have a default.xml in your personal Inkscape profile directory (e.g. ~/.config/inkscape
+on Unix). The bindings in that personal file are added to (or, if there's a conflict,
+override) the bindings in the main default.xml.
+-->
+
+  <modifier action="select-add-to" modifiers="Ctrl"/>
+  <modifier action="select-in-groups" modifiers="Shift"/>
+
+</keys>
