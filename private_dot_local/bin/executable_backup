@@ -48,7 +48,18 @@ if mount | grep -q "$RCLONE_MOUNT_POINT"; then
   DO_UNMOUNT=false
 else
   info "Mounting \"$RCLONE_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
-  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" --daemon --rc --rc-addr "$RCLONE_RC_ADDR" --vfs-cache-mode writes
+  # The --daemon option is broken in rclone v1.75.0 and Koofr. You have to mount before the backup.
+  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" \
+    --daemon \
+    # Remote control
+    --rc \
+    --rc-addr "$RCLONE_RC_ADDR" \
+    # Cache
+    --vfs-cache-mode writes \
+    --vfs-cache-max-size 1G \
+    # Concurrency
+    --transfers 10 \
+    --checkers 6
   if (( $? )); then
     # Previous command failed.
     info "Cannot rclone mount \"$MOUNT_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
