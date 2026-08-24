@@ -119,10 +119,6 @@ inline = 'if command -v chezmoi >/dev/null; then eval "$(chezmoi completion zsh)
 [plugins.rustup-completion]
 inline = 'if command -v rustup >/dev/null; then eval "$(rustup completions zsh rustup)"; fi'
 
-[plugins.custom-fpath]
-local = "~/.local/share/zsh/site-functions"
-apply = ["fpath"]
-
 [plugins.zoxide]
 # https://github.com/ajeetdsouza/zoxide
 inline = 'if command -v zoxide >/dev/null; then eval "$(zoxide init zsh)"; fi'

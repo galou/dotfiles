@@ -73,6 +73,9 @@ zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle :compinstall filename "$HOME/.config/zsh/.zshrc"
 
+# Add the site-functions directory to fpath before calling compinit, so that
+# completions from ~/.local/share/zsh/site-functions are available.
+fpath=(~/.local/share/zsh/site-functions $fpath)
 autoload -Uz compinit && compinit
 
 # End of lines added by compinstall
