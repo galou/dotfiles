@@ -95,7 +95,7 @@ firefox:
 freecad:
   description: "FreeCAD"
   binary: ~/.local/bin/freecad
-  icon: freecad-daily
+  icon: freecad{{/* ln -s ~/04-sources/freecad/FreeCAD/src/Gui/Icons/freecad.svg $HOME/.local/share/icons/freecda.svg */}}
 
 freetube:
   description: "FreeTube"
@@ -217,8 +217,9 @@ retext:
 
 rustdesk:
   description: "RustDesk"
-  binary: rustdesk
-  icon: rustdesk
+  binary: flatpak
+  args: ["run", "com.rustdesk.RustDesk"]
+  icon: com.rustdesk.RustDesk{{/* ln -s ~/.local/share/flatpak/app/com.rustdesk.RustDesk/current/active/files/share/icons/hicolor/scalable/apps/com.rustdesk.RustDesk.svg ~/.local/share/icons/com.rustdesk.RustDesk.svg */}}
 
 rxtools:
   description: "RxTools (Septentrio)"
@@ -239,21 +240,11 @@ simplescan:
   description: "Simple Scan"
   binary: simple-scan
   icon: org.gnome.SimpleScan
-{{- if eq .chezmoi.osRelease.versionID "22.04"}}
-{{- /* slack doesn't launch on Pop!_OS 24 with sway and NVIDIA driver */}}
 
 slack:
-  description: "Slack"  # From snap.
+  description: "Slack"{{/* `apt install slack-desktop` provides a deprecated version on 24.04, `snap install slack` on 22.04 */}}
   binary: slack
   icon: slack
-{{- else}}
-
-slack:
-  description: "Slack"
-  binary: firefox
-  args: ["-P", "slack"]
-  icon: slack
-{{- end}}
 
 terminal:
   description: "Terminal"
@@ -322,8 +313,8 @@ zathura:
 
 zotero:
   description: "Zotero"
-  binary: /opt/zotero/zotero  # From tar.bz2 in /opt/zotero.
-  icon: zotero
+  binary: /opt/zotero/zotero  # From tar.xz in /opt/zotero.
+  icon: zotero{{/* ln -s /opt/zotero/icons/symbolic.svg $HOME/.local/share/icons/zotero.svg */}}
 
 calibre:
   description: "Calibre"
