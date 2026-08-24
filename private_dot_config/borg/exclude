@@ -1,3 +1,6 @@
+*/.pixi
+*/.yarn
+*/__pycache__
 */build
 */log
 */logs

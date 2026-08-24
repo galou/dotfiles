@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Copyright (C) 2026 Gaël Écorchard <galou_breizh@yahoo.fr>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Requires playerctl binary to be in your path (except cmus)
+# See: https://github.com/acrisci/playerctl
+
+player=(playerctl --player=vlc)
+
+case "${BLOCK_BUTTON:-}" in
+    1) "${player[@]}" previous ;;
+    2) "${player[@]}" play-pause ;;
+    3) "${player[@]}" next ;;
+esac
+
+status=$("${player[@]}" status)
+# playerctl returns a non-zero status when it cannot find the player.
+if (( $? != 0 )); then
+    exit 0
+fi
+
+case "$status" in
+    Playing) icon="▶" ;; # U+25B6 BLACK RIGHT-POINTING TRIANGLE
+    Paused)  icon="⏸" ;; # U+23F8 DOUBLE VERTICAL BAR
+    Stopped)
+        icon="⏹" # U+23F9 BLACK SQUARE FOR STOP
+        echo "$icon"
+        echo "$icon"
+        exit 0
+        ;;
+    *) exit 0 ;;
+esac
+
+now_playing=$("${player[@]}" metadata vlc:nowplaying)
+if (( $? != 0 )); then
+    exit 0
+fi
+
+echo "$icon $now_playing"
+# i3blocks uses the second output line as short text; limit it to 20 characters.
+title="${now_playing#* - }"
+short_text="$icon $title"
+if (( ${#short_text} > 20 )); then
+    short_text="${short_text:0:19}…"
+fi
+echo "$short_text"
+
