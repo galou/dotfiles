@@ -608,6 +608,10 @@ export TAVILY_API_KEY='{{.tavily.api_key}}'
 export ROBOCON_REMOTE_USER='{{.kmr.robocon_remote_user}}'
 {{- end}}
 
+{{- if (and (index . "label_studio") (index .label_studio "api_key"))}}
+export LABEL_STUDIO_API_KEY='{{.label_studio.api_key}}'
+{{- end}}
+
 # Session management with oatmeal (https://github.com/dustinblackman/oatmeal).
 function oatmeal-sessions() {
     (
