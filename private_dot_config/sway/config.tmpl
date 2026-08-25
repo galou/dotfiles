@@ -73,7 +73,7 @@ set $file_manager cosmic-files
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 {{- if (index . "main_monitor")}}
-{{- if or (eq .chezmoi.hostname "pcgael1") (eq .chezmoi.hostname "pcgael3")}}
+{{- if or (eq .chezmoi.hostname "pcgael1") (eq .chezmoi.hostname "pcgael2")}}
 output {{.main_monitor}} {
   scale 1.6
 }
@@ -387,7 +387,7 @@ bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command 
 bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command kitty
 {{- end}}
 bindsym $mod+Shift+i exec inkscape
-bindsym $mod+m exec $HOME/.cargo/bin/sway-scratchpad --mark music --command "vlc /home/gael/Music/fip-autour_du_monde.m3u"
+bindsym $mod+m exec $HOME/.cargo/bin/sway-scratchpad --mark music --command "vlc /home/gael/Music/fip-monde.m3u"
 bindsym $mod+Shift+m exec $HOME/.cargo/bin/sway-scratchpad --mark divercities --command "brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities"
 bindsym $mod+n exec $file_manager
 {{- if eq .chezmoi.hostname "pcgael1"}}
@@ -425,7 +425,7 @@ include $HOME/.config/sway/config.d/*
 # Autostart
 #exec dunst  # Notification daemon.
 #exec mako  # Notification daemon, started with systemd.
-exec $HOME/.local/bin/bato  # Battery monitor.
+# exec $HOME/.local/bin/bato  # Battery monitor, started with systemd.
 exec udiskie  # Mounting/Unmounting.
 # exec gnome-pomodoro --no-default-window
 exec kdeconnect-indicator
