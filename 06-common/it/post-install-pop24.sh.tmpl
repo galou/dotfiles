@@ -44,7 +44,6 @@ sudo apt install \
   bat \{{/* Terminal file viewer, ala `cat`. `bat` command */}}
   beep \{{/* Terminal bell */}}
   blender \{{/* 3D modeling software */}}
-  borgbackup \{{/* Backup software, https://www.borgbackup.org/ */}}
   brightnessctl \{{/* Control screen brightness from the terminal */}}
   btop \{{/* Terminal system monitor */}}
   cairosvg \
@@ -167,6 +166,16 @@ pip install --break-system-packages \
 # https://github.com/atuinsh/atuin
 # Interactive version: `curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh`
 curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
+
+## Borg backup
+# Backup software, https://www.borgbackup.org/
+# The apt version on Pop!_OS 24.04 is 1.2.8 but we need >1.4 for the slashdot support in archive path.
+# 2026-08-29 there exists a beta-version 2 that we don't want for production yet.
+#BORG_VERSION=$(curl -s "https://api.github.com/repos/borgbackup/borg/releases/latest" | grep -Po '"tag_name": *"v\K[^"]*') \
+BORG_VERSION=1.4.5 \
+  && curl -Lo /tmp/borg "https://github.com/borgbackup/borg/releases/download/${BORG_VERSION}/borg-linux-glibc231-x86_64" \
+  && sudo install -Dm755 /tmp/borg /usr/local/bin/borg
+
 
 ## Development software.
 sudo apt install \
