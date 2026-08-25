@@ -9,10 +9,12 @@ export KEEP_MONTHLY_COUNT=12
 # Setting this, so the repo does not need to be given on the commandline:
 export BORG_REPO=$HOME/.local/mnt/backups/borg
 
-# Rclone mount point.
+# Rclone mount point, mounted on demand via the rclone-backups.service
+# systemd user unit.
 # Will be mounted if not already mounted, and unmounted after the backup is finished.
 RCLONE_REMOTE="koofr:backups"
-RCLONE_MOUNT_POINT="$HOME/.local/mnt/backups"
+RCLONE_MOUNT_POINT="$HOME/.local/mnt/backups" # Must match the mount point in the rclone-backups.service unit file.
+RCLONE_MOUNT_SERVICE="rclone-backups.service"
 
 # Use a non-default address/port for rclone's remote-control (RC) API so
 # this script never talks to (or collides with) some other "rclone mount"
@@ -42,27 +44,16 @@ wait_for_rclone_sync() {
 }
 
 # Mount if not already mounted
-if mount | grep -q "$RCLONE_MOUNT_POINT"; then
+if systemctl --user is-active --quiet "$RCLONE_MOUNT_SERVICE"; then
   # Already mounted.
   info "\"$RCLONE_REMOTE\" already mounted to \"$RCLONE_MOUNT_POINT\""
   DO_UNMOUNT=false
 else
   info "Mounting \"$RCLONE_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
-  # The --daemon option is broken in rclone v1.75.0 and Koofr. You have to mount before the backup.
-  rclone mount "$RCLONE_REMOTE" "$RCLONE_MOUNT_POINT" \
-    --daemon \
-    # Remote control
-    --rc \
-    --rc-addr "$RCLONE_RC_ADDR" \
-    # Cache
-    --vfs-cache-mode writes \
-    --vfs-cache-max-size 1G \
-    # Concurrency
-    --transfers 10 \
-    --checkers 6
+  systemctl --user start "$RCLONE_MOUNT_SERVICE"
   if (( $? )); then
     # Previous command failed.
-    info "Cannot rclone mount \"$MOUNT_REMOTE\" to \"$RCLONE_MOUNT_POINT\""
+    info "Cannot start \"$RCLONE_MOUNT_SERVICE\""
     exit 1
   fi
   # Let the mount settle for a few seconds.
@@ -126,7 +117,7 @@ fi
 if $DO_UNMOUNT; then
   wait_for_rclone_sync
   sync
-  fusermount -u "$RCLONE_MOUNT_POINT" || info "Failed to unmount \"$RCLONE_MOUNT_POINT\""
+  systemctl --user stop "$RCLONE_MOUNT_SERVICE" || info "Failed to stop \"$RCLONE_MOUNT_SERVICE\""
 fi
 
 exit ${global_exit}
