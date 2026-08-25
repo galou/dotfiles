@@ -585,6 +585,17 @@ mkdir --parents /tmp/slack \
 ## Ollama, local LLMs (https://ollama.com/).
 curl -fsSL https://ollama.com/install.sh | sh
 
+## BKG NTRIP Client (BNC)
+# https://igs.bkg.bund.de/ntrip/bnc
+mkdir --parents /tmp/bnc-2.13.6 \
+  && pushd /tmp/bnc >/dev/null \
+  && curl -Lo /tmp/bnc.zip 'https://igs.bkg.bund.de/root_ftp/NTRIP/software/BNC/bnc-2.13.6-debian12.zip'
+  && unzip /tmp/bnc.zip \
+  && sudo install -Dm755 /tmp/bnc-2.13.6 /opt \
+  && sudo ln -s /opt/bnc-2.13.6/bnc /usr/local/bin/bnc \
+  && popd >/dev/null \
+  && rm -rf /tmp/bnc
+
 # Configuration.
 
 echo -n $HOSTNAME | sudo tee /etc/hostname >/dev/null
