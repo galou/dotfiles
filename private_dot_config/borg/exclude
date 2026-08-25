@@ -1,3 +1,6 @@
+# Cf. https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns
+# Pattern are matched again the full path (without leading `/`) even with the
+# slashdot stripping pattern that possibly removes parts of the part.
 */.pixi
 */.yarn
 */__pycache__
@@ -10,18 +13,12 @@ sh:home/*/.autojump.vim
 sh:home/*/.bash_history
 sh:home/*/.bashrc
 sh:home/*/.cache
-sh:home/*/.config/chezmoi/chezmoi.yaml
-sh:home/*/.config/shell/profile
-sh:home/*/.config/zsh/.zshrc
-sh:home/*/.dbus
-sh:home/*/.gvfs
 sh:home/*/.local/mnt
 sh:home/*/.local/share/Trash
 sh:home/*/.local/share/gvfs-metadata
 sh:home/*/.local/share/keyrings
 sh:home/*/.local/state
 sh:home/*/.ros
-sh:home/*/.ssh
 sh:home/*/.thunderbird
 sh:home/*/.wine/dosdevices/z:
 sh:home/*/04-sources/freecad/FreeCAD/pixi_cache
@@ -32,5 +29,5 @@ sh:home/*/11-projects/2023-10-robocon/5-work/repos/robocon_ros2_monows-legacy/in
 sh:home/*/11-projects/2023-10-robocon/5-work/repos/robocon_ros2_monows/install
 sh:home/*/11-projects/2023-10-robocon/5-work/repos/webots/scripts/install
 sh:home/*/80-build/
-sh:home/*/go
 sh:home/*/rovozci_humble_ws/install
+sh:home/*/rovozci_jazzy_ws/install

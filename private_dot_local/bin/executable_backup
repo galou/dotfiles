@@ -69,7 +69,11 @@ info "Starting backup"
 ${BORG_CMD} --version
 
 # Backup the most important directories into an archive named after
-# the machine this script is currently running on:
+# the machine this script is currently running on.
+# "/./" in the source path means
+# "store everything to the right of /./, but strip everything to the left."
+# AME: only show items with status A (Added), M (Modified), or E (Error)
+# --show-rc: show return code
 
 /usr/bin/nice -n 19 ${BORG_CMD} create \
   --verbose                        \
@@ -82,7 +86,7 @@ ${BORG_CMD} --version
   --exclude-nodump                 \
   \
   ::'{hostname}-{now}'             \
-  "$HOME"
+  "$HOME/./"
 
 backup_exit=$?
 
