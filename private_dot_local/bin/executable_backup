@@ -21,6 +21,9 @@ RCLONE_MOUNT_SERVICE="rclone-backups.service"
 # process that might already be running with the default RC port (5572).
 RCLONE_RC_ADDR="127.0.0.1:5573"
 
+# borg command
+BORG_CMD="/usr/local/bin/borg"
+
 # See the section "Passphrase notes" for more infos.
 # export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
 PASSPHRASE_FILE="$HOME/.config/borg/passphrase.sh"
@@ -63,12 +66,12 @@ fi
 
 info "Starting backup"
 
-/usr/bin/borg --version
+${BORG_CMD} --version
 
 # Backup the most important directories into an archive named after
 # the machine this script is currently running on:
 
-/usr/bin/nice -n 19 /usr/bin/borg create \
+/usr/bin/nice -n 19 ${BORG_CMD} create \
   --verbose                        \
   --filter AME                     \
   --stats                          \
@@ -90,7 +93,7 @@ info "Pruning repository"
 # limit prune's operation to this machine's archives and not apply to
 # other machines' archives also:
 
-/usr/bin/borg prune                          \
+${BORG_CMD} prune                          \
   --glob-archives '{hostname}-*'       \
   --show-rc                            \
   --keep-daily    "$KEEP_DAILY_COUNT"  \
