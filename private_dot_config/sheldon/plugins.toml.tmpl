@@ -92,9 +92,6 @@ inline = 'if command -v register-python-argcomplete3 >/dev/null; then eval "$(re
 [plugins.pip3-completion]
 inline = 'if command -v pip3 >/dev/null; then eval "$(pip3 completion --zsh)"; fi'
 
-[plugins.platformio-completion]
-inline = 'if command -v pio >/dev/null; then eval "$(_PIO_COMPLETE=zsh_source pio)"; fi'
-
 [plugins.kitty-completion]
 inline = 'if command -v kitty >/dev/null; then eval "$(kitty + complete setup zsh)"; fi'
 
