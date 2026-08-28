@@ -6,9 +6,10 @@ Type=notify
 ExecStart=/usr/bin/rclone mount koofr:backups %h/.local/mnt/backups \
   --rc \
   --rc-addr 127.0.0.1:5573 \
-  --vfs-cache-mode writes \
-  --vfs-cache-max-size 1G \
-  --transfers 10 \
-  --checkers 6
+  --vfs-cache-mode full \
+  --vfs-cache-max-size 2G \
+  --transfers 2 \
+  --checkers 2 \
+  --max-connections 5
 ExecStop=/bin/fusermount -u %h/.local/mnt/backups
 Restart=on-failure
