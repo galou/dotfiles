@@ -1,0 +1,6 @@
+[Unit]
+Description=Check the age of the last successful backup with script ~/.local/bin/check-backup-age
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/check-backup-age

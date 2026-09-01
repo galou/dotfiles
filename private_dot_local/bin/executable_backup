@@ -6,6 +6,11 @@ export KEEP_DAILY_COUNT=7
 export KEEP_WEEKLY_COUNT=4
 export KEEP_MONTHLY_COUNT=12
 
+# Directory holding the timestamps of the last successful borg create/prune
+# runs. Read by ~/.local/bin/check-backup-age to tell a failed backup from a
+# failed pruning.
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/backup"
+
 # Setting this, so the repo does not need to be given on the commandline:
 export BORG_REPO=$HOME/.local/mnt/backups/borg
 
@@ -90,6 +95,11 @@ ${BORG_CMD} --version
 
 backup_exit=$?
 
+# Timestamp the successful archive creation for check-backup-age.
+if [ ${backup_exit} -eq 0 ]; then
+  mkdir -p "$STATE_DIR" && touch "$STATE_DIR/last-successful-create"
+fi
+
 info "Pruning repository"
 
 # Use the "prune" subcommand to maintain 7 daily, 4 weekly and 6 monthly
@@ -106,9 +116,10 @@ ${BORG_CMD} prune                          \
 
 prune_exit=$?
 
-# actually free repo disk space by compacting segments
-
-info "Compacting repository"
+# Timestamp the successful pruning for check-backup-age.
+if [ ${prune_exit} -eq 0 ]; then
+  mkdir -p "$STATE_DIR" && touch "$STATE_DIR/last-successful-prune"
+fi
 
 # use highest exit code as global exit code
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))

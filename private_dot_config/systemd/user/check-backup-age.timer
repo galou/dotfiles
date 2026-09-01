@@ -1,0 +1,12 @@
+[Unit]
+Description=Run check-backup-age.service every two hours
+
+[Timer]
+OnCalendar=*-*-* 0/2:00:00
+# Catch up on the check missed while the machine was off or suspended.
+Persistent=true
+# Do not have every two-hour tick happen at the exact same second.
+RandomizedDelaySec=5min
+
+[Install]
+WantedBy=timers.target

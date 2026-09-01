@@ -1,0 +1,74 @@
+#!/bin/bash
+# Check that the last successful run of the backup service is recent enough and
+# notify otherwise.
+#
+# ~/.local/bin/backup timestamps its two steps separately, so the two failure
+# modes can be told apart:
+#   - no recent successful "borg create" -> error   (no fresh backup at all)
+#   - no recent successful "borg prune"  -> warning (backups are fine, but the
+#                                                    repository is not pruned)
+#
+# Run periodically by the check-backup-age.timer systemd user unit.
+#
+# Dependencies: notify-send.
+
+MAX_AGE_HOURS=25
+NOTIFY_TIMEOUT_MS=0  # Never expire, the notification must be acknowledged.
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/backup"
+CREATE_STAMP="$STATE_DIR/last-successful-create"
+PRUNE_STAMP="$STATE_DIR/last-successful-prune"
+
+MAX_AGE_S=$(( MAX_AGE_HOURS * 3600 ))
+NOW=$( date +%s )
+
+# Echo the age in seconds of the timestamp file given as $1.
+# Return 1 (and echo nothing) if the file is missing or unreadable.
+stamp_age () {
+    local mtime
+    mtime=$( stat -c %Y "$1" 2>/dev/null ) || return 1
+    echo $(( NOW - mtime ))
+}
+
+# Echo a human-readable description of the age in seconds given as $1, or
+# "never" if $1 is empty.
+describe_age () {
+    if [[ -z "$1" ]]; then
+        echo "never"
+    else
+        echo "$(( $1 / 3600 )) h ago"
+    fi
+}
+
+# Send the notification with urgency $1, icon $2, summary $3 and body $4.
+# Fall back to the journal if no notification daemon is reachable, e.g. when
+# the timer fires outside of a graphical session.
+notify () {
+    notify-send \
+        --expire-time=$NOTIFY_TIMEOUT_MS \
+        --icon="$2" \
+        --app-name=check-backup-age \
+        --urgency="$1" \
+        --category=device \
+        "$3" "$4" \
+        || printf '%s: %s\n' "$3" "$4" >&2
+}
+
+create_age=$( stamp_age "$CREATE_STAMP" )
+prune_age=$( stamp_age "$PRUNE_STAMP" )
+
+if [[ -z "$create_age" ]] || (( create_age > MAX_AGE_S )); then
+    notify critical dialog-error \
+        "Backup failed" \
+        "No successful backup in the last $MAX_AGE_HOURS h (last one: $( describe_age "$create_age" ))."
+    exit 1
+fi
+
+if [[ -z "$prune_age" ]] || (( prune_age > MAX_AGE_S )); then
+    notify normal dialog-warning \
+        "Backup pruning failed" \
+        "The backups are up to date but the repository has not been pruned in the last $MAX_AGE_HOURS h (last pruning: $( describe_age "$prune_age" ))."
+    exit 0
+fi
+
+exit 0
