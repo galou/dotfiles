@@ -1,58 +1,206 @@
 #!/bin/bash
 # Utility functions for display (output, monitor) management.
+# Managed by chezmoi from
+# ~/.local/share/chezmoi/private_dot_local/share/shell/display-utilities.tmpl.
+#
+# Every function has an X11 (xrandr) and a Wayland/sway (swaymsg) implementation.
+# The relevant one is defined when this file is sourced, so that the callers do
+# not have to care about the session type.
 
-# Return the list of possible outputs (connected or not).
+# Return 0 if a sway compositor is reachable, i.e. if we are on Wayland.
+# $XDG_SESSION_TYPE alone is not enough: it is empty in some contexts and says
+# nothing about swaymsg being usable.
+# Usage: on_wayland
+function on_wayland()
+{
+    command -v swaymsg > /dev/null 2>&1 && swaymsg -t get_version > /dev/null 2>&1
+}
+
+# Return the list of possible outputs (connected or not), one per line.
 # Usage: all_outputs_except OUTPUT
-if [[ "$XDG_SESSION_DESKTOP" =~ sway ]]; then
-    all_outputs_except()
+if on_wayland; then
+    # Sway only knows about connected outputs, disabled ones included.
+    function all_outputs_except()
     {
-        EXCLUDE="$1"
-        swaymsg --raw -t get_outputs | jq '. [] | (.name)' | grep -v -e  "\<$EXCLUDE\>" | tr '\n' ' '
+        swaymsg --raw -t get_outputs \
+            | jq --raw-output --arg exclude "$1" '.[] | select(.name != $exclude) | .name'
     }
 else
-    all_outputs_except()
+    function all_outputs_except()
     {
-        EXCLUDE="$1"
-        xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -e "\<$EXCLUDE\>"
+        # `grep connected` also matches `disconnected`, this is on purpose.
+        xrandr | grep connected | cut --delimiter=' ' --field=1 | grep -v -x -F "$1"
     }
 fi
 
-# Return the list of connected outputs.
-# Usage: connected_display
-if [[ "$XDG_SESSION_DESKTOP" =~ sway ]]; then
-    connected_displays()
+# Return the list of connected outputs, one per line.
+# Usage: connected_displays
+if on_wayland; then
+    function connected_displays()
     {
-        # swaymsg --pretty -t get_outputs | grep 'Output' | cut --delimiter=' ' --field=2
-        swaymsg --raw -t get_outputs | jq '. [] | (.name)' | sed -e 's/"//g'
+        swaymsg --raw -t get_outputs | jq --raw-output '.[] | .name'
     }
 else
-    connected_displays()
+    function connected_displays()
     {
         xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
     }
 fi
 
-# Return the list of connected outputs.
+# Turn an output off.
+# Usage: output_off OUTPUT
+if on_wayland; then
+    function output_off()
+    {
+        swaymsg --quiet output "$1" disable
+    }
+else
+    function output_off()
+    {
+        xrandr --output "$1" --off
+    }
+fi
+
+# Turn an output on at its preferred mode, at the origin of the layout, and make
+# it the primary one. Sway has no notion of primary output, so there it is only
+# turned on.
+# Usage: output_on_primary OUTPUT
+if on_wayland; then
+    function output_on_primary()
+    {
+        swaymsg --quiet output "$1" enable position 0 0
+    }
+else
+    function output_on_primary()
+    {
+        xrandr --output "$1" --auto --primary
+    }
+fi
+
+# Return "WIDTH HEIGHT", the size of an output as it appears in the layout, i.e.
+# in logical pixels (mode size divided by the scaling factor), or nothing if the
+# output is unknown or off.
+# Usage: output_logical_size OUTPUT
+if on_wayland; then
+    function output_logical_size()
+    {
+        swaymsg --raw -t get_outputs \
+            | jq --raw-output --arg output "$1" \
+                '.[] | select(.name == $output and .active) | "\(.rect.width) \(.rect.height)"'
+    }
+else
+    function output_logical_size()
+    {
+        # Pick the WIDTHxHEIGHT+X+Y field of the line describing the output.
+        xrandr | awk -v output="$1" '
+            $1 == output {
+                for (i = 1; i <= NF; i++) {
+                    if ($i ~ /^[0-9]+x[0-9]+\+[0-9]+\+[0-9]+$/) {
+                        split($i, size, /[x+]/)
+                        print size[1], size[2]
+                        exit
+                    }
+                }
+            }'
+    }
+fi
+
+# Turn on two outputs side by side, PRIMARY at the origin of the layout and
+# SECONDARY at the given position relative to it.
+# Usage: place_secondary PRIMARY SECONDARY {left|right|above|below}
+if on_wayland; then
+    function place_secondary()
+    {
+        local PRIMARY="$1"
+        local SECONDARY="$2"
+        local POSITION="$3"
+        local PRIMARY_SIZE SECONDARY_SIZE
+        local PRIMARY_WIDTH PRIMARY_HEIGHT SECONDARY_WIDTH SECONDARY_HEIGHT
+
+        # Both outputs must be on before their size can be queried.
+        swaymsg --quiet output "$PRIMARY" enable
+        swaymsg --quiet output "$SECONDARY" enable
+
+        PRIMARY_SIZE=$(output_logical_size "$PRIMARY")
+        SECONDARY_SIZE=$(output_logical_size "$SECONDARY")
+        if [[ -z "$PRIMARY_SIZE" ]] || [[ -z "$SECONDARY_SIZE" ]]; then
+            echo "place_secondary: cannot get the size of $PRIMARY or $SECONDARY" 1>&2
+            return 1
+        fi
+        read -r PRIMARY_WIDTH PRIMARY_HEIGHT <<< "$PRIMARY_SIZE"
+        read -r SECONDARY_WIDTH SECONDARY_HEIGHT <<< "$SECONDARY_SIZE"
+
+        # Sway has no relative positioning, the offsets have to be computed.
+        case "$POSITION" in
+            left)
+                swaymsg --quiet output "$SECONDARY" position 0 0
+                swaymsg --quiet output "$PRIMARY" position "$SECONDARY_WIDTH" 0
+                ;;
+            right)
+                swaymsg --quiet output "$PRIMARY" position 0 0
+                swaymsg --quiet output "$SECONDARY" position "$PRIMARY_WIDTH" 0
+                ;;
+            above)
+                swaymsg --quiet output "$SECONDARY" position 0 0
+                swaymsg --quiet output "$PRIMARY" position 0 "$SECONDARY_HEIGHT"
+                ;;
+            below)
+                swaymsg --quiet output "$PRIMARY" position 0 0
+                swaymsg --quiet output "$SECONDARY" position 0 "$PRIMARY_HEIGHT"
+                ;;
+            *)
+                echo "place_secondary: unknown position '$POSITION'" 1>&2
+                return 1
+                ;;
+        esac
+    }
+else
+    function place_secondary()
+    {
+        local PRIMARY="$1"
+        local SECONDARY="$2"
+        local RELATION
+
+        case "$3" in
+            left) RELATION=--left-of ;;
+            right) RELATION=--right-of ;;
+            above) RELATION=--above ;;
+            below) RELATION=--below ;;
+            *)
+                echo "place_secondary: unknown position '$3'" 1>&2
+                return 1
+                ;;
+        esac
+
+        xrandr \
+            --output "$PRIMARY" --auto --primary \
+            --output "$SECONDARY" --auto "$RELATION" "$PRIMARY"
+    }
+fi
+
+# Return the list of connected outputs, one per line.
 # Usage: all_connected_outputs_except OUTPUT
-all_connected_outputs_except()
+function all_connected_outputs_except()
 {
-    EXCLUDE="$1"
-    connected_displays | grep -v -e "\<$EXCLUDE\>"
+    connected_displays | grep -v -x -F "$1"
 }
 
 # Usage: best_connected OUT1 OUT2 ...
 # Return the first connected output from the input list
-best_connected()
+function best_connected()
 {
-    CONNECTED_OUTPUTS=$(connected_displays)
-    CANDIDATE_OUTPUTS="$@"
-    for OUTPUT in $(echo $CONNECTED_OUTPUTS | tr '\n' ' '); do
-        RE=\\b$OUTPUT\\b
-        if [[ $CANDIDATE_OUTPUTS =~ $RE ]]; then
-            # If $OUTPUT in $CANDIDATE_OUTPUTS, bash regular expression
-            echo "$OUTPUT"
-            return 0
-        fi
+    local OUTPUT CANDIDATE
+
+    # The candidates are compared one by one rather than flattened into a single
+    # string: a `\b...\b` match over such a string treats `-` as a word
+    # boundary, so a connected HDMI-1 would match the candidate HDMI-1-0.
+    for OUTPUT in $(connected_displays); do
+        for CANDIDATE in "$@"; do
+            if [[ "$OUTPUT" = "$CANDIDATE" ]]; then
+                echo "$OUTPUT"
+                return 0
+            fi
+        done
     done
     return 1
 }

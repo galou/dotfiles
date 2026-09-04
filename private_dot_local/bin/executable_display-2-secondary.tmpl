@@ -1,78 +1,71 @@
 #!/bin/bash
 # Two monitors, secondary on the left, on the right, above or below.
 # Usage: display-2-secondary {left|right|above|below}.
+# Works both on X11 and on Wayland/sway, cf. display-utilities.
 # Managed by chezmoi from ~/.local/share/chezmoi/private_dot_local/bin/executable_display-2-secondary.tmpl.
 
 set -o errexit
 set -o nounset
 
 {{- if index . "external_monitors"}}
-# For `best_connected`, `all_connected_outputs_except`.
+# For `best_connected`, `all_connected_outputs_except`, `output_off`,
+# `output_on_primary`, `place_secondary`.
 {{- else}}
-# For `all_connected_outputs_except`.
+# For `all_connected_outputs_except`, `output_off`, `output_on_primary`,
+# `place_secondary`.
 {{- end}}
-if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
-    source "$HOME/.local/share/shell/display-utilities"
-else
-    return 1
-fi
+source "$HOME/.local/share/shell/display-utilities" || exit 1
 
-# Usage: display_secondary_on {--left-of|--right-of|--above|--below}
+# Usage: display_secondary_on {left|right|above|below}
 display_secondary_on()
 {
     POSITION="$1"
 
     PRIMARY={{.main_monitor}}
     {{- if index . "external_monitors"}}
-    SECONDARY=$(best_connected {{.external_monitors}})
+    # `|| SECONDARY=` because `best_connected` fails when none of the candidates
+    # is connected, which `errexit` would otherwise turn into an early exit,
+    # skipping the fallback below.
+    SECONDARY=$(best_connected {{.external_monitors}}) || SECONDARY=
     {{- else}}
-    # The parentheses make an array.
-    SECONDARY=($(all_connected_outputs_except "$PRIMARY"))
+    # The parentheses make an array. `|| SECONDARY=()` because the underlying
+    # `grep` fails when there is no output besides $PRIMARY, which `errexit`
+    # would otherwise turn into an early exit.
+    SECONDARY=($(all_connected_outputs_except "$PRIMARY")) || SECONDARY=()
     SECONDARY=${SECONDARY[@]:0:1}  # The first element (array[@]:offset:length).
     {{- end}}
 
-    # Turn off all outputs not being cited as primary or secondary.
-    {{- if index . "external_monitors"}}
-    # Also save the first one to use in the case the none of
-    # {{.external_monitors}} is connected.
-    {{- end}}
+{{- if index . "external_monitors"}}
+    if [[ -z "$SECONDARY" ]]; then
+        # None of {{.external_monitors}} is connected, fall back to the first
+        # other connected output, if any.
+        SECONDARY=$(all_connected_outputs_except "$PRIMARY" | head --lines=1)
+    fi
+{{- end}}
+
+    # Turn off all outputs not being cited as primary or secondary. $SECONDARY
+    # must be resolved by now: turning an output off and on again would leave
+    # the workspaces sway moved away from it on the other output.
     for OUTPUT in $(all_connected_outputs_except "$PRIMARY"); do
-        if [[ ! -v FALLBACK ]]; then
-            # If $FALLBACK is not yet defined.
-            FALLBACK="$OUTPUT"
-        fi
-        if [[ "$OUTPUT " != "$SECONDARY" ]]; then
-            xrandr --output "$OUTPUT" --off
+        if [[ "$OUTPUT" != "$SECONDARY" ]]; then
+            output_off "$OUTPUT"
         fi
     done
 
     if [[ -n "$SECONDARY" ]]; then
         # $SECONDARY is not empty.
-        xrandr \
-            --output "$PRIMARY" --auto --primary \
-            --output "$SECONDARY" --auto $POSITION "$PRIMARY"
+        place_secondary "$PRIMARY" "$SECONDARY" "$POSITION"
     else
-        if [[ -v FALLBACK ]]; then
-            # $FALLBACK is defined.
-            xrandr \
-                --output "$PRIMARY" --auto --primary \
-                --output "$FALLBACK" --auto $POSITION "$PRIMARY"
-        else
-            xrandr \
-                --output "$PRIMARY" --auto --primary
-        fi
+        output_on_primary "$PRIMARY"
     fi
 }
 
-if [[ "$1" = left ]]; then
-    display_secondary_on --left-of
-elif [[ "$1" = right ]]; then
-    display_secondary_on --right-of
-elif [[ "$1" = above ]]; then
-    display_secondary_on --above
-elif [[ "$1" = below ]]; then
-    display_secondary_on --below
-else
-    echo Usage: $0 '{left|right|above|below}' 1>&2
-fi
-
+case "${1:-}" in
+    left|right|above|below)
+        display_secondary_on "$1"
+        ;;
+    *)
+        echo "Usage: $(basename "$0") {left|right|above|below}" 1>&2
+        exit 1
+        ;;
+esac

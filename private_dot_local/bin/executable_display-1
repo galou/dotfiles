@@ -1,12 +1,10 @@
 #!/bin/bash
 # One monitor.
 # Usage: display-1 MONITOR
+# Works both on X11 and on Wayland/sway, cf. display-utilities.
 
-if [ -e $HOME/.local/share/shell/display-utilities ]; then
-    source $HOME/.local/share/shell/display-utilities
-else
-    return 1
-fi
+# For `best_connected`, `all_outputs_except`, `output_off`, `output_on_primary`.
+source "$HOME/.local/share/shell/display-utilities" || exit 1
 
 # Usage: display_single OUTPUT
 display_single()
@@ -16,11 +14,11 @@ display_single()
     if ! [[ -z "$PRIMARY" ]]; then
         # Change ouputs only if primary is connected to avoid a blackout.
         # Turn off all outputs not being cited as primary.
-        for OUTPUT in $(all_outputs_except $PRIMARY); do
-            xrandr --output "$OUTPUT" --off
+        for OUTPUT in $(all_outputs_except "$PRIMARY"); do
+            output_off "$OUTPUT"
         done
 
-        xrandr --output "$PRIMARY" --auto --primary
+        output_on_primary "$PRIMARY"
     fi
 }
 
