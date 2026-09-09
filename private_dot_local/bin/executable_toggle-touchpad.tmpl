@@ -5,8 +5,39 @@ exit 0
 {{- else}}
 NOTIFY_TIMEOUT_MS=2000
 
-if [[ "$XDG_SESSION_DESKTOP" =~ "sway" ]]; then
-  swaymsg input type:touchpad events toggle enabled disabled
+if [ -e "$HOME/.local/share/shell/display-utilities" ]; then
+  source "$HOME/.local/share/shell/display-utilities"
+else
+  exit 1
+fi
+
+# Report the state the touchpad ended up in.
+# Usage: notify_touchpad {enabled|disabled}
+notify_touchpad()
+{
+  local ICON
+
+  case "$1" in
+    enabled) ICON=input-touchpad-symbolic.svg ;;
+    disabled) ICON=touchpad-disabled-symbolic.svg ;;
+    *) return 1 ;;
+  esac
+
+  notify-send \
+      --expire-time=$NOTIFY_TIMEOUT_MS \
+      --icon="$HOME/.local/share/icons/$ICON" \
+      --app-name=toggle-touchpad \
+      --urgency=low \
+      --category=device \
+      "Touchpad $1"
+}
+
+if on_wayland; then
+  swaymsg --quiet input type:touchpad events toggle enabled disabled
+  # `events toggle` does not report the state it settled on, so query it.
+  state=$(swaymsg --raw -t get_inputs \
+      | jq --raw-output 'first(.[] | select(.type == "touchpad") | .libinput.send_events)')
+  notify_touchpad "$state"
 else
   DEVICE="{{.touchpad_device}}"
 
@@ -14,23 +45,11 @@ else
   case $enabled in
     0)
       xinput enable "$DEVICE"
-      notify-send \
-          --expire-time=$NOTIFY_TIMEOUT_MS \
-          --icon=$HOME/.local/share/icons/input-touchpad-symbolic.svg \
-          --app-name=toggle-touchpad \
-          --urgency=low \
-          --category=device \
-          "Touchpad enabled"
+      notify_touchpad enabled
       ;;
     1)
       xinput disable "$DEVICE"
-      notify-send \
-          --expire-time=$NOTIFY_TIMEOUT_MS \
-          --icon=$HOME/.local/share/icons/touchpad-disabled-symbolic.svg \
-          --app-name=toggle-touchpad \
-          --urgency=low \
-          --category=device \
-          "Touchpad disabled"
+      notify_touchpad disabled
       ;;
   esac
 fi
