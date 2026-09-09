@@ -233,18 +233,6 @@ function get-ip-wifi()
 }
 {{- end }}
 
-ros_master_local()
-{
-  export ROS_MASTER_URI="http://localhost:11311"
-  export ROS_IP=$(get_ip_eth)
-}
-
-ros_master_host_wifi()
-{
-  export ROS_MASTER_URI="http://$1:11311"
-  export ROS_IP=$(get_ip_wifi)
-}
-
 # cf. http://wiki.ros.org/rosconsole
 function ros_rosconsole_format_default()
 {
