@@ -2,7 +2,7 @@
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/shell/profile.tmpl.
 
 # Prefix PATH with the given directory if not alreay present.
-add-to-path()
+function add-to-path()
 {
   local dir=${1:-}
   [ -n "$dir" ] || return # `-n STRING` → true if `STRING` is **not empty**
@@ -16,7 +16,7 @@ add-to-path()
 {{- if eq .chezmoi.osRelease.versionID "24.04"}}
 
 # Prefix LD_LIBRARY_PATH with the given directory if not alreay present.
-add_to_ld_library_path()
+function add-to-ld-library-path()
 {
   if [ -z "${1}" ]; then
     return
@@ -30,7 +30,7 @@ add_to_ld_library_path()
 {{- end}}
 
 # Prefix XDG_DATA_DIRS with the given directory if not alreay present.
-add_to_xdg_data_dirs()
+function add-to-xdg-data-dirs()
 {
   if [ -z "${1}" ]; then
     return
@@ -78,7 +78,7 @@ add-to-path /opt/drake/bin
 export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
 
 # Flatpak
-add_to_xdg_data_dirs $HOME/.local/share/flatpak/exports/share
+add-to-xdg-data-dirs $HOME/.local/share/flatpak/exports/share
 
 # Add ~/.local/bin with the highest priority.
 add-to-path "$HOME/.local/bin"
@@ -87,7 +87,7 @@ add-to-path "$HOME/.local/bin"
 # Add /usr/local/lib/x86_64-linux-gnu.
 # As of 2024-11-22, this is needed for gtk4-layer-shell that is installed from
 # source on Ubuntu 24.04 (used by swtchr).
-add_to_ld_library_path /usr/local/lib/x86_64-linux-gnu
+add-to-ld-library-path /usr/local/lib/x86_64-linux-gnu
 {{- end}}
 
 # Deactive ctrl-s sending xoff
@@ -191,7 +191,7 @@ fi
 
 {{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
 
-get_ip_first_available()
+function get-ip-first-available()
 {
 {{- if (index . "eth_device")}}
   ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
@@ -210,7 +210,7 @@ get_ip_first_available()
 {{- /* eth_device and wifi_device may be defined in ~/.config/chezmoi/chezmoi.yaml. */}}
 {{- if (index . "eth_device")}}
 
-get_ip_eth()
+function get-ip-eth()
 {
   ip=$(ip address show dev {{.eth_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
   if [ -z "$ip" ]; then
@@ -223,7 +223,7 @@ get_ip_eth()
 
 {{- if (index . "wifi_device")}}
 
-get_ip_wifi()
+function get-ip-wifi()
 {
   ip=$(ip address show dev {{.wifi_device}} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
   if [ -z "$ip" ]; then
@@ -246,17 +246,17 @@ ros_master_host_wifi()
 }
 
 # cf. http://wiki.ros.org/rosconsole
-ros_rosconsole_format_default()
+function ros_rosconsole_format_default()
 {
   export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}'
 }
 
-ros_rosconsole_format_node_message()
+function ros_rosconsole_format_node_message()
 {
     export ROSCONSOLE_FORMAT='[${severity}] [${node}]: ${message}'
 }
 
-conda_activate()
+function conda_activate()
 {
   # >>> conda initialize >>>
   # !! Contents within this block are managed by 'conda init' !!
@@ -275,13 +275,13 @@ conda_activate()
 }
 
 # PlatformIO.
-platformio_activate()
+function platformio_activate()
 {
   add-to-path $HOME/.platformio/penv/bin
 }
 
 # openrobots (https://stack-of-tasks.github.io/pinocchio/download.html)
-openrobots_activate()
+function openrobots_activate()
 {
   export PATH=/opt/openrobots/bin:$PATH
   export PKG_CONFIG_PATH=/opt/openrobots/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -291,32 +291,32 @@ openrobots_activate()
 }
 
 # MP3 manipulation
-mp3_list() {
+function mp3-list() {
   find -mmin -"$1" -exec file "{}" \; | grep Audio | cut -d : -f -1
 }
 
 # fcd file
 # cd to the directory containing file.
-fcd()
+function fcd()
 {
   cd "$(dirname "$1")"
 }
 
 # mkcd directory
 # mkdir directory && cd directory
-mkcd()
+function mkcd()
 {
   mkdir -p "$1" && cd "$1"
 }
 
-weather()
+function weather()
 {
   # Cf. https://github.com/chubin/wttr.in#usage.
   # ?m for metric units.
   curl -Ss 'https://wttr.in?m' || echo "No weather"
 }
 
-psaux()
+function psaux()
 {
   if [[ -z "$1" ]]; then
     ps aux
@@ -327,7 +327,7 @@ psaux()
   fi
 }
 
-psux()
+function psux()
 {
   if [[ -z "$1" ]]; then
     ps ux
@@ -338,17 +338,17 @@ psux()
   fi
 }
 
-extract-images()
+function extract-images()
 {
   ffmpeg -i $1 $1-%05d.jpg -hide_banner
 }
 
-now()
+function now()
 {
   date '+%Y_%m_%d__%H_%M_%S'
 }
 
-today()
+function today()
 {
   date '+%Y_%m_%d'
 }
@@ -366,7 +366,7 @@ function stopwatch()
 # countdown time_in_seconds.
 # Inspired by https://www.unix.com/302302337-post6.html but the original, called with
 # "countdown 00:01:00" e.g. didn't work with zsh.
-countdown()
+function countdown()
 {
   setopt LOCAL_OPTIONS NO_NOTIFY NO_MONITOR
   secs=${1}
@@ -381,7 +381,7 @@ countdown()
   echo
 }
 
-colcon()
+function colcon()
 {
   # Credit goes to https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475.
 

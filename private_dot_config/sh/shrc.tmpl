@@ -31,7 +31,7 @@ export ECLIPSE_HOME=$HOME/.config/eclipse
 export IPYTHONDIR=$HOME/.config/ipython
 export JUPYTER_CONFIG_DIR=$HOME/.config/jupyter
 
-# Matplotlib configuration (instead of ~/.matploblib).
+# Matplotlib configuration (instead of ~/.matplotlib).
 export MPLCONFIGDIR=$HOME/.config/matplotlib
 
 # Personal cheatsheets for cheat.
@@ -167,11 +167,14 @@ psux()
     fi
 }
 
-# connected_displays
-# Return a space separated list of connected displays
-connected_displays()
-{
-    xrandr | grep -v disconnected | grep connected | cut --delimiter=' ' --field=1
-}
 
-export HOST
+# The functions above are named with `_` because dash rejects `-` in function
+# names; these aliases keep the hyphenated names usable.
+alias get-ip-first-available=get_ip_first_available
+{{- if (index . "eth_device")}}
+alias get-ip-eth=get_ip_eth
+{{- end}}
+{{- if (index . "wifi_device")}}
+alias get-ip-wifi=get_ip_wifi
+{{- end}}
+alias mp3-list=mp3_list
