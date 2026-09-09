@@ -1,0 +1,48 @@
+#!/bin/bash
+# Build FreeCAD from the pixi env using the local (DT_RPATH) preset, then make
+# sure the executables really carry DT_RPATH.
+#
+# The preset lives in the checkout's CMakeUserPresets.json, which is gitignored
+# by upstream (.gitignore:2 ".*" / :63 "/CMakeUserPresets.json"), so none of
+# this shows up as a local diff against FreeCAD.
+#
+# Usage:
+#   freecad-build                 build (configures first if needed)
+#   freecad-build --reconfigure   force a reconfigure, then build
+#   freecad-build <ninja args>    e.g. freecad-build -j8
+set -uo pipefail
+
+FREECAD_SRC="${FREECAD_SRC:-$HOME/04-sources/freecad/FreeCAD}"
+PRESET="${FREECAD_PRESET:-conda-linux-debug-local}"
+BUILD_DIR="$FREECAD_SRC/build/debug"
+PIXI="$HOME/.local/bin/pixi"
+
+cd "$FREECAD_SRC" || { echo "freecad-build: no such dir: $FREECAD_SRC" >&2; exit 1; }
+[[ -x "$PIXI" ]] || { echo "freecad-build: pixi not found at $PIXI" >&2; exit 1; }
+
+force_reconfigure=0
+if [[ "${1:-}" == "--reconfigure" ]]; then force_reconfigure=1; shift; fi
+
+# Reconfigure when there is no cache, or the cache was made without the
+# DT_RPATH linker flag (e.g. a previous plain `pixi run configure`).
+need_configure="$force_reconfigure"
+if [[ ! -f "$BUILD_DIR/CMakeCache.txt" ]]; then
+  need_configure=1
+elif ! grep -q -- '--disable-new-dtags' "$BUILD_DIR/CMakeCache.txt"; then
+  need_configure=1
+fi
+
+if (( need_configure )); then
+  echo "freecad-build: configuring with preset '$PRESET'"
+  # Empty *FLAGS mirror what pixi's own configure task does.
+  "$PIXI" run bash -c \
+    "CFLAGS= CXXFLAGS= DEBUG_CFLAGS= DEBUG_CXXFLAGS= cmake --preset '$PRESET'" \
+    || { echo "freecad-build: configure failed" >&2; exit 1; }
+fi
+
+"$PIXI" run build "$@" || { echo "freecad-build: build failed" >&2; exit 1; }
+
+# Belt and braces: if anything relinked with DT_RUNPATH, convert it.
+"$HOME/.local/bin/freecad-fix-rpath" || true
+
+echo "freecad-build: done"

@@ -1,0 +1,52 @@
+#!/bin/bash
+# Ensure FreeCAD's executables carry DT_RPATH rather than DT_RUNPATH.
+#
+# Why: DT_RUNPATH applies only to a binary's own direct dependencies -- it is
+# NOT inherited by libraries loaded further down the chain. The loader searches
+# DT_RPATH, then LD_LIBRARY_PATH, then DT_RUNPATH. So with a sourced ROS 2 setup
+# (which puts /opt/ros/... on LD_LIBRARY_PATH) conda's libcurl/libxslt resolve
+# libssl/libxml2 against /usr instead of the pixi env and fail:
+#   libssl.so.3: version `OPENSSL_3.2.0' not found (required by libcurl.so.4)
+#   libxslt.so.1: undefined symbol: xmlCtxtParseDocument
+# DT_RPATH *is* inherited, so resolution stays inside the env.
+#
+# Only the two executables need patching, not the ~200 .so files: DT_RPATH on
+# the executable participates in resolution for everything loaded in the
+# process.
+#
+# Normally the build already emits DT_RPATH, via the conda-linux-debug-local
+# preset in the checkout's (gitignored) CMakeUserPresets.json. This script is
+# the fallback for binaries linked without it -- e.g. after a plain
+# `pixi run build`. Idempotent, and silent when there is nothing to do.
+set -uo pipefail
+
+BIN_DIR="${FREECAD_BIN_DIR:-$HOME/04-sources/freecad/FreeCAD/build/debug/bin}"
+QUIET="${FREECAD_FIX_RPATH_QUIET:-0}"
+
+note() { [[ "$QUIET" == 1 ]] || printf 'freecad-fix-rpath: %s\n' "$1" >&2; }
+
+if ! command -v patchelf >/dev/null 2>&1; then
+  note "patchelf not found; skipping (sudo apt install patchelf)"
+  exit 0
+fi
+command -v readelf >/dev/null 2>&1 || { note "readelf not found; skipping"; exit 0; }
+
+# Serialise concurrent launches so two processes never rewrite the same binary.
+if command -v flock >/dev/null 2>&1; then
+  exec 9>"${XDG_RUNTIME_DIR:-/tmp}/freecad-fix-rpath.lock" && flock -w 10 9 || true
+fi
+
+rc=0
+for b in "$BIN_DIR/FreeCAD" "$BIN_DIR/FreeCADCmd"; do
+  [[ -f "$b" && -w "$b" ]] || continue
+  readelf -d "$b" 2>/dev/null | grep -q '(RUNPATH)' || continue   # already RPATH
+  rp=$(patchelf --print-rpath "$b" 2>/dev/null) || continue
+  [[ -n "$rp" ]] || continue
+  if patchelf --force-rpath --set-rpath "$rp" "$b" 2>/dev/null; then
+    note "$(basename "$b"): DT_RUNPATH -> DT_RPATH"
+  else
+    note "$(basename "$b"): patchelf failed"
+    rc=1
+  fi
+done
+exit "$rc"
