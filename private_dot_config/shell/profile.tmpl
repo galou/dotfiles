@@ -2,16 +2,16 @@
 # This file is managed by chezmoi, its source is ~/.local/share/chezmoi/private_dot_config/shell/profile.tmpl.
 
 # Prefix PATH with the given directory if not alreay present.
-add_to_path()
+add-to-path()
 {
-  if [ -z "${1}" ]; then
-    return
-  fi
-  if [ -n "${PATH##*${1}}" -a -n "${PATH##*${1}:*}" ]; then
-    if [ -d "${1}" ] ; then
-      export PATH="${1}":$PATH
-    fi
-  fi
+  local dir=${1:-}
+  [ -n "$dir" ] || return # `-n STRING` → true if `STRING` is **not empty**
+  [ -d "$dir" ] || return # `-d PATH` → true if `PATH` exists and is a **directory**
+
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) export PATH="$dir:$PATH" ;;
+  esac
 }
 {{- if eq .chezmoi.osRelease.versionID "24.04"}}
 
@@ -49,7 +49,7 @@ export NPM_PACKAGES="$HOME/.cache/npm-global"
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 # set PATH so it includes npm bin.
-add_to_path "$NPM_PACKAGES/bin"
+add-to-path "$NPM_PACKAGES/bin"
 
 {{- /* Remove this because it adds  almost 500 ms to the shell startup time
 # https://github.com/nvm-sh/nvm/blob/master/README.md
@@ -59,21 +59,21 @@ export NVM_DIR=$HOME/.local/share/nvm
 */}}
 
 # Prefix /usr/lib/ccache to use ccache by default
-add_to_path /usr/lib/ccache
+add-to-path /usr/lib/ccache
 
-add_to_path "$HOME/snap/rustup/common/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin"
-add_to_path "$HOME/go/bin"
-add_to_path "$HOME/.cargo/bin"
+add-to-path "$HOME/snap/rustup/common/rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin"
+add-to-path "$HOME/go/bin"
+add-to-path "$HOME/.cargo/bin"
 {{/* This is not installed
-add_to_path "$HOME/.modular/bin"
+add-to-path "$HOME/.modular/bin"
 
 # Mojo (modular).
 export MODULAR_HOME="$HOME/.local/share/modular"
-add_to_path "$MODULAR_HOME/pkg/packages.modular.com_mojo/bin"
+add-to-path "$MODULAR_HOME/pkg/packages.modular.com_mojo/bin"
 */}}
 
 # Drake (https://drake.mit.edu/).
-add_to_path /opt/drake/bin
+add-to-path /opt/drake/bin
 # export PYTHONPATH="/opt/drake/lib/python$(python3 -c 'import sys; print("{0}.{1}".format(*sys.version_info))')/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHONPATH}}"
 
@@ -81,7 +81,7 @@ export PYTHONPATH="/opt/drake/lib/python3.10/site-packages${PYTHONPATH:+:${PYTHO
 add_to_xdg_data_dirs $HOME/.local/share/flatpak/exports/share
 
 # Add ~/.local/bin with the highest priority.
-add_to_path "$HOME/.local/bin"
+add-to-path "$HOME/.local/bin"
 {{- if eq .chezmoi.osRelease.versionID "24.04"}}
 
 # Add /usr/local/lib/x86_64-linux-gnu.
@@ -277,7 +277,7 @@ conda_activate()
 # PlatformIO.
 platformio_activate()
 {
-  add_to_path $HOME/.platformio/penv/bin
+  add-to-path $HOME/.platformio/penv/bin
 }
 
 # openrobots (https://stack-of-tasks.github.io/pinocchio/download.html)
