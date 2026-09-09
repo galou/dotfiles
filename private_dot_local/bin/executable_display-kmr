@@ -10,24 +10,18 @@ else
   return 1
 fi
 
-displays=($(connected_displays))
 edp1_scale=1.6
 
-if [[ "${displays[@]}" -regex-match DP-5 ]]; then
-  external_display="DP-5"
-elif [[ "${displays[@]}" -regex-match DP-6 ]]; then
-  external_display="DP-6"
-else
-  external_display="not_found"
-fi
+# The external screen sits on DP-5 or, when docked differently, on DP-6.
+external_display=$(best_connected DP-5) || external_display=$(best_connected DP-6)
 
-if [[ "${displays[@]}" -regex-match eDP-1 ]]; then
-  # Align the centers of eDP-1 and DP-5 in y direction.
+if best_connected eDP-1 > /dev/null; then
+  # Align the centers of eDP-1 and the external display in y direction.
   y=$(( 1440 / 2.0 - 1920 / $edp1_scale / 2.0))
   swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 $y
 fi
 
-if [[ "${displays[@]}" -regex-match "$external_display" ]]; then
+if [[ -n "$external_display" ]]; then
   x=$(( 3072 / $edp1_scale ))
   swaymsg output "$external_display" mode 2560x1440@60Hz scale 1.0 position $x 0
   # Save the current workspace number.
