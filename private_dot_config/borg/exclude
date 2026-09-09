@@ -13,6 +13,7 @@ sh:home/*/.autojump.vim
 sh:home/*/.bash_history
 sh:home/*/.bashrc
 sh:home/*/.cache
+sh:home/*/.config/mozilla
 sh:home/*/.local/mnt
 sh:home/*/.local/share/Trash
 sh:home/*/.local/share/gvfs-metadata
