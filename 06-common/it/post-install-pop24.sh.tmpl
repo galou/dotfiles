@@ -73,6 +73,7 @@ sudo apt install \
   imagemagick \{{/* Image manipulation software */}}
   iw \{{/* WiFi tools */}}
   jabref \{{/* Reference manager (BibTeX) */}}
+  jp \{{/* Command-line JSON processor, interface to JMESPath */}}
   jq \{{/* Command-line JSON processor */}}
   kdeconnect \{{/* Connect your phone with your computer */}}
   kdenlive \{{/* Video editor */}}
@@ -152,7 +153,8 @@ sudo snap install \
   freetube \
   glow \{{/* markdown viewer (https://github.com/charmbracelet/glow). */}}
   telegram-desktop \
-  zasper{{/* jupyterlab alternative */}}
+  zasper \{{/* jupyterlab alternative */}}
+  zellij{{/* Terminal workspace manager */}}
 
 flatpak install \
   com.prusa3d.PrusaSlicer \
@@ -183,6 +185,7 @@ sudo apt install \
   clangd \
   cmake-curses-gui \
   colorized-logs \
+  cpufreq-utils \{{/* CPU frequency utilities */}}
   docker-buildx \
   docker-compose-v2 \
   docker.io \
@@ -198,6 +201,7 @@ sudo apt install \
   golang-go \
   grc \
   heaptrack-gui \
+  i7z \{{/* Intel CPU monitoring tool */}}
   ipython3 \
   jupyter-console \
   jupyter-core \
@@ -205,11 +209,15 @@ sudo apt install \
   jupyter-notebook \
   liblua5.4-dev \
   libpython3.12-dev \
+  linux-tools-common \{{/* Linux kernel tools */}}
   lld \{{/* LLVM linker */}}
   luarocks \
   mold \{{/* Linker. */}}
   mosh \{{/* Mobile shell, remote shell that automatically reconnects without interrupting the session.*/}}
+  mysql-client-core-8.0 \{{/* MySQL client. */}}
+  patchelf \{{/* Modify ELF binaries. */}}
   pipenv \{{/* Python virtual environment manager. */}}
+  powercap-utils \{{/* Power capping utilities */}}
   pre-commit \{{/* Pre-commit hooks for git. */}}
   python3-anyio \{{/* Async I/O library for Python. For jupyterlab */}}
   python3-arrow \{{/* Date and time library for Python. For jupyterlab */}}
@@ -218,7 +226,9 @@ sudo apt install \
   python3-h11 \{{/* HTTP/1.1 library for Python. For jupyterlab */}}
   python3-httpcore \{{/* Low-level HTTP client for Python. For jupyterlab */}}
   python3-httpx \{{/* HTTP client for Python. For jupyterlab */}}
+  python3-janus \{{/* Async queue for Python. For Open3D (indirectly because of dash) */}}
   python3-json5 \{{/* JSON5 library for Python. For jupyterlab */}}
+  python3-jsonpatch \{{/* JSON patch library for Python. */}}
   python3-jsonschema \{{/* JSON Schema library for Python. For jupyterlab */}}
   python3-jsonschema-specifications \{{/* JSON Schema specifications for Python. For jupyterlab */}}
   python3-jupyter-events \{{/* Jupyter events library for Python. For jupyterlab */}}
@@ -230,12 +240,19 @@ sudo apt install \
   python3-pickleshare \
   python3-plotly \
   python3-pyfuse3 \{{/* Python bindings for FUSE3. For borg. */}}
+  python3-pyglet \{{/* Python library for OpenGL graphics. Optional dependency of trimesh */}}
   python3-pyperclip \
   python3-referencing \{{/* JSON reference resolution library for Python. For jupyterlab */}}
   python3-rocker \
+  python3-sklearn \{{/* Machine learning library for Python. For Open3D */}}
+  python3-tqdm \{{/* Progress bar library for Python. For Open3D */}}
+  python3-typing-extensions \{{/* Backport of typing extensions for Python. For Open3D */}}
   python3-websocket \{{/* WebSocket library for Python. For jupyterlab */}}
+  python3-werkzeug \{{/* WSGI utility library for Python. For Open3D (indirectly because of dash) */}}
   python3-wxgtk4.0 \
+  s-tui \{{/* Terminal UI for monitoring CPU temperature and frequency */}}
   socat \{{/* Multipurpose relay (SOcket CAT). */}}
+  stress-ng \{{/* Stress test tool */}}
   tig \{{/* Text-mode interface for git. */}}
   vcstool \
   wireshark
@@ -243,6 +260,19 @@ sudo apt install \
 pip install --break-system-packages \
   jupyterlab \
   jupytext
+
+pipx install claude-chat-to-md
+pipx install jsondiff
+
+# Open3D library
+# http://www.open3d.org/
+# `python3-pydantic` apt package is too old
+# `python3-typing-extensions` apt package (v4.10 on 24.04) is too old
+pip install --no-deps --break-system-packages addict dash open3d pydantic==2.13 pydantic-core==2.46 typing-extensions==4.16 typing-inspection
+
+# Trimesh, mesh manipulation library
+# https://trimesh.org
+pip install --no-deps --break-system-packages trimesh
 
 # Lazydocker, terminal UI for docker
 # https://github.com/jesseduffield/lazydocker
@@ -344,9 +374,12 @@ sudo apt update \
     python3-rosdep \
     python3-streamz \
     python3-watchdog \
+    python3-networkx \{{/* For dear-ros-node-viewer */}}
     ros-${ROS_DISTRO}-cv-bridge \
     ros-${ROS_DISTRO}-desktop \
     ros-${ROS_DISTRO}-rmf-utils \
+    ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+    ros-${ROS_DISTRO}-rviz-imu-plugin \
     ros-${ROS_DISTRO}-topic-tools \
     ros-${ROS_DISTRO}-warehouse-ros-sqlite \
   && pipx install rotop \
@@ -358,9 +391,29 @@ sudo apt update \
   && rosdep update
 mkdir --parents $HOME/04-sources/ros \
   && git clone --recursive https://github.com/Martin-Oehler/ros2cd.git $HOME/04-sources/ros/ros2cd
+
 # ros2probe, non-intrusive ROS2 introspection tool (ala `ros2 bag record` or `ros2 topic echo` but without subscribing to the topic).
 # https://github.com/csi-dgist/ros2probe
 curl -fsSL https://github.com/csi-dgist/ros2probe/releases/latest/download/install.sh | sh -s -- --gui
+
+# ros-glint
+# https://github.com/MetroRobots/ros_glint
+pipx install ros-glint
+
+# Bubblify, URDF spherization tool
+# https://github.com/bheijden/bubblify
+pipx install bubblify
+
+# CoACD, Approximate Convex Decomposition for 3D Meshes
+# https://github.com/SarahWeiii/CoACD
+pipx install coacd
+
+# Dear-ros-node-viewer, ROS2 node graph viewer
+pip install --no-deps --break-system-packages dearpygui
+pip install --no-deps --break-system-packages dear-ros-node-viewer
+
+# Draco, 3D mesh compression library
+# https://google.github.io/draco/
 
 ## Mounch (https://github.com/chmouel/mounch).
 mkdir --parents $SOURCES \
@@ -379,6 +432,7 @@ mkdir /tmp/webots \
 sudo apt install python3-git
 sudo add-apt-repository ppa:freecad-maintainers/freecad-daily \
   && sudo apt-get install freecad-daily
+pipx install freecad-robust-mcp
 
 ## i3blocks-pomodoro.
 mkdir --parents $HOME/04-sources/i3 \
@@ -475,6 +529,9 @@ curl -fsSL https://pixi.sh/install.sh | zsh \
 
 ## Cookiecutter, create projects from templates (https://cookiecutter.readthedocs.io/en/stable/index.html).
 pipx install cookiecutter
+
+## coloredlogs, colored log output for Python (https://pypi.org/project/coloredlogs/).
+pipx install coloredlogs
 
 ## O3DE from source (https://o3de.org/).
 mkdir --parents $HOME/04-sources/o3de \
@@ -596,6 +653,27 @@ mkdir --parents /tmp/bnc-2.13.6 \
   && popd >/dev/null \
   && rm -rf /tmp/bnc
 
+## OAK Viewer from Luxonis
+# https://docs.luxonis.com/software-v3/depthai/tools/oak-viewer/
+curl -L 'https://oak-viewer-releases.luxonis.com/data/3.8.2/debian_x86_64/viewer.deb' --output /tmp/oak-viewer.deb \
+  && sudo apt install /tmp/oak-viewer.deb \
+  && rm -f /tmp/oak-viewer.deb
+
+## Open3D mesh viewer
+# https://www.open3d.org/
+OPEN3D_VIEWER_VERSION=$(curl -s "https://api.github.com/repos/isl-org/Open3D/releases/latest" | grep -Po '"tag_name": *"v\K[^"]*') \
+  && mkdir --parents /tmp/open3d-viewer \
+  && pushd /tmp/open3d-viewer >/dev/null \
+  && curl -Lo open3d-viewer.deb "https://github.com/isl-org/Open3D/releases/download/main-devel/open3d-viewer-${OPEN3D_VIEWER_VERSION}-Linux.deb" \
+  && sudo apt install /tmp/open3d-viewer/open3d-viewer.deb \
+  && popd >/dev/null \
+  && rm -rf /tmp/open3d-viewer
+
+
+# CROC, secure file transfer
+# https://github.com/schollz/croc
+curl https://getcroc.com | bash
+
 # Configuration.
 
 echo -n $HOSTNAME | sudo tee /etc/hostname >/dev/null
@@ -605,6 +683,19 @@ rfkill unblock all
 
 # Configure timezone
 sudo ln -fs /usr/share/zoneinfo/Europe/Prague /etc/localtime
+
+# Use https://github.com/galou/local_bin.git
+mkdir --parents $HOME/.cache \
+  && git clone https://github.com/galou/local_bin.git \
+  && ln -s $HOME/.cache/local_bin/bluetooth-disconnect $HOME/.local/bin/bluetooth-disconnect \
+  && ln -s $HOME/.cache/local_bin/csv2freecad $HOME/.local/bin/csv2freecad \
+  && ln -s $HOME/.cache/local_bin/fc-draw-character $HOME/.local/bin/fc-draw-character \
+  && ln -s $HOME/.cache/local_bin/fc-search-codepoint $HOME/.local/bin/fc-search-codepoint \
+  && ln -s $HOME/.cache/local_bin/fullfil_player_dirs $HOME/.local/bin/fullfil_player_dirs \
+  && ln -s $HOME/.cache/local_bin/rename_from_id3 $HOME/.local/bin/rename_from_id3 \
+  && ln -s $HOME/.cache/local_bin/rename_picture $HOME/.local/bin/rename_picture \
+  && ln -s $HOME/.cache/local_bin/thumbnail_dir $HOME/.local/bin/thumbnail_dir \
+  && ln -s $HOME/.cache/local_bin/thunderbird-compose $HOME/.local/bin/thunderbird-compose
 
 # Configure default applications
 xdg-mime default org.gnome.eog.desktop image/jpeg
