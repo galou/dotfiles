@@ -109,9 +109,9 @@ weather()
 
 psaux()
 {
-    if [[ -z "$1" ]]; then
+    if [ -z "$1" ]; then
         ps aux
-    elif [[ "$1"  = grep ]]; then
+    elif [ "$1"  = grep ]; then
         ps aux | grep grep
     else
         ps aux | grep -v grep | grep "$1"
@@ -120,9 +120,9 @@ psaux()
 
 psux()
 {
-    if [[ -z "$1" ]]; then
+    if [ -z "$1" ]; then
         ps ux
-    elif [[ "$1" = grep ]]; then
+    elif [ "$1" = grep ]; then
         ps ux | grep grep
     else
         ps ux | grep -v grep | grep "$1"
