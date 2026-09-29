@@ -9,6 +9,8 @@
 .local/share/rofi/rofi-locate.sh.rst
 .local/share/rofi/rofi-wifi.rst
 .local/share/zsh/site-functions/pip3.rst
+etc/
+install-autofs.sh
 usr/
 README.rst
 
