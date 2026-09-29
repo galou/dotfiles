@@ -1,7 +1,3 @@
-# Ignore until chezmoi_modify_manager is solved
-snap/prusa-slicer/60/private_dot_config/PrusaSlicer/PrusaSlicer.ini
-
-.config/PrusaSlicer/PrusaSlicer-to_be_symlinked.ini
 .config/duplicity/passphrase.sh
 .config/i3/README.rst
 .config/i3/layouts/README.rst
@@ -20,18 +16,11 @@ README.rst
 **/*.src.ini
 
 {{- if ne .chassis_type "laptop"}}
-.local/bin/notify-airplane-mode-status
-{{- end}}
-
-{{- if ne .chezmoi.hostname "pcgael4"}}
-.Xresources
-{{- end}}
-
-{{- if ne .chassis_type "laptop"}}
 .local/bin/display-1
-.local/bin/display-1-laptop
 .local/bin/display-1-external
+.local/bin/display-1-laptop
 .local/bin/display-2-secondary
 .local/bin/display-2-secondary-left
 .local/bin/display-2-secondary-right
+.local/bin/notify-airplane-mode-status
 {{- end}}
