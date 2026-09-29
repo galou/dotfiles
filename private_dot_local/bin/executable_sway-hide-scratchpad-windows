@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+scratchpad_ids=$(swaymsg -t get_tree | jq -r '
+  .. | objects
+  | select((.scratchpad_state? // "none") != "none" and .visible == true)
+  | .id
+')
+
+while IFS= read -r id; do
+  [[ -z "$id" ]] || swaymsg "[con_id=$id] scratchpad show" >/dev/null
+done <<< "$scratchpad_ids"

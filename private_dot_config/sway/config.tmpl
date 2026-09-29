@@ -48,6 +48,7 @@
 # Custom dependencies:
 #   ~/.config/i3/i3-startup-layout.sh (this repo)
 #   ~/.local/bin/i3-rename-workspace (this repo)
+#   ~/.local/bin/sway-hide-scratchpad-windows (this repo)
 #   ~/.local/bin/notify-airplane-mode-status (this repo)
 #   ~/.local/bin/notify-mic-status (this repo)
 #   ~/.local/bin/screencast (this repo)
@@ -230,6 +231,7 @@ bindsym $mod+Shift+minus move scratchpad
 # Show the next scratchpad window or hide the focused scratchpad window.
 # If there are multiple scratchpad windows, this command cycles through them.
 bindsym $mod+minus scratchpad show
+bindsym $mod+b exec $HOME/.local/bin/sway-hide-scratchpad-windows
 
 # switch to workspace
 bindsym $mod+1 workspace number 1
