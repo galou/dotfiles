@@ -18,12 +18,12 @@ external_display=$(best_connected DP-5) || external_display=$(best_connected DP-
 if best_connected eDP-1 > /dev/null; then
   # Align the centers of eDP-1 and the external display in y direction.
   y=$(( 1440 / 2.0 - 1920 / $edp1_scale / 2.0))
-  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 $y
+  swaymsg output eDP-1 enable mode 3072x1920@60.001Hz scale $edp1_scale position 0 $y
 fi
 
 if [[ -n "$external_display" ]]; then
   x=$(( 3072 / $edp1_scale ))
-  swaymsg output "$external_display" mode 2560x1440@60Hz scale 1.0 position $x 0
+  swaymsg output "$external_display" enable mode 2560x1440@60Hz scale 1.0 position $x 0
   # Save the current workspace number.
   current_workspace=$(swaymsg -t get_workspaces | jq '.[] | select(.focused==true) | .num')
   # Move the current workspace to the external display.

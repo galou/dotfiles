@@ -13,7 +13,7 @@ external_height=1440
 external_scale=1.0
 
 if [[ -n "$external_display" ]]; then
-  swaymsg output $external_display mode ${external_width}x${external_height}@60Hz scale $external_scale position 0 0
+  swaymsg output $external_display enable mode ${external_width}x${external_height}@60Hz scale $external_scale position 0 0
   # Save the current workspace number.
   current_workspace=$(swaymsg -t get_workspaces | jq '.[] | select(.focused==true) | .num')
   swaymsg 'workspace number 2; move workspace to '"$external_display"
@@ -30,5 +30,5 @@ else
 fi
 
 if best_connected eDP-1 > /dev/null; then
-  swaymsg output eDP-1 mode 3072x1920@60.001Hz scale $edp1_scale position 0 $edp1_pos_y
+  swaymsg output eDP-1 enable mode 3072x1920@60.001Hz scale $edp1_scale position 0 $edp1_pos_y
 fi
