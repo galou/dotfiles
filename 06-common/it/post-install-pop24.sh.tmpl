@@ -73,6 +73,7 @@ sudo apt install \
   imagemagick \{{/* Image manipulation software */}}
   iw \{{/* WiFi tools */}}
   jabref \{{/* Reference manager (BibTeX) */}}
+  jhead \{{/* JPEG header manipulation */}}
   jp \{{/* Command-line JSON processor, interface to JMESPath */}}
   jq \{{/* Command-line JSON processor */}}
   kdeconnect \{{/* Connect your phone with your computer */}}
@@ -90,6 +91,7 @@ sudo apt install \
   mpv \{{/* Media player */}}
   mtools \{{/* Access to MS-DOS disks */}}
   musescore3 \{{/* Music notation software */}}
+  nmap \{{/* Network scanner */}}
   npm \
   obs-studio \
   openscad \
@@ -124,7 +126,7 @@ sudo apt install \
   texlive-extra-utils \
   texlive-xetex \
   timg \
-  trash-cli \
+  trash-cli \{{/* trash-put and trash-empty commands */}}
   tree \
   tree-sitter-cli \{{/* Syntax parsing */}}
   udiskie \{{/* Automounting of disks */}}
@@ -250,6 +252,7 @@ sudo apt install \
   python3-websocket \{{/* WebSocket library for Python. For jupyterlab */}}
   python3-werkzeug \{{/* WSGI utility library for Python. For Open3D (indirectly because of dash) */}}
   python3-wxgtk4.0 \
+  rpi-imager \{{/* ISO image writer for Raspberry Pi */}}
   s-tui \{{/* Terminal UI for monitoring CPU temperature and frequency */}}
   socat \{{/* Multipurpose relay (SOcket CAT). */}}
   stress-ng \{{/* Stress test tool */}}
@@ -263,6 +266,9 @@ pip install --break-system-packages \
 
 pipx install claude-chat-to-md
 pipx install jsondiff
+
+pipx install odrive
+curl https://cdn.odriverobotics.com/files/odrive-udev-rules.rules > /etc/udev/rules.d/91-odrive.rules && udevadm control --reload-rules && udevadm trigger
 
 # Open3D library
 # http://www.open3d.org/
@@ -420,10 +426,10 @@ mkdir --parents $SOURCES \
   && git clone --recursive https://github.com/chmouel/mounch $SOURCES/mounch-rofi_replacement \
   && ln -s $SOURCES/mounch-rofi_replacement/mounch.py $HOME/.local/bin/mounch
 
-## Webots 2023a.
+## Webots 2025a.
 mkdir /tmp/webots \
   && pushd /tmp/webots >/dev/null \
-  && curl -Lo /tmp/webots/webots.deb 'https://github.com/cyberbotics/webots/releases/download/R2023a/webots_2023a_amd64.deb' \
+  && curl -Lo /tmp/webots/webots.deb 'https://github.com/cyberbotics/webots/releases/download/R2025a/webots_2025a_amd64.deb' \
   && sudo apt install /tmp/webots/webots.deb \
   && popd >/dev/null \
   && rm -rf /tmp/webots
@@ -603,8 +609,6 @@ curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc | sudo tee /etc
 # The ROS version can also be installed
 #sudo apt install --yes ros-${ROS_DISTRO}-pinocchio
 
-EOF
-
 ## Google Gemini CLI.
 # https://github.com/google-gemini/gemini-cli
 npm install -g @google/gemini-cli
@@ -677,6 +681,17 @@ curl https://getcroc.com | bash
 # Herdr, terminal for agents
 curl -fsSL https://herdr.dev/install.sh | sh
 
+
+## Alternative installation for Zellij
+# https://zellij.dev/
+ZELLIJ_VERSION=$(curl -s "https://api.github.com/repos/zellij-org/zellij/releases/latest" | grep -Po '"tag_name": *"v\K[^"]*') \
+  && mkdir --parents /tmp/zellij \
+  && pushd /tmp/zellij >/dev/null \
+  && curl -Lo zellij.tar.gz "https://github.com/zellij-org/zellij/releases/download/v${ZELLIJ_VERSION}/zellij-x86_64-unknown-linux-musl.tar.gz" \
+  && tar xf zellij.tar.gz \
+  && sudo install -Dm755 zellij /usr/local/bin/zellij \
+  && popd >/dev/null \
+  && rm -rf /tmp/zellij
 
 # Configuration.
 
@@ -774,6 +789,14 @@ mkdir --parents $HOME/.local/share/fonts/GoogleFonts/Parisienne \
   && wget 'https://github.com/google/fonts/raw/refs/heads/main/ofl/parisienne/Parisienne-Regular.ttf' \
   && wget 'https://github.com/google/fonts/raw/refs/heads/main/ofl/parisienne/OFL.txt' \
   && popd >/dev/null \
+  && fc-cache
+# Helvetica, from https://github.com/Kyles-World/Helvetica-Font.git
+mkdir --parents /tmp/helvetica \
+  && pushd /tmp/helvetica >/dev/null \
+  && git clone https://github.com/Kyles-World/Helvetica-Font.git \
+  && cp "Helvetica-Font/Helvetica\ World\ \(Unicode\)/* " $HOME/.local/share/fonts \
+  && popd >/dev/null \
+  && rm -rf /tmp/helvetica \
   && fc-cache
 
 ## Yazi.
