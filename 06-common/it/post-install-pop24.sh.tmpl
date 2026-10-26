@@ -674,6 +674,10 @@ OPEN3D_VIEWER_VERSION=$(curl -s "https://api.github.com/repos/isl-org/Open3D/rel
 # https://github.com/schollz/croc
 curl https://getcroc.com | bash
 
+# Herdr, terminal for agents
+curl -fsSL https://herdr.dev/install.sh | sh
+
+
 # Configuration.
 
 echo -n $HOSTNAME | sudo tee /etc/hostname >/dev/null

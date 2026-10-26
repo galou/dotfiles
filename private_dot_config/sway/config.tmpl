@@ -389,6 +389,7 @@ bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command 
 {{- else}}
 bindsym $mod+i exec $HOME/.cargo/bin/sway-scratchpad --mark terminals --command kitty
 {{- end}}
+bindsym $mod+u exec $HOME/.cargo/bin/sway-scratchpad --mark herdr --command "kitty -- $HOME/.local/bin/herdr"
 bindsym $mod+Shift+i exec inkscape
 bindsym $mod+m exec $HOME/.cargo/bin/sway-scratchpad --mark music --command "vlc /home/gael/Music/fip-monde.m3u"
 bindsym $mod+Shift+m exec $HOME/.cargo/bin/sway-scratchpad --mark divercities --command "brave-browser --user-data-dir=$HOME/.config/BraveSoftware/Divercities"
