@@ -20,7 +20,7 @@
 # `pixi run build`. Idempotent, and silent when there is nothing to do.
 set -uo pipefail
 
-BIN_DIR="${FREECAD_BIN_DIR:-$HOME/04-sources/freecad/FreeCAD/build/debug/bin}"
+BIN_DIR="${FREECAD_BIN_DIR:-$HOME/04-sources/freecad/FreeCAD/build/relWithDebInfo/bin}"
 QUIET="${FREECAD_FIX_RPATH_QUIET:-0}"
 
 note() { [[ "$QUIET" == 1 ]] || printf 'freecad-fix-rpath: %s\n' "$1" >&2; }

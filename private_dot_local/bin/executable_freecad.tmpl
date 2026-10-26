@@ -2,7 +2,7 @@
 
 PIXI_MANIFEST="$HOME/04-sources/freecad/FreeCAD/pixi.toml"
 PIXI_ENV="$HOME/04-sources/freecad/FreeCAD/.pixi/envs/default"
-CMD=($HOME/.local/bin/pixi run --manifest-path "$PIXI_MANIFEST" freecad-debug)
+CMD=($HOME/.local/bin/pixi run --manifest-path "$PIXI_MANIFEST" freecad-rel-with-deb-info)
 
 # Keep conda's transitive dependencies resolving inside the pixi env rather
 # than against /usr, which otherwise breaks ifcopenshell (libcurl -> libssl)
