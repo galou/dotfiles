@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROFILE=messages
+
+/usr/bin/firefox -P "$PROFILE" "$@" > /dev/null

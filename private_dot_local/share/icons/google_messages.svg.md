@@ -1,0 +1,1 @@
+From [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Google_Messages_icon_%282022%29.svg) in [SVG format](https://upload.wikimedia.org/wikipedia/commons/6/67/Google_Messages_icon_%282022%29.svg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original).
