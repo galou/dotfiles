@@ -12,6 +12,7 @@
 etc/
 install-autofs.sh
 usr/
+CLAUDE.md
 README.rst
 
 # Files for generation with plugin `chezmoi_modify_manager`.
