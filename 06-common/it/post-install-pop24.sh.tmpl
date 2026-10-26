@@ -573,6 +573,13 @@ mkdir --parents $HOME/.local/share/meshroom/lib/nodes \
 ## Node.js 24 (otherwise 18 is installed).
 curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
 
+## Deno, JavaScript, TypeScript, and WebAssembly runtime
+# https://deno.com/
+curl -fsSL https://deno.land/install.sh | sh \
+  && mv ~/.deno/bin/deno ~/.local/bin \
+  && rm -rf ~/.deno
+
+
 ## `gr` multi-repo management.
 # https://github.com/mixu/gr
 npm install -g git-run
