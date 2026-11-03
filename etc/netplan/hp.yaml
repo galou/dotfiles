@@ -1,0 +1,18 @@
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    hp:
+      renderer: NetworkManager
+      match:
+        macaddress: "84:3A:5B:44:7A:07"
+      dhcp4: true
+      set-name: "hp"
+      ipv6-address-generation: "stable-privacy"
+      networkmanager:
+        uuid: "a1e62449-5282-3361-b628-2bad993ab7f8"
+        name: "hp_dhcp"
+        passthrough:
+          connection.timestamp: "1787663900"
+          ipv6.method: "ignore"
+          proxy._: ""
