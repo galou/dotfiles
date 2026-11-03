@@ -1,0 +1,39 @@
+#!/bin/bash
+# Open the captive portal of the current network.
+#
+# Tailscale's MagicDNS routes all DNS queries (`~.`) to 100.100.100.100, which
+# times out behind a captive portal, so Tailscale is stopped until the portal
+# login gives full connectivity, then started again.
+#
+# Alternatively, `tailscale up --accept-dns=true` (this will fail because default
+# parameters are missing but `tailscale` will propose the command to use).
+#
+# Dependencies: nmcli, ip, xdg-open, notify-send, tailscale.
+# `tailscale up/down` without sudo needs, once: `sudo tailscale set --operator=$USER`.
+
+TIMEOUT_S=600
+
+tailscale_was_up=false
+if tailscale status >/dev/null 2>&1; then
+    tailscale_was_up=true
+    tailscale down
+fi
+
+gateway=$(ip route show default | awk '{print $3; exit}')
+if [ -z "$gateway" ]; then
+    notify-send --app-name=captive-portal "Captive portal" "No default gateway"
+    $tailscale_was_up && tailscale up
+    exit 1
+fi
+
+xdg-open "http://$gateway/"
+
+if $tailscale_was_up; then
+    for ((i = 0; i < TIMEOUT_S; i += 5)); do
+        if [ "$(nmcli networking connectivity check)" = full ]; then
+            break
+        fi
+        sleep 5
+    done
+    tailscale up
+fi
