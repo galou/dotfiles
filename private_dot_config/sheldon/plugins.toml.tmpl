@@ -18,6 +18,11 @@ shell = "zsh"
 local = "~/.config/shell"
 use = ["profile"]
 
+[plugins.omz-plugin-common-aliases]
+# Must be loaded before `plugins.{shell,zsh}-aliases` to be able to override some aliases.
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/common-aliases"
+
 [plugins.shell-aliases]
 local = "~/.config/shell"
 use = ["shell_aliases"]
@@ -67,10 +72,6 @@ dir = "plugins/pip"
 [plugins.omz-plugin-safe-paste]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/safe-paste"
-
-[plugins.omz-plugin-common-aliases]
-github = "ohmyzsh/ohmyzsh"
-dir = "plugins/common-aliases"
 
 [plugins.direnv]
 # https://direnv.net/
