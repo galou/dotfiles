@@ -17,7 +17,8 @@
 # Requires playerctl binary to be in your path (except cmus)
 # See: https://github.com/acrisci/playerctl
 
-player=(playerctl --player=vlc)
+# Without --player, playerctl acts on the first available player (VLC, KDE Connect...).
+player=(playerctl)
 
 case "${BLOCK_BUTTON:-}" in
     1) "${player[@]}" previous ;;
@@ -43,8 +44,14 @@ case "$status" in
     *) exit 0 ;;
 esac
 
-now_playing=$("${player[@]}" metadata vlc:nowplaying)
-if (( $? != 0 )); then
+# VLC exposes the current song of a stream in vlc:nowplaying, other players only
+# through xesam:artist and xesam:title.
+if ! now_playing=$("${player[@]}" metadata vlc:nowplaying 2>/dev/null); then
+    artist=$("${player[@]}" metadata xesam:artist 2>/dev/null)
+    title=$("${player[@]}" metadata xesam:title 2>/dev/null)
+    now_playing="${artist:+$artist - }$title"
+fi
+if [[ -z "$now_playing" ]]; then
     exit 0
 fi
 
