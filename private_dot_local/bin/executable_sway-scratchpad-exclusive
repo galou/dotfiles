@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Toggle a sway-scratchpad window, hiding first another scratchpad window
+# made mutually exclusive with it.
+#
+# Usage: sway-scratchpad-exclusive OTHER_MARK SWAY_SCRATCHPAD_ARGS...
+#
+# If the window marked OTHER_MARK (by sway-scratchpad) is visible, it is sent
+# back to the scratchpad, then sway-scratchpad is called with the remaining
+# arguments. Hiding a window this way thus shows the background windows
+# instead of the other scratchpad window.
+
+other_mark=$1
+shift
+
+# sway-scratchpad marks its windows with "SCRATCHPAD_<mark>". Windows hidden
+# in the scratchpad are on the "__i3_scratch" workspace and must not match.
+swaymsg -q "[con_mark=\"^SCRATCHPAD_${other_mark}\$\" workspace=\"^(?!__i3_scratch\$)\"] move scratchpad"
+
+exec "$HOME/.cargo/bin/sway-scratchpad" "$@"
