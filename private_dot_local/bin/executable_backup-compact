@@ -20,6 +20,9 @@ RCLONE_MOUNT_POINT="$HOME/.local/mnt/backups"
 # process that might already be running with the default RC port (5572).
 RCLONE_RC_ADDR="127.0.0.1:5573"
 
+# borg command
+BORG_CMD="/usr/local/bin/borg"
+
 # See the section "Passphrase notes" for more infos.
 # export BORG_PASSPHRASE='XYZl0ngandsecurepa_55_phrasea&&123'
 PASSPHRASE_FILE="$HOME/.config/borg/passphrase.sh"
@@ -62,7 +65,7 @@ fi
 
 info "Compacting repository"
 
-/usr/bin/borg compact
+${BORG_CMD} compact
 compact_exit=$?
 
 if [ ${compact_exit} -eq 0 ]; then
