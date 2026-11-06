@@ -18,7 +18,14 @@
 # See: https://github.com/acrisci/playerctl
 
 # Without --player, playerctl acts on the first available player (VLC, KDE Connect...).
-player=(playerctl)
+# This is not necessarily the playing one, and with playerctl v2.4.1 commands do
+# not even agree on which player they act: with a paused Firefox listed before a
+# playing VLC, `playerctl metadata` and `playerctl play-pause` act on Firefox but
+# `playerctl next` acts on VLC (probably a playerctl bug). So select explicitly
+# the first playing player, if any.
+playing=$(playerctl --all-players status --format '{{status}} {{playerInstance}}' 2>/dev/null \
+    | awk '$1 == "Playing" { print $2; exit }')
+player=(playerctl ${playing:+--player="$playing"})
 
 case "${BLOCK_BUTTON:-}" in
     1) "${player[@]}" previous ;;
@@ -46,10 +53,20 @@ esac
 
 # VLC exposes the current song of a stream in vlc:nowplaying, other players only
 # through xesam:artist and xesam:title.
+# VLC sets vlc:nowplaying only for Icecast/Shoutcast radio streams (from their ICY
+# "now playing" tag); there, xesam:title is usually the station name. For other
+# sources (local files, Jamendo tracks...), fall back to xesam:artist and
+# xesam:title.
 if ! now_playing=$("${player[@]}" metadata vlc:nowplaying 2>/dev/null); then
     artist=$("${player[@]}" metadata xesam:artist 2>/dev/null)
     title=$("${player[@]}" metadata xesam:title 2>/dev/null)
-    now_playing="${artist:+$artist - }$title"
+    # Some sources (e.g. Jamendo in VLC) already include the artist in the title
+    # ("Artist - Title"); don't prepend it a second time.
+    if [[ -n "$artist" && "$title" != "$artist - "* ]]; then
+        now_playing="$artist - $title"
+    else
+        now_playing="$title"
+    fi
 fi
 if [[ -z "$now_playing" ]]; then
     exit 0
