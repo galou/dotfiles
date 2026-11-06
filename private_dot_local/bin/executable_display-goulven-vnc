@@ -30,7 +30,8 @@ if best_connected DP-3 > /dev/null; then
 fi
 
 if best_connected HEADLESS-1 > /dev/null; then
-  # Resolution 1280x800 or 1280x749.
+  # Resolution 1280x800 or 1280x749, create with
+  # `swaymsg create_output HEADLESS-1 1280x800@60Hz`.
   x=$(( 3072 / $edp1_scale ))
   swaymsg output HEADLESS-1 enable position $x 1440
 fi

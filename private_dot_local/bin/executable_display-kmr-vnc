@@ -38,7 +38,8 @@ fi
 
 if best_connected HEADLESS-1 > /dev/null; then
   # Align the centers of the external display and HEADLESS-1 in x direction.
-  # Resolution 1280x800 or 1280x749.
+  # Resolution 1280x800 or 1280x749, create with
+  # `swaymsg create_output HEADLESS-1 1280x800@60Hz`.
   x=$(( 3072 / $edp1_scale + 2560 / 2.0 - 1280 / 2.0 ))
   swaymsg output HEADLESS-1 enable position $x 1440
 fi
