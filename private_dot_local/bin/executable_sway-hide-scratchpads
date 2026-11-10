@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Hide all visible sway-scratchpad windows, showing the main windows.
+#
+# sway-scratchpad marks its windows with "SCRATCHPAD_<mark>". Windows hidden
+# in the scratchpad are on the "__i3_scratch" workspace and must not match.
+# Windows sent to the scratchpad with sway's "move scratchpad" have no mark
+# and are not hidden.
+
+swaymsg -q '[con_mark="^SCRATCHPAD_" workspace="^(?!__i3_scratch$)"] move scratchpad'

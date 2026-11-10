@@ -383,6 +383,7 @@ bindsym $mod+Return exec $HOME/.local/bin/kitty
 {{- else}}
 bindsym $mod+Return exec kitty
 {{- end}}
+bindsym $mod+b exec $HOME/.local/bin/sway-hide-scratchpads
 bindsym $mod+c exec $HOME/.local/share/rofi/rofi-commands
 {{- if eq .chezmoi.hostname "pcgael1"}}
 bindsym $mod+i exec $HOME/.local/bin/sway-scratchpad-exclusive herdr --mark terminals --command $HOME/.local/bin/kitty
